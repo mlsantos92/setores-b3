@@ -47,7 +47,7 @@ p{margin:0 0 10px}
 .kpi small{display:block;color:var(--mut);font-size:12px;margin-top:2px}
 .ctl{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:8px 0 10px}
 .ctl label{font-size:13px;color:var(--text2)}
-select,input[type=search]{font:inherit;font-size:14px;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:5px 8px}
+select,input[type=search],input[type=number]{font:inherit;font-size:14px;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:5px 8px}
 input[type=search]{min-width:200px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
 .seg button{font:inherit;font-size:13px;padding:5px 11px;border:0;background:var(--surface);color:var(--text2);cursor:pointer}
@@ -179,6 +179,37 @@ a{color:var(--s1)}
     <h3 style="font-size:.98rem;margin:16px 0 4px" id="hGrTit">Histórico da empresa</h3>
     <p class="mut">Clique em uma empresa da tabela para ver a métrica em todos os períodos da visão escolhida.</p>
     <div id="hGraf" class="gr"></div>
+  </section>
+
+  <section class="card" id="secFil">
+    <h2>Filtros: crescimento, resultado e endividamento</h2>
+    <p class="mut" id="fTxt">Crescimento do trimestre contra o trimestre anterior (T/T) e contra o mesmo trimestre do ano anterior (A/A), lucro ou prejuízo, EBITDA, P/VP e passivos. Veja o número da empresa ou a distância dela para a mediana dos pares do setor.</p>
+    <div class="ctl">
+      <label for="fQ">Trimestre</label><select id="fQ"></select>
+      <div class="seg" id="fModo" role="group" aria-label="Modo">
+        <button data-v="emp" aria-pressed="true">Empresa</button>
+        <button data-v="set" aria-pressed="false">Contra os pares do setor</button>
+      </div>
+      <select id="fLista" aria-label="Lista"><option value="">Todas as listas</option><option>Large e Mid Caps</option><option>Small e Micro Caps</option></select>
+      <select id="fSetor" aria-label="Setor"><option value="">Todos os setores</option></select>
+      <label><input type="checkbox" id="fEleg" checked> Só elegíveis</label>
+    </div>
+    <div class="ctl">
+      <select id="fRes" aria-label="Resultado do trimestre"><option value="">Lucro ou prejuízo</option><option value="lucro">Só com lucro no trimestre</option><option value="prej">Só com prejuízo no trimestre</option><option value="virou">Saiu do prejuízo (A/A)</option><option value="caiu">Entrou no prejuízo (A/A)</option></select>
+      <label>Receita A/A mín. <input type="number" id="fRecAA" step="5" placeholder="%" style="width:70px"></label>
+      <label>Lucro A/A mín. <input type="number" id="fLucAA" step="5" placeholder="%" style="width:70px"></label>
+      <label>Receita T/T mín. <input type="number" id="fRecTT" step="5" placeholder="%" style="width:70px"></label>
+      <label>P/VP máx. <input type="number" id="fPvp" step="0.5" min="0" style="width:64px"></label>
+      <label>Passivo/PL máx. <input type="number" id="fPas" step="0.5" min="0" style="width:64px"></label>
+      <label>Dívida/EBITDA máx. <input type="number" id="fDiv" step="0.5" min="0" style="width:64px"></label>
+      <select id="fPar" aria-label="Melhor que os pares"><option value="">Sem filtro de pares</option></select>
+      <input type="search" id="fBusca" placeholder="Empresa ou código" aria-label="Buscar empresa ou código">
+      <span class="mut" id="fCont"></span>
+    </div>
+    <div class="tw" style="max-height:560px;overflow-y:auto"><table id="tFil"></table></div>
+    <h3 style="font-size:.98rem;margin:16px 0 4px">Mediana dos pares, por setor</h3>
+    <p class="mut">A referência usada no modo “Contra os pares”: mediana das empresas do setor que passam nos filtros de lista e de elegibilidade.</p>
+    <div class="tw"><table id="tFilSet"></table></div>
   </section>
 
   <section class="card">
@@ -448,7 +479,62 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     ["hBusca","hLista","hSetor","hEleg"].forEach(i=>$(i).addEventListener("input",()=>{dHS();$("hCont").textContent=dHE()+" empresas"}));
     $("hTxt").textContent+=" Dados de "+TR[0].replace("T"," T")+" a "+ultimo.replace("T"," T")+", em "+H.unidade+".";
     periodos();empSel=(empresas.find(e=>e.ticker==="PETR4")||empresas[0]||{}).ticker;monta();
-  }).catch(()=>{$("secHist").style.display="none"});
+
+    // ---------- filtros: crescimento, resultado e endividamento
+    const fQ=$("fQ");TR.forEach((t,i)=>fQ.add(new Option(t.replace("T"," T"),i)));
+    fQ.value=VIS.tri.per[+(()=>{const P=VIS.tri.per,total=Object.keys(HE).length;let ia=P.length-1;while(ia>0&&cobertura(P[ia])<total/2)ia--;return ia})()].is[0];
+    [...new Set(empresas.map(e=>e.setor))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(n=>$("fSetor").add(new Option(n,n)));
+    const gq=(h,k,i)=>i<0||!h[k]?null:(h[k][i]??null),cres=(a,b)=>a==null||b==null||b<=0?null:a/b-1;
+    // tipo: "pct" (crescimento ou margem; diferença em p.p.), "mult" (múltiplo; diferença relativa), "valor" (R$ mi; sem comparação)
+    const FM=[{k:"rec_tt",t:"Receita T/T",tipo:"pct",cor:1,h:"Receita do trimestre contra o trimestre anterior"},{k:"rec_aa",t:"Receita A/A",tipo:"pct",cor:1,h:"Receita do trimestre contra o mesmo trimestre do ano anterior"},
+      {k:"luc",t:"Lucro no tri.",tipo:"valor",cor:1,h:"Lucro (ou prejuízo) do trimestre, atribuído aos controladores"},{k:"luc_tt",t:"Lucro T/T",tipo:"pct",cor:1},{k:"luc_aa",t:"Lucro A/A",tipo:"pct",cor:1},
+      {k:"eb",t:"EBITDA no tri.",tipo:"valor",cor:1,h:"Resultado operacional + depreciação e amortização"},{k:"eb_aa",t:"EBITDA A/A",tipo:"pct",cor:1},{k:"meb",t:"Margem EBITDA",tipo:"pct",h:"EBITDA ÷ receita do trimestre"},
+      {k:"pvp",t:"P/VP",tipo:"mult",h:"Valor de mercado atual ÷ patrimônio líquido mais recente"},{k:"pas_pl",t:"Passivo/PL",tipo:"mult",h:"Passivo exigível (tudo o que a empresa deve) ÷ patrimônio líquido"},
+      {k:"div_eb",t:"Dívida/EBITDA",tipo:"mult",h:"Empréstimos e financiamentos ÷ EBITDA dos últimos 4 trimestres"}];
+    const menorMelhor={pvp:1,pas_pl:1,div_eb:1};
+    FM.filter(m=>m.tipo!=="valor").forEach(m=>$("fPar").add(new Option((menorMelhor[m.k]?"Abaixo":"Acima")+" da mediana do setor em "+m.t,m.k)));
+    function linhaF(e,i){const h=HE[e.ticker],rec=gq(h,"receita",i),luc=gq(h,"lucro",i),eb=gq(h,"ebitda",i),pl=gq(h,"pl",i),pas=gq(h,"passivo",i),dv=gq(h,"divida",i);
+      const eb12=i>=3?som(h.ebitda?h:{ebitda:[]},[i-3,i-2,i-1,i],"ebitda"):null;
+      return {empresa:e.empresa,ticker:e.ticker,setor:e.setor,subsetor:e.subsetor,lista:e.lista,elegivel:e.elegivel,
+        rec_tt:cres(rec,gq(h,"receita",i-1)),rec_aa:cres(rec,gq(h,"receita",i-4)),luc,luc_ant:gq(h,"lucro",i-4),luc_tt:cres(luc,gq(h,"lucro",i-1)),luc_aa:cres(luc,gq(h,"lucro",i-4)),
+        eb,eb_aa:cres(eb,gq(h,"ebitda",i-4)),meb:eb!=null&&rec>0?eb/rec:null,pvp:e.pvp??null,pas_pl:pas!=null&&pl>0?pas/pl:null,div_eb:dv!=null&&eb12>0?dv/eb12:null,x:!!h.x&&!!h.x[i]}}
+    const med=v=>{const a=v.filter(x=>x!=null).sort((x,y)=>x-y);if(!a.length)return null;const m=a.length>>1;return a.length%2?a[m]:(a[m-1]+a[m])/2};
+    let modo="emp",baseF=[],medSet={};
+    const num=id=>{const v=$(id).value.trim();return v===""?null:+v};
+    function calcula(){
+      const i=+fQ.value,l=$("fLista").value,eg=$("fEleg").checked;
+      baseF=empresas.filter(e=>(!eg||e.elegivel)&&(!l||e.lista===l)).map(e=>linhaF(e,i)).filter(r=>r.luc!=null||r.rec_aa!=null||r.pvp!=null);
+      medSet={};
+      for(const st of new Set(baseF.map(r=>r.setor))){const g=baseF.filter(r=>r.setor===st),o={setor:st,n:g.length,prej:g.filter(r=>r.luc!=null&&r.luc<0).length};
+        FM.forEach(m=>{if(m.tipo!=="valor")o[m.k]=med(g.map(r=>r[m.k]))});medSet[st]=o}
+      baseF.forEach(r=>{FM.forEach(m=>{if(m.tipo==="valor")return;const md=medSet[r.setor][m.k],v=r[m.k];
+        r["d_"+m.k]=v==null||md==null?null:m.tipo==="pct"?v-md:(md>0?v/md-1:null)})});
+    }
+    function filtradas(){
+      const st=$("fSetor").value,res=$("fRes").value,q=$("fBusca").value.trim().toUpperCase(),par=$("fPar").value;
+      const mn=[["rec_aa",num("fRecAA")],["luc_aa",num("fLucAA")],["rec_tt",num("fRecTT")]],mx=[["pvp",num("fPvp")],["pas_pl",num("fPas")],["div_eb",num("fDiv")]];
+      return baseF.filter(r=>(!st||r.setor===st)&&(!q||r.empresa.toUpperCase().includes(q)||r.ticker.includes(q))
+        &&(!res||(res==="lucro"?r.luc>0:res==="prej"?r.luc!=null&&r.luc<0:res==="virou"?r.luc>0&&r.luc_ant!=null&&r.luc_ant<0:r.luc!=null&&r.luc<0&&r.luc_ant>0))
+        &&mn.every(([k,v])=>v==null||(r[k]!=null&&r[k]*100>=v))&&mx.every(([k,v])=>v==null||(r[k]!=null&&r[k]<=v))
+        &&(!par||(r["d_"+par]!=null&&(menorMelhor[par]?r["d_"+par]<0:r["d_"+par]>0))));
+    }
+    const fmtF=(m,v)=>v==null?"–":m.tipo==="pct"?(m.k==="meb"?fP(v):fS(v)):m.tipo==="mult"?fN(v,2):(Math.abs(v)>=1000?"R$ "+fN(v/1000,1)+" bi":"R$ "+fN(v,0)+" mi");
+    const fmtD=(m,v)=>v==null?"–":m.tipo==="pct"?(Math.abs(v)<.0005?"0,0":(v>0?"+":"")+fN(v*100,1))+" p.p.":fS(v,0);
+    let dFil,dFilSet;
+    function montaF(){
+      calcula();
+      const cols=[{k:"empresa",t:"Empresa",txt:1,f:(v,r)=>esc(v)+(r.x?MARCA:"")},{k:"ticker",t:"Código",txt:1,f:v=>esc(v)},{k:"setor",t:"Setor",txt:1,f:v=>esc(curto(v))}]
+        .concat(FM.map(m=>modo==="set"&&m.tipo!=="valor"?{k:"d_"+m.k,t:m.t,h:(m.h?m.h+". ":"")+"Diferença para a mediana do setor"+(m.tipo==="pct"?", em pontos percentuais":", em %"),f:v=>fmtD(m,v),cor:m.tipo==="pct"}:{k:m.k,t:m.t,h:m.h,f:v=>fmtF(m,v),cor:m.cor}));
+      dFil=tabela("tFil",cols,filtradas,{k:modo==="set"?"d_rec_aa":"rec_aa",d:-1});
+      dFilSet=tabela("tFilSet",[{k:"setor",t:"Setor",txt:1,f:v=>esc(v)},{k:"n",t:"Empresas",f:v=>v},{k:"prej",t:"Com prejuízo no tri.",f:(v,r)=>v+" de "+r.n}]
+        .concat(FM.filter(m=>m.tipo!=="valor").map(m=>({k:m.k,t:m.t,h:m.h,f:v=>fmtF(m,v),cor:m.cor}))),()=>Object.values(medSet),{k:"rec_aa",d:-1});
+      $("fCont").textContent=dFil()+" de "+baseF.length+" empresas";dFilSet();
+    }
+    seg("fModo",v=>{modo=v;montaF()});
+    ["fQ","fLista","fEleg"].forEach(i=>$(i).addEventListener("input",montaF));
+    ["fSetor","fRes","fRecAA","fLucAA","fRecTT","fPvp","fPas","fDiv","fPar","fBusca"].forEach(i=>$(i).addEventListener("input",()=>{$("fCont").textContent=dFil()+" de "+baseF.length+" empresas"}));
+    montaF();
+  }).catch(()=>{$("secHist").style.display="none";$("secFil").style.display="none"});
 
   // ---------- método
   const cr=M.criterio;
@@ -463,6 +549,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     "<b>Só as métricas.</b> O estudo usa os números das demonstrações; o parecer do auditor não entra na avaliação. A coluna “Auditor” traz apenas o nome informado à CVM.",
     "<b>Conferência com o Yahoo:</b> quando a CVM não tem o dado (BDRs, por exemplo), o múltiplo vem do Yahoo Finance e a coluna “Base dos múltiplos” avisa. Quando as duas fontes diferem mais de 25%, a empresa ganha a marca “≠ Yahoo” e vale o número da CVM. O valor de mercado é o número de ações informado à CVM, fora a tesouraria, vezes o preço de cada classe (em units, o preço é dividido pelas ações que a unit representa). Como a CVM não informa se a quantidade está em unidades ou em milhares, o valor de mercado do Yahoo serve de referência para a escala. O EV/EBITDA vem do Yahoo.",
     "<b>Histórico por período:</b> cada documento da CVM traz o acumulado do exercício; o trimestre isolado é a diferença entre dois acumulados seguidos, e o 4º trimestre é o ano (DFP) menos os nove meses. Semestre, acumulado e ano são somas de trimestres civis, então empresas com exercício fora do ano civil ficam comparáveis. Os valores são os do documento original de cada período.",
+    "<b>Filtros e pares:</b> T/T compara o trimestre com o anterior; A/A, com o mesmo trimestre do ano anterior. Crescimento sobre base negativa ou zero não é calculado. EBITDA é o resultado operacional mais a depreciação e amortização informada na demonstração do valor adicionado; bancos e seguradoras não têm EBITDA nem dívida bruta nesse formato. Passivo/PL usa o passivo exigível, que em bancos inclui os depósitos e por isso é naturalmente alto. “Contra os pares” mostra a diferença para a mediana do setor: em pontos percentuais para crescimento e margem, em % para os múltiplos.",
     "<b>Referência cruzada:</b> quando falta o documento de um período, o valor é buscado no documento do trimestre seguinte (acumulado menos o trimestre isolado) ou no do mesmo período do ano seguinte, que repete os números do exercício anterior. Esses períodos levam a marca “ref. cruzada” e aparecem mais claros no gráfico. Sem nenhuma referência, o período fica vazio.",
     "<b>Resultado atrasado:</b> empresa que não protocola resultado há mais de 9 meses fica sem P/L, P/VP e ROE.",
     "<b>Dividend yield</b> é calculado aqui: proventos pagos em 12 meses ÷ preço atual. P/L só existe para empresas com lucro; valores fora de faixas plausíveis são descartados.",
