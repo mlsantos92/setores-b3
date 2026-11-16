@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setores da B3</title>
+<style>
+:root{
+  --bg:#f6f5f2; --surface:#fcfcfb; --line:#e3e1db; --grid:#ecebe6;
+  --text:#0b0b0b; --text2:#52514e; --mut:#7b7a75;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --neutro:#8b8a84;
+  --verde:#1a7f37; --amarelo:#9a6700; --vermelho:#cf222e;
+  --pos:#1a7f37; --neg:#b42318;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    --bg:#121211; --surface:#1a1a19; --line:#33322f; --grid:#2a2927;
+    --text:#f0efec; --text2:#c3c2b7; --mut:#96958d;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --neutro:#8b8a84;
+    --verde:#3fb950; --amarelo:#d29922; --vermelho:#f85149;
+    --pos:#56c271; --neg:#f0766e;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121211; --surface:#1a1a19; --line:#33322f; --grid:#2a2927;
+  --text:#f0efec; --text2:#c3c2b7; --mut:#96958d;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --neutro:#8b8a84;
+  --verde:#3fb950; --amarelo:#d29922; --vermelho:#f85149;
+  --pos:#56c271; --neg:#f0766e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.6rem;line-height:1.2;margin:0 0 6px;letter-spacing:-.01em}
+h2{font-size:1.12rem;margin:0 0 4px}
+p{margin:0 0 10px}
+.sub{color:var(--text2);max-width:76ch}
+.mut{color:var(--mut);font-size:13px}
+.selo{display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:999px;color:#fff;font-weight:600;font-size:13px}
+.selo::before{content:"";width:8px;height:8px;border-radius:50%;background:#fff;opacity:.9}
+.cab{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:8px 0 18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:0 0 16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:0 0 16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kpi b{display:block;font-size:1.45rem;line-height:1.2;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--text2);font-size:13px}
+.kpi small{display:block;color:var(--mut);font-size:12px;margin-top:2px}
+.ctl{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:8px 0 10px}
+.ctl label{font-size:13px;color:var(--text2)}
+select,input[type=search]{font:inherit;font-size:14px;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:5px 8px}
+input[type=search]{min-width:200px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;padding:5px 11px;border:0;background:var(--surface);color:var(--text2);cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--text);color:var(--surface)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:6px 9px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{position:sticky;top:0;background:var(--surface);color:var(--text2);font-weight:600;cursor:pointer;user-select:none}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
+td.txt,th.txt{text-align:left}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--bg)}
+.pos{color:var(--pos)} .neg{color:var(--neg)}
+.tag{display:inline-block;font-size:11px;padding:0 6px;border-radius:999px;border:1px solid var(--line);color:var(--mut);margin-left:6px}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--text2);margin:2px 0 6px}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.leg i.l{width:16px;height:2px;border-radius:0;vertical-align:3px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{fill:var(--text2);font-size:12px}
+svg .tit{fill:var(--mut);font-size:11.5px}
+.tip{position:fixed;pointer-events:none;background:var(--text);color:var(--surface);font-size:12.5px;line-height:1.4;padding:7px 10px;border-radius:7px;max-width:260px;z-index:9;opacity:0;transition:opacity .08s}
+.tip b{display:block}
+details{margin-top:8px} summary{cursor:pointer;color:var(--text2);font-size:14px}
+ul{margin:6px 0 0;padding-left:20px} li{margin:2px 0}
+a{color:var(--s1)}
+@media (max-width:640px){h1{font-size:1.3rem}.card{padding:12px}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Setores e empresas da B3</h1>
+  <p class="sub">Retorno, risco e múltiplos de 282 empresas, divididas em large e mid caps e em small e micro caps, nos 11 setores da bolsa. Uma ação por empresa: a mais líquida.</p>
+  <div class="cab">
+    <span id="selo" class="selo" style="background:var(--neutro)">carregando</span>
+    <span id="motivo" class="mut"></span>
+    <span id="quando" class="mut"></span>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section class="card">
+    <h2>Retorno e risco por setor</h2>
+    <p class="mut" id="scTxt"></p>
+    <div class="ctl">
+      <div class="seg" id="scLista" role="group" aria-label="Lista">
+        <button data-v="Todas" aria-pressed="true">Todas</button>
+        <button data-v="Large e Mid Caps" aria-pressed="false">Large e mid</button>
+        <button data-v="Small e Micro Caps" aria-pressed="false">Small e micro</button>
+      </div>
+    </div>
+    <div id="scatter"></div>
+  </section>
+
+  <section class="card">
+    <h2>Large e mid caps contra small e micro caps</h2>
+    <p class="mut">Retorno ao ano de cada grupo dentro do setor, no período todo. Índice de pesos iguais das empresas elegíveis.</p>
+    <div class="leg"><span><i style="background:var(--s1)"></i>Large e mid caps</span><span><i style="background:var(--s2)"></i>Small e micro caps</span></div>
+    <div id="halteres"></div>
+  </section>
+
+  <section class="card">
+    <h2>Evolução de R$ 100</h2>
+    <div class="ctl">
+      <label for="evSel">Série</label>
+      <select id="evSel"></select>
+    </div>
+    <div id="evolucao"></div>
+  </section>
+
+  <section class="card">
+    <h2>Setores: retorno, risco e múltiplos</h2>
+    <p class="mut">Retorno e risco do índice de pesos iguais do setor. Múltiplos: mediana das empresas elegíveis. Clique no título de uma coluna para ordenar.</p>
+    <div class="ctl">
+      <div class="seg" id="stLista" role="group" aria-label="Lista">
+        <button data-v="Todas" aria-pressed="true">Todas</button>
+        <button data-v="Large e Mid Caps" aria-pressed="false">Large e mid</button>
+        <button data-v="Small e Micro Caps" aria-pressed="false">Small e micro</button>
+      </div>
+    </div>
+    <div class="tw"><table id="tSet"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>Empresas</h2>
+    <p class="mut">“P/L × setor” mostra quanto o P/L da empresa está acima ou abaixo da mediana do setor. Não é recomendação: múltiplo baixo pode refletir risco ou lucro que não se repete.</p>
+    <div class="ctl">
+      <input type="search" id="eBusca" placeholder="Empresa ou código" aria-label="Buscar empresa ou código">
+      <select id="eLista" aria-label="Lista"><option value="">Todas as listas</option><option>Large e Mid Caps</option><option>Small e Micro Caps</option></select>
+      <select id="eSetor" aria-label="Setor"><option value="">Todos os setores</option></select>
+      <label><input type="checkbox" id="eEleg" checked> Só elegíveis</label>
+      <span class="mut" id="eCont"></span>
+    </div>
+    <div class="tw" style="max-height:640px;overflow-y:auto"><table id="tEmp"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>Como ler</h2>
+    <ul class="sub" id="metodo"></ul>
+    <details><summary id="semTit">Empresas da lista sem dado</summary><ul id="semDado" class="mut"></ul></details>
+    <p class="mut" style="margin-top:12px">Material de estudo. Nada aqui é recomendação de compra ou venda. Código e método: <a href="https://github.com/mlsantos92/setores-b3">github.com/mlsantos92/setores-b3</a>.</p>
+  </section>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+const $=id=>document.getElementById(id);
+const NS="http://www.w3.org/2000/svg";
+const fP=(v,d=1)=>v==null?"–":(Math.abs(v*100)<.5*Math.pow(10,-d)?0:v*100).toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d})+"%";
+const fS=(v,d=1)=>v==null?"–":(v>0?"+":"")+fP(v,d);
+const fN=(v,d=1)=>v==null?"–":v.toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fM=v=>v==null?"–":v>=1e9?"R$ "+fN(v/1e9,1)+" bi":v>=1e6?"R$ "+fN(v/1e6,1)+" mi":"R$ "+fN(v/1e3,0)+" mil";
+const fD=s=>s?s.split("-").reverse().join("/"):"–";
+const cls=v=>v==null?"":v>0?"pos":v<0?"neg":"";
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const el=(n,a={},t)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e};
+const CURTO={"Petróleo, Gás e Biocombustíveis":"Petróleo e gás","Tecnologia da Informação":"Tecnologia","Consumo Não Cíclico":"Consumo não cíclico","Consumo Cíclico":"Consumo cíclico","Materiais Básicos":"Materiais básicos","Bens Industriais":"Bens industriais","Utilidade Pública":"Utilidade pública"};
+const curto=s=>CURTO[s]||s;
+
+const tip=$("tip");
+function mostra(ev,html){tip.innerHTML=html;tip.style.opacity=1;const r=tip.getBoundingClientRect();let x=ev.clientX+14,y=ev.clientY+14;if(x+r.width>innerWidth-8)x=ev.clientX-r.width-14;if(y+r.height>innerHeight-8)y=ev.clientY-r.height-14;tip.style.left=Math.max(8,x)+"px";tip.style.top=Math.max(8,y)+"px"}
+function some(){tip.style.opacity=0}
+function hover(node,html){node.addEventListener("pointermove",e=>mostra(e,html));node.addEventListener("pointerleave",some)}
+function ticks(a,b,n=5){const span=b-a,step0=span/n,mag=Math.pow(10,Math.floor(Math.log10(step0))),f=step0/mag;const step=(f<1.5?1:f<3?2:f<7?5:10)*mag;const t=[];for(let v=Math.ceil(a/step)*step;v<=b+1e-9;v+=step)t.push(+v.toFixed(10));return t}
+function seg(id,fn){const g=$(id);g.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;g.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));fn(b.dataset.v)})}
+
+fetch("dados.json").then(r=>r.json()).then(D=>{
+  const M=D.meta,S=D.setores,E=D.empresas,R=M.referencias||{};
+  // ---------- cabeçalho
+  const s=M.selo,cor={verde:"var(--verde)",amarelo:"var(--amarelo)",vermelho:"var(--vermelho)"}[s.cor];
+  $("selo").textContent={verde:"Verde",amarelo:"Amarelo",vermelho:"Vermelho"}[s.cor];$("selo").style.background=cor;
+  $("motivo").textContent=s.motivo;
+  $("quando").textContent="Pregão de "+fD(M.pregao)+" · atualizado em "+fD(s.atualizado_em.slice(0,10))+" às "+s.atualizado_em.slice(11)+" · preços desde "+fD(M.inicio);
+  const L=Object.fromEntries(D.listas.map(l=>[l.lista,l]));
+  const lg=L["Large e Mid Caps"]||{},sm=L["Small e Micro Caps"]||{};
+  $("kpis").innerHTML=[
+    ["Empresas elegíveis",M.elegiveis+" de "+M.empresas,M.com_dado+" com preço na fonte"],
+    ["Large e mid caps",fS(lg.ret_aa)+" a.a.","volatilidade "+fP(lg.vol)+" · "+lg.elegiveis+" empresas"],
+    ["Small e micro caps",fS(sm.ret_aa)+" a.a.","volatilidade "+fP(sm.vol)+" · "+sm.elegiveis+" empresas"],
+    ["Ibovespa",R.Ibovespa?fS(R.Ibovespa.ret_aa)+" a.a.":"–",R.Ibovespa?"volatilidade "+fP(R.Ibovespa.vol):""],
+    ["CDI",R.CDI?fS(R.CDI.ret_aa)+" a.a.":"–","referência sem risco do período"]
+  ].map(k=>'<div class="kpi"><span>'+k[0]+'</span><b>'+k[1]+'</b><small>'+k[2]+'</small></div>').join("");
+
+  // ---------- dispersão retorno x risco
+  function scatter(lista){
+    const pts=S.filter(x=>x.lista===lista&&x.ret_aa!=null&&x.vol!=null&&x.elegiveis>=2);
+    const W=1100,H=440,m={l:54,r:24,t:14,b:44};
+    const xs=pts.map(p=>p.vol),ys=pts.map(p=>p.ret_aa).concat(M.cdi_aa!=null?[M.cdi_aa]:[]);
+    const x0=Math.max(0,Math.min(...xs)-.03),x1=Math.max(...xs)+.04,y0=Math.min(...ys,0)-.03,y1=Math.max(...ys)+.04;
+    const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r),Y=v=>H-m.b-(v-y0)/(y1-y0)*(H-m.t-m.b);
+    const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Retorno ao ano e volatilidade de cada setor"});
+    ticks(y0,y1).forEach(t=>{svg.append(el("line",{x1:m.l,x2:W-m.r,y1:Y(t),y2:Y(t),stroke:"var(--grid)"}));svg.append(el("text",{x:m.l-8,y:Y(t)+4,"text-anchor":"end"},fP(t,0)))});
+    ticks(x0,x1).forEach(t=>svg.append(el("text",{x:X(t),y:H-m.b+18,"text-anchor":"middle"},fP(t,0))));
+    svg.append(el("line",{x1:m.l,x2:W-m.r,y1:Y(0),y2:Y(0),stroke:"var(--line)","stroke-width":1.5}));
+    svg.append(el("text",{x:W-m.r,y:H-8,"text-anchor":"end",class:"tit"},"Volatilidade ao ano →"));
+    svg.append(el("text",{x:m.l,y:10,class:"tit"},"↑ Retorno ao ano"));
+    if(M.cdi_aa!=null){svg.append(el("line",{x1:m.l,x2:W-m.r,y1:Y(M.cdi_aa),y2:Y(M.cdi_aa),stroke:"var(--neutro)","stroke-dasharray":"5 4"}));svg.append(el("text",{x:W-m.r,y:Y(M.cdi_aa)-6,"text-anchor":"end",class:"tit"},"CDI "+fP(M.cdi_aa)+" a.a."))}
+    const ib=R.Ibovespa;
+    if(ib&&ib.vol>=x0&&ib.vol<=x1){const g=el("g");g.append(el("rect",{x:X(ib.vol)-6,y:Y(ib.ret_aa)-6,width:12,height:12,fill:"var(--neutro)",stroke:"var(--surface)","stroke-width":2,transform:`rotate(45 ${X(ib.vol)} ${Y(ib.ret_aa)})`}));hover(g,"<b>Ibovespa</b>Retorno "+fS(ib.ret_aa)+" a.a.<br>Volatilidade "+fP(ib.vol));svg.append(g);pts.push({rot:"Ibovespa",vol:ib.vol,ret_aa:ib.ret_aa,ref:1})}
+    const caixas=[];
+    const livre=b=>!caixas.some(c=>!(b.x+b.w<c.x||c.x+c.w<b.x||b.y+b.h<c.y||c.y+c.h<b.y))&&b.x>m.l&&b.x+b.w<W-4;
+    pts.slice().sort((a,b)=>b.ret_aa-a.ret_aa).forEach(p=>{
+      const cx=X(p.vol),cy=Y(p.ret_aa),nome=p.rot||curto(p.setor),w=nome.length*6.6+4,h=15;
+      if(!p.ref){const c=el("circle",{cx,cy,r:7,fill:"var(--s1)",stroke:"var(--surface)","stroke-width":2});const g=el("g");g.append(el("circle",{cx,cy,r:16,fill:"transparent"}),c);
+        hover(g,"<b>"+esc(p.setor)+"</b>Retorno "+fS(p.ret_aa)+" a.a.<br>Volatilidade "+fP(p.vol)+"<br>Maior queda "+fP(p.drawdown)+"<br>"+p.elegiveis+" empresas elegíveis");svg.append(g)}
+      caixas.push({x:cx-9,y:cy-9,w:18,h:18});
+      const op=[{x:cx+11,y:cy-7,a:"start"},{x:cx-11-w,y:cy-7,a:"end"},{x:cx-w/2,y:cy-25,a:"middle"},{x:cx-w/2,y:cy+11,a:"middle"},{x:cx+11,y:cy-22,a:"start"},{x:cx+11,y:cy+8,a:"start"}];
+      const o=op.find(o=>livre({x:o.x,y:o.y,w,h}))||op[0];caixas.push({x:o.x,y:o.y,w,h});
+      svg.append(el("text",{x:o.a==="start"?o.x:o.a==="end"?o.x+w:o.x+w/2,y:o.y+12,"text-anchor":o.a,style:"fill:var(--text)"},nome));
+    });
+    $("scatter").replaceChildren(svg);
+  }
+  $("scTxt").textContent="Cada ponto é um setor: índice de pesos iguais das empresas elegíveis, de "+fD(M.inicio)+" a "+fD(M.pregao)+". Acima da linha tracejada, o setor rendeu mais que o CDI.";
+  scatter("Todas");seg("scLista",scatter);
+
+  // ---------- halteres large x small
+  (function(){
+    const nomes=[...new Set(S.map(x=>x.setor))];
+    const linhas=nomes.map(n=>({n,g:S.find(x=>x.setor===n&&x.lista==="Large e Mid Caps"),p:S.find(x=>x.setor===n&&x.lista==="Small e Micro Caps")}))
+      .filter(l=>(l.g&&l.g.ret_aa!=null)||(l.p&&l.p.ret_aa!=null)).sort((a,b)=>((b.g&&b.g.ret_aa)??-9)-((a.g&&a.g.ret_aa)??-9));
+    const W=1100,rh=30,m={l:170,r:60,t:26,b:8},H=m.t+m.b+rh*linhas.length;
+    const vals=linhas.flatMap(l=>[l.g&&l.g.ret_aa,l.p&&l.p.ret_aa]).filter(v=>v!=null);
+    const a=Math.min(...vals,0)-.02,b=Math.max(...vals,0)+.02,X=v=>m.l+(v-a)/(b-a)*(W-m.l-m.r);
+    const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Retorno ao ano de large e small caps por setor"});
+    ticks(a,b,6).forEach(t=>{svg.append(el("line",{x1:X(t),x2:X(t),y1:m.t-4,y2:H-m.b,stroke:t===0?"var(--line)":"var(--grid)","stroke-width":t===0?1.5:1}));svg.append(el("text",{x:X(t),y:12,"text-anchor":"middle"},fP(t,0)))});
+    linhas.forEach((l,i)=>{const y=m.t+rh*i+rh/2;
+      svg.append(el("text",{x:m.l-12,y:y+4,"text-anchor":"end",style:"fill:var(--text)"},curto(l.n)));
+      const gv=l.g&&l.g.ret_aa,pv=l.p&&l.p.ret_aa;
+      if(gv!=null&&pv!=null)svg.append(el("line",{x1:X(gv),x2:X(pv),y1:y,y2:y,stroke:"var(--neutro)","stroke-width":2,opacity:.55}));
+      [[gv,"var(--s1)",l.g,"Large e mid caps"],[pv,"var(--s2)",l.p,"Small e micro caps"]].forEach(([v,c,o,nm])=>{if(v==null)return;
+        const g=el("g");g.append(el("circle",{cx:X(v),cy:y,r:14,fill:"transparent"}),el("circle",{cx:X(v),cy:y,r:6.5,fill:c,stroke:"var(--surface)","stroke-width":2}));
+        hover(g,"<b>"+esc(l.n)+"</b>"+nm+"<br>Retorno "+fS(v)+" a.a.<br>Volatilidade "+fP(o.vol)+"<br>"+o.elegiveis+" empresas elegíveis");svg.append(g)});
+      const mx=Math.max(gv??-9,pv??-9);svg.append(el("text",{x:X(mx)+12,y:y+4,class:"tit"},gv!=null&&pv!=null?"dif. "+fS(gv-pv,1).replace("%"," p.p."):""));
+    });
+    $("halteres").replaceChildren(svg);
+  })();
+
+  // ---------- evolução base 100
+  const series=D.series,nomesSet=[...new Set(S.map(x=>x.setor))].filter(n=>series[n]);
+  const sel=$("evSel");
+  [["Large e Mid Caps","Large e mid caps contra small e micro caps"]].concat(nomesSet.map(n=>[n,n])).forEach(([v,t])=>sel.add(new Option(t,v)));
+  function evolucao(v){
+    const linhas=v==="Large e Mid Caps"?[["Large e Mid Caps","Large e mid caps","var(--s1)"],["Small e Micro Caps","Small e micro caps","var(--s2)"]]:[[v,curto(v),"var(--s1)"]];
+    if(series.Ibovespa)linhas.push(["Ibovespa","Ibovespa","var(--s3)"]);
+    if(series.CDI)linhas.push(["CDI","CDI","var(--neutro)"]);
+    const ok=linhas.filter(l=>series[l[0]]);
+    const meses=series[ok[0][0]].meses,n=meses.length;
+    const todos=ok.flatMap(l=>series[l[0]].base100);
+    const W=1100,H=380,m={l:50,r:150,t:14,b:30};
+    const y0=Math.min(...todos,100)*.96,y1=Math.max(...todos)*1.04;
+    const X=i=>m.l+i/(n-1)*(W-m.l-m.r),Y=v=>H-m.b-(v-y0)/(y1-y0)*(H-m.t-m.b);
+    const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Evolução de R$ 100 aplicados"});
+    ticks(y0,y1).forEach(t=>{svg.append(el("line",{x1:m.l,x2:W-m.r,y1:Y(t),y2:Y(t),stroke:"var(--grid)"}));svg.append(el("text",{x:m.l-8,y:Y(t)+4,"text-anchor":"end"},fN(t,0)))});
+    meses.forEach((mm,i)=>{if(mm.endsWith("-01"))svg.append(el("text",{x:X(i),y:H-m.b+18,"text-anchor":"middle"},mm.slice(0,4)))});
+    const fins=[];
+    ok.forEach(([k,nome,c])=>{const sr=series[k],off=meses.indexOf(sr.meses[0]);if(off<0)return;
+      svg.append(el("path",{d:sr.base100.map((v,i)=>(i?"L":"M")+X(i+off).toFixed(1)+" "+Y(v).toFixed(1)).join(""),fill:"none",stroke:c,"stroke-width":2,"stroke-linejoin":"round","stroke-dasharray":k==="CDI"?"5 4":null}));
+      fins.push({y:Y(sr.base100.at(-1)),nome,c,v:sr.base100.at(-1)})});
+    fins.sort((a,b)=>a.y-b.y);for(let i=1;i<fins.length;i++)if(fins[i].y-fins[i-1].y<15)fins[i].y=fins[i-1].y+15;
+    fins.forEach(f=>{svg.append(el("circle",{cx:W-m.r,cy:Y(f.v),r:4,fill:f.c,stroke:"var(--surface)","stroke-width":2}));svg.append(el("text",{x:W-m.r+9,y:f.y+4,style:"fill:var(--text)"},f.nome+" "+fN(f.v,0)))});
+    const guia=el("line",{y1:m.t,y2:H-m.b,stroke:"var(--mut)","stroke-width":1,opacity:0});svg.append(guia);
+    const area=el("rect",{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:"transparent"});
+    area.addEventListener("pointermove",e=>{const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W;const i=Math.max(0,Math.min(n-1,Math.round((px-m.l)/(W-m.l-m.r)*(n-1))));
+      guia.setAttribute("x1",X(i));guia.setAttribute("x2",X(i));guia.setAttribute("opacity",.6);
+      mostra(e,"<b>"+meses[i].split("-").reverse().join("/")+"</b>"+ok.map(([k,nome])=>{const sr=series[k],j=i-meses.indexOf(sr.meses[0]);return sr.base100[j]!=null?nome+": "+fN(sr.base100[j],1):""}).filter(Boolean).join("<br>"))});
+    area.addEventListener("pointerleave",()=>{guia.setAttribute("opacity",0);some()});svg.append(area);
+    $("evolucao").replaceChildren(svg);
+  }
+  evolucao(sel.value);sel.addEventListener("change",()=>evolucao(sel.value));
+
+  // ---------- tabelas
+  function tabela(id,cols,linhas,ord){
+    const t=$(id);let st=ord;
+    function desenha(){
+      const c=cols.find(c=>c.k===st.k),dir=st.d;
+      const rows=linhas().slice().sort((a,b)=>{const x=a[st.k],y=b[st.k];if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (typeof x==="string"?x.localeCompare(y,"pt-BR"):x-y)*dir});
+      t.innerHTML="<thead><tr>"+cols.map(c=>'<th data-k="'+c.k+'"'+(c.txt?' class="txt"':'')+(c.h?' title="'+esc(c.h)+'"':'')+">"+c.t+(c.k===st.k?(dir>0?" ↑":" ↓"):"")+"</th>").join("")+"</tr></thead><tbody>"+
+        (rows.map(r=>"<tr>"+cols.map(c=>"<td"+(c.txt?' class="txt"':c.cor?' class="'+cls(r[c.k])+'"':"")+">"+(c.f?c.f(r[c.k],r):esc(r[c.k]))+"</td>").join("")+"</tr>").join("")||'<tr><td class="txt" colspan="'+cols.length+'">Nenhuma linha com esses filtros.</td></tr>')+"</tbody>";
+      return rows.length;
+    }
+    t.addEventListener("click",e=>{const th=e.target.closest("th");if(!th)return;const k=th.dataset.k;st={k,d:st.k===k?-st.d:(cols.find(c=>c.k===k).txt?1:-1)};desenha()});
+    return desenha;
+  }
+  let stLista="Todas";
+  const dSet=tabela("tSet",[
+    {k:"setor",t:"Setor",txt:1,f:v=>esc(v)},
+    {k:"elegiveis",t:"Empresas",f:(v,r)=>v+" de "+r.empresas,h:"Elegíveis de um total na lista"},
+    {k:"ret_aa",t:"Retorno a.a.",f:v=>fS(v),cor:1},{k:"ret_12m",t:"12 meses",f:v=>fS(v),cor:1},{k:"ret_ano",t:"No ano",f:v=>fS(v),cor:1},
+    {k:"vol",t:"Volatilidade",f:v=>fP(v)},{k:"drawdown",t:"Maior queda",f:v=>fP(v)},{k:"sharpe",t:"Sharpe",f:v=>fN(v,2),h:"(retorno a.a. − CDI a.a.) ÷ volatilidade"},
+    {k:"pl_mediana",t:"P/L",f:v=>fN(v)},{k:"pvp_mediana",t:"P/VP",f:v=>fN(v,2)},{k:"ev_ebitda_mediana",t:"EV/EBITDA",f:v=>fN(v)},
+    {k:"dy_mediana",t:"Div. yield",f:v=>fP(v)},{k:"roe_mediana",t:"ROE",f:v=>fP(v)},{k:"com_prejuizo",t:"Com prejuízo",f:v=>v??"–",h:"Empresas elegíveis com lucro por ação negativo em 12 meses"}
+  ],()=>S.filter(x=>x.lista===stLista),{k:"ret_aa",d:-1});
+  dSet();seg("stLista",v=>{stLista=v;dSet()});
+
+  [...new Set(E.map(e=>e.setor))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(n=>$("eSetor").add(new Option(n,n)));
+  const filtra=()=>{const q=$("eBusca").value.trim().toUpperCase(),l=$("eLista").value,st=$("eSetor").value,eg=$("eEleg").checked;
+    return E.filter(e=>e.ticker&&(!eg||e.elegivel)&&(!l||e.lista===l)&&(!st||e.setor===st)&&(!q||e.empresa.toUpperCase().includes(q)||(e.ticker||"").includes(q)||(e.tickers_lista||"").includes(q)))};
+  const dEmp=tabela("tEmp",[
+    {k:"empresa",t:"Empresa",txt:1,f:(v,r)=>esc(v)+(r.suspeito?'<span class="tag" title="Salto de preço de um dia que indica grupamento ou troca de código não ajustados na fonte. Fora dos agregados.">dado suspeito</span>':r.elegivel?"":'<span class="tag" title="Fora dos agregados: pouca liquidez">pouca liquidez</span>')+(r.prejuizo?'<span class="tag" title="Lucro por ação negativo em 12 meses">prejuízo</span>':"")},
+    {k:"ticker",t:"Código",txt:1,f:v=>esc(v)},{k:"setor",t:"Setor",txt:1,f:(v,r)=>esc(curto(v))+(r.subsetor?" · "+esc(r.subsetor):"")},
+    {k:"lista",t:"Lista",txt:1,f:v=>v.startsWith("Large")?"Large e mid":"Small e micro"},
+    {k:"ret_aa",t:"Retorno a.a.",f:v=>fS(v),cor:1},{k:"ret_12m",t:"12 meses",f:v=>fS(v),cor:1},{k:"ret_ano",t:"No ano",f:v=>fS(v),cor:1},
+    {k:"vol",t:"Volatilidade",f:v=>fP(v)},{k:"drawdown",t:"Maior queda",f:v=>fP(v)},{k:"sharpe",t:"Sharpe",f:v=>fN(v,2)},
+    {k:"pl",t:"P/L",f:v=>fN(v)},{k:"pl_vs_setor",t:"P/L × setor",f:v=>fS(v,0),h:"P/L da empresa frente à mediana do setor"},
+    {k:"pvp",t:"P/VP",f:v=>fN(v,2)},{k:"ev_ebitda",t:"EV/EBITDA",f:v=>fN(v)},{k:"dy",t:"Div. yield",f:v=>fP(v)},{k:"roe",t:"ROE",f:v=>fP(v)},
+    {k:"valor_mercado",t:"Valor de mercado",f:v=>fM(v)},{k:"liq_mediana",t:"Liquidez/dia",f:v=>fM(v)},{k:"desde",t:"Preços desde",f:v=>fD(v)}
+  ],filtra,{k:"valor_mercado",d:-1});
+  const atualiza=()=>{$("eCont").textContent=dEmp()+" empresas"};
+  ["eBusca","eLista","eSetor","eEleg"].forEach(i=>$(i).addEventListener("input",atualiza));atualiza();
+
+  // ---------- método
+  const cr=M.criterio;
+  $("metodo").innerHTML=[
+    "<b>Uma ação por empresa.</b> Quando a lista traz mais de um código (ON, PN, unit), fica o de maior volume financeiro mediano nos últimos 60 pregões.",
+    "<b>Retorno</b> usa preços ajustados por proventos, então inclui dividendos reinvestidos. “Retorno a.a.” é o do período todo, anualizado; empresas que abriram capital depois aparecem com a data em “Preços desde”.",
+    "<b>Risco:</b> volatilidade é o desvio-padrão dos retornos diários × √252; maior queda é a distância do pico ao vale no período; Sharpe compara o retorno com o CDI ("+fP(M.cdi_aa)+" a.a. no período).",
+    "<b>Elegíveis:</b> empresas que negociaram em pelo menos "+fP(cr.presenca_minima,0)+" dos pregões dos últimos 12 meses e giram ao menos "+fM(cr.liq_minima)+" por dia. Só elas entram nos índices e nas medianas dos setores.",
+    "<b>Índice do setor:</b> pesos iguais entre as elegíveis, rebalanceado todo dia. Não é um índice investível e difere dos índices setoriais da B3, que pesam por valor de mercado.",
+    "<b>Viés de sobrevivência:</b> a lista foi montada em 2026. Empresas que quebraram ou saíram da bolsa antes não entram, o que melhora o retorno histórico, sobretudo das small caps.",
+    "<b>Múltiplos</b> vêm do Yahoo Finance, com base nos últimos 12 meses. P/L só existe para empresas com lucro; valores fora de faixas plausíveis são descartados. O dividend yield é calculado aqui: proventos pagos em 12 meses ÷ preço atual.",
+    "<b>Dado suspeito:</b> alta de mais de 100% ou queda de mais de 80% em um único dia costuma ser grupamento ou troca de código que a fonte não ajustou. Essas empresas aparecem na tabela com a marca e ficam fora dos agregados.",
+    "<b>Selo:</b> verde quando pelo menos 95% das large e mid caps têm preço do último pregão fechado, há fundamentos para 80% das elegíveis e os testes automáticos passam.",
+    "<b>Fonte:</b> "+esc(M.fonte)+"."
+  ].map(x=>"<li>"+x+"</li>").join("");
+  const sem=E.filter(e=>!e.ticker),fora=M.fora_da_bolsa||{};
+  $("semTit").textContent=sem.length+" empresas da lista sem dado";
+  $("semDado").innerHTML=sem.map(e=>{const mot=e.tickers_lista.split(" ").map(t=>fora[t]).find(Boolean);return "<li><b>"+esc(e.empresa)+"</b> ("+esc(e.tickers_lista)+"): "+esc(mot||"sem preço na fonte para os códigos da lista")+"</li>"}).join("");
+}).catch(e=>{$("selo").textContent="sem dados";$("motivo").textContent="Não foi possível carregar dados.json: "+e.message});
+</script>
+</body>
+</html>

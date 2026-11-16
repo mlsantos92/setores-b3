@@ -23,13 +23,13 @@ ajustes = universo.carregar_ajustes()
 u = universo.aplicar_ajustes(universo.carregar(), ajustes)
 todos = sorted({t for ts in u["tickers"] for t in ts})
 
-fech, vol = coleta.precos(todos + [coleta.IBOV])
+tab = coleta.precos(todos + [coleta.IBOV])
+fech, vol, bruto, prov = tab["ajustado"], tab["volume"], tab["bruto"], tab["proventos"]
 ibov = fech.pop(coleta.IBOV) if coleta.IBOV in fech else pd.Series(dtype=float)
-vol = vol.drop(columns=[coleta.IBOV], errors="ignore")
 sem_dado = [t for t in todos if t not in fech.columns]
 print(f"{len(todos)} códigos consultados, {len(sem_dado)} sem dado: {' '.join(sem_dado)}")
 
-escolha = estudo.escolher_tickers(u, fech[fech.index <= fim], vol[vol.index <= fim])
+escolha = estudo.escolher_tickers(u, bruto[bruto.index <= fim], vol[vol.index <= fim], fech[fech.index <= fim])
 escolhidos = [t for t in escolha["ticker"] if isinstance(t, str)]
 
 # fundamentos: o que o Yahoo devolver hoje por cima do último valor guardado
@@ -53,7 +53,7 @@ try:
 except Exception as erro:
     print("CDI indisponível:", type(erro).__name__, erro)
 
-dados = estudo.montar(u, fech, vol, guardado, cdi_aa, fim)
+dados = estudo.montar(u, fech, vol, guardado, cdi_aa, fim, bruto=bruto, proventos=prov)
 
 ref = {}
 if len(ibov.dropna()):

@@ -22,8 +22,13 @@ def _limpo(x):
     return x
 
 
-def escolher_tickers(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame) -> pd.DataFrame:
-    """Para cada empresa, o código com maior volume financeiro mediano. Sem dado: ticker None."""
+def escolher_tickers(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame,
+                     ajustado: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Para cada empresa, o código com maior volume financeiro mediano. Sem dado: ticker None.
+
+    ``fech`` é o preço como negociado (liquidez); ``ajustado`` serve para achar saltos suspeitos.
+    """
+    ajustado = fech if ajustado is None else ajustado
     linhas = []
     for e in universo.itertuples():
         melhor, liq_melhor = None, None
@@ -38,7 +43,9 @@ def escolher_tickers(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFra
     extra = pd.DataFrame(linhas)
     extra["ticker"] = pd.Series([l["ticker"] for l in linhas], dtype=object)
     out = pd.concat([universo.reset_index(drop=True), extra], axis=1)
-    out["elegivel"] = out["ticker"].notna() & (out["liq_mediana"] >= LIQ_MINIMA) & (out["presenca_12m"] >= PRESENCA_MINIMA)
+    out["suspeito"] = [bool(isinstance(t, str) and metricas.salto_suspeito(ajustado[t])) for t in out["ticker"]]
+    out["elegivel"] = (out["ticker"].notna() & (out["liq_mediana"] >= LIQ_MINIMA)
+                       & (out["presenca_12m"] >= PRESENCA_MINIMA) & ~out["suspeito"])
     return out
 
 
@@ -52,22 +59,34 @@ def _agregado(nome: dict, emp: pd.DataFrame, fech: pd.DataFrame, fim: pd.Timesta
 
 
 def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundamentos: dict,
-           cdi_aa: float, fim: pd.Timestamp) -> dict:
-    """Devolve {"empresas": [...], "setores": [...], "listas": [...], "series": {...}}."""
+           cdi_aa: float, fim: pd.Timestamp, bruto: pd.DataFrame | None = None,
+           proventos: pd.DataFrame | None = None) -> dict:
+    """Devolve {"empresas": [...], "setores": [...], "listas": [...], "series": {...}}.
+
+    ``fech`` é o preço ajustado por proventos. ``bruto`` (preço negociado) e ``proventos``
+    são opcionais: sem eles a liquidez usa o preço ajustado e não há dividend yield.
+    """
     fech = fech[fech.index <= fim]
     vol = vol[vol.index <= fim]
-    emp = escolher_tickers(universo, fech, vol)
+    bruto = fech if bruto is None else bruto[bruto.index <= fim]
+    emp = escolher_tickers(universo, bruto, vol, fech)
 
     reg = []
     for e in emp.itertuples():
         base = {"empresa": e.empresa, "lista": e.lista, "setor": e.setor, "subsetor": e.subsetor,
                 "ticker": e.ticker if isinstance(e.ticker, str) else None, "tickers_lista": " ".join(getattr(e, "tickers_lista", e.tickers)),
-                "liq_mediana": e.liq_mediana, "presenca_12m": e.presenca_12m, "elegivel": bool(e.elegivel)}
+                "liq_mediana": e.liq_mediana, "presenca_12m": e.presenca_12m, "elegivel": bool(e.elegivel),
+                "suspeito": bool(e.suspeito)}
         if not isinstance(e.ticker, str):
             reg.append({**base, **{k: None for k in INDICADORES}, "prejuizo": False, "valor_mercado": None})
             continue
         r = metricas.resumo(fech[e.ticker], fim, cdi_aa)
         m = multiplos.limpar(fundamentos.get(e.ticker, {}))
+        m["dy"] = None
+        if proventos is not None and e.ticker in proventos.columns:
+            pago = proventos[e.ticker]
+            pago = pago[(pago.index > fim - pd.DateOffset(years=1)) & (pago.index <= fim)].sum()
+            m["dy"] = multiplos.dividend_yield(float(pago), float(bruto[e.ticker].dropna().iloc[-1]))
         reg.append({**base, **r, **m, "ultimo_preco_em": fech[e.ticker].dropna().index[-1].date().isoformat()})
     emp = pd.DataFrame(reg)
     emp["ticker"] = pd.Series([r["ticker"] for r in reg], dtype=object)

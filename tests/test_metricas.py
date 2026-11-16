@@ -67,3 +67,9 @@ def test_resumo_marca_inicio_e_retorno_do_ano():
     base = p[p.index <= pd.Timestamp("2025-12-31")].iloc[-1]
     assert r["ret_ano"] == pytest.approx(150 / base - 1)
     assert np.isnan(r["ret_12m"])  # menos de 12 meses de história
+
+
+def test_menos_de_um_ano_nao_tem_retorno_ao_ano():
+    idx = pd.bdate_range("2026-07-01", "2026-11-13")
+    r = metricas.resumo(pd.Series(np.linspace(10, 30, len(idx)), index=idx), pd.Timestamp("2026-11-13"), 0.1)
+    assert np.isnan(r["ret_aa"]) and r["ret_periodo"] == pytest.approx(2.0)

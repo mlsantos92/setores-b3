@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import math
 
-LIMITES = {"pl": (0, 200), "pvp": (0, 50), "ev_ebitda": (0, 100), "dy": (0, 0.40),
+LIMITES = {"pl": (0, 200), "pvp": (0, 50), "ev_ebitda": (0, 100), "dy": (0, 0.30),
            "roe": (-2, 2), "margem": (-5, 1), "div_pl": (0, 20)}
 
 
@@ -26,16 +26,14 @@ def limpar(info: dict) -> dict:
     """Converte o retorno do Yahoo em indicadores comparáveis. Valor fora da faixa plausível vira None.
 
     P/L só existe com lucro: empresa com prejuízo fica sem P/L e marcada em ``prejuizo``.
-    Dividend yield vem em pontos percentuais no Yahoo (8,09 = 8,09%).
+    O dividend yield não vem daqui: é calculado dos proventos pagos (ver ``dividend_yield``).
     """
     lpa = _num(info.get("trailingEps"))
-    dy = _num(info.get("dividendYield"))
     div = _num(info.get("debtToEquity"))
     return {
         "pl": _faixa("pl", _num(info.get("trailingPE"))),
         "pvp": _faixa("pvp", _num(info.get("priceToBook"))),
         "ev_ebitda": _faixa("ev_ebitda", _num(info.get("enterpriseToEbitda"))),
-        "dy": _faixa("dy", dy / 100 if dy is not None else None),
         "roe": _faixa("roe", _num(info.get("returnOnEquity"))),
         "margem": _faixa("margem", _num(info.get("profitMargins"))),
         "div_pl": _faixa("div_pl", div / 100 if div is not None else None),
@@ -45,7 +43,7 @@ def limpar(info: dict) -> dict:
 
 
 def mediana(valores: list[float | None]) -> float | None:
-    v = sorted(x for x in valores if x is not None)
+    v = sorted(x for x in (_num(y) for y in valores) if x is not None)
     if not v:
         return None
     m = len(v) // 2
@@ -54,6 +52,15 @@ def mediana(valores: list[float | None]) -> float | None:
 
 def frente_ao_setor(valor: float | None, mediana_setor: float | None) -> float | None:
     """Quanto o indicador da empresa está acima (+) ou abaixo (−) da mediana do setor."""
+    valor, mediana_setor = _num(valor), _num(mediana_setor)
     if valor is None or not mediana_setor:
         return None
     return valor / mediana_setor - 1
+
+
+def dividend_yield(proventos_12m: float | None, preco: float | None) -> float | None:
+    """Proventos por ação pagos em 12 meses ÷ preço atual. Acima de 30% é tratado como dado suspeito."""
+    p, x = _num(proventos_12m), _num(preco)
+    if p is None or x is None or x <= 0 or p < 0:
+        return None
+    return _faixa("dy", p / x)

@@ -52,7 +52,8 @@ def resumo(precos: pd.Series, fim: pd.Timestamp, cdi_aa: float = np.nan) -> dict
         return {}
     ini = p.index[0]
     acum = retorno_acumulado(p)
-    aa = anualizar(acum, ini, p.index[-1])
+    # com menos de um ano de história, anualizar distorce: fica sem retorno ao ano
+    aa = anualizar(acum, ini, p.index[-1]) if (p.index[-1] - ini).days >= 365 else np.nan
     vol = volatilidade(p)
     p12 = recorte(p, fim - pd.DateOffset(years=1))
     pano = recorte(p, pd.Timestamp(year=fim.year - 1, month=12, day=31))
@@ -93,3 +94,13 @@ def liquidez(fechamento: pd.Series, volume: pd.Series, dias: int = 60) -> dict:
         "liq_mediana": float(ult.median()) if len(ult) else 0.0,
         "presenca_12m": float((ano.fillna(0) > 0).mean()) if len(ano) else 0.0,
     }
+
+
+SALTO_ALTA, SALTO_BAIXA = 1.0, -0.8
+
+
+def salto_suspeito(precos: pd.Series) -> bool:
+    """Alta de mais de 100% ou queda de mais de 80% em um dia: quase sempre grupamento,
+    troca de código ou erro da fonte, não retorno de verdade."""
+    r = precos.dropna().pct_change().dropna()
+    return bool(len(r) and (r.max() > SALTO_ALTA or r.min() < SALTO_BAIXA))

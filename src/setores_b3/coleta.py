@@ -13,7 +13,7 @@ import requests
 
 SUFIXO = ".SA"
 IBOV = "^BVSP"
-CAMPOS = ["trailingPE", "trailingEps", "priceToBook", "enterpriseToEbitda", "dividendYield", "returnOnEquity",
+CAMPOS = ["trailingPE", "trailingEps", "priceToBook", "enterpriseToEbitda", "returnOnEquity",
           "profitMargins", "debtToEquity", "marketCap", "currentPrice", "longName", "sector", "industry"]
 URL_SGS = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados"
 
@@ -22,17 +22,23 @@ def _simbolo(t: str) -> str:
     return t if t.startswith("^") else t + SUFIXO
 
 
-def precos(tickers: list[str], anos: int = 5, lote: int = 40, pausa: float = 1.0) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Fechamento ajustado por proventos e volume (nº de ações), uma coluna por código."""
+def precos(tickers: list[str], anos: int = 5, lote: int = 40, pausa: float = 1.0) -> dict[str, pd.DataFrame]:
+    """Uma coluna por código em cada tabela:
+
+    - ``ajustado``: fechamento ajustado por proventos (base do retorno);
+    - ``bruto``: fechamento como negociado (base da liquidez e do dividend yield);
+    - ``volume``: número de ações negociadas;
+    - ``proventos``: dividendos e JCP por ação, na data ex.
+    """
     import yfinance as yf
 
-    fech, vol = {}, {}
+    tab = {"ajustado": {}, "bruto": {}, "volume": {}, "proventos": {}}
     for i in range(0, len(tickers), lote):
         grupo = tickers[i:i + lote]
         for tentativa in range(3):
             try:
-                d = yf.download([_simbolo(t) for t in grupo], period=f"{anos}y", interval="1d", auto_adjust=True,
-                                progress=False, group_by="ticker", threads=True)
+                d = yf.download([_simbolo(t) for t in grupo], period=f"{anos}y", interval="1d", auto_adjust=False,
+                                actions=True, progress=False, group_by="ticker", threads=True)
                 break
             except Exception as erro:  # rede ou limite de requisições
                 print(f"lote {i}: {type(erro).__name__}; nova tentativa")
@@ -43,15 +49,22 @@ def precos(tickers: list[str], anos: int = 5, lote: int = 40, pausa: float = 1.0
             s = _simbolo(t)
             if s not in d.columns.get_level_values(0):
                 continue
-            c = d[s]["Close"].dropna()
-            if len(c):
-                fech[t] = c
-                vol[t] = d[s]["Volume"].reindex(c.index)
+            q = d[s]
+            c = q["Adj Close"].dropna()
+            if not len(c):
+                continue
+            tab["ajustado"][t] = c
+            tab["bruto"][t] = q["Close"].reindex(c.index)
+            tab["volume"][t] = q["Volume"].reindex(c.index)
+            if "Dividends" in q:
+                tab["proventos"][t] = q["Dividends"].reindex(c.index).fillna(0.0)
         time.sleep(pausa)
-    f, v = pd.DataFrame(fech), pd.DataFrame(vol)
-    for df in (f, v):
+    out = {}
+    for nome, colunas in tab.items():
+        df = pd.DataFrame(colunas)
         df.index = pd.to_datetime(df.index).tz_localize(None).normalize()
-    return f.sort_index(), v.sort_index()
+        out[nome] = df.sort_index()
+    return out
 
 
 def fundamentos(tickers: list[str], pausa: float = 0.25) -> dict[str, dict]:

@@ -22,8 +22,8 @@ def _base():
         "empresa": ["Alfa", "Beta", "Gama", "Delta"],
         "tickers": [["AAAA4", "AAAA3"], ["BBBB3"], ["CCCC3"], ["ZZZZ3"]],
     })
-    fund = {"AAAA4": {"trailingPE": 8.0, "priceToBook": 1.0, "dividendYield": 6.0, "trailingEps": 2.0},
-            "BBBB3": {"trailingPE": 12.0, "priceToBook": 2.0, "dividendYield": 2.0, "trailingEps": 1.0}}
+    fund = {"AAAA4": {"trailingPE": 8.0, "priceToBook": 1.0, "trailingEps": 2.0},
+            "BBBB3": {"trailingPE": 12.0, "priceToBook": 2.0, "trailingEps": 1.0}}
     return u, fech, vol, fund, idx[-1]
 
 
@@ -50,7 +50,31 @@ def test_mediana_do_setor_e_posicao_relativa():
     assert fin["pl_mediana"] == pytest.approx(10.0)
     alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
     assert alfa["pl_vs_setor"] == pytest.approx(-0.2)
-    assert alfa["dy"] == pytest.approx(0.06)
+
+
+def test_dividend_yield_soma_proventos_de_12_meses_sobre_o_preco_negociado():
+    u, fech, vol, fund, fim = _base()
+    bruto = fech * 0 + 50.0
+    prov = fech * 0
+    prov.loc[prov.index[-10], "AAAA4"] = 1.5
+    prov.loc[prov.index[-200], "AAAA4"] = 1.5
+    prov.loc[prov.index[-400], "AAAA4"] = 9.0   # há mais de 12 meses: não conta
+    d = estudo.montar(u, fech, vol, fund, 0.10, fim, bruto=bruto, proventos=prov)
+    alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
+    assert alfa["dy"] == pytest.approx(3.0 / 50.0)
+
+
+def test_salto_de_um_dia_marca_suspeito_e_tira_dos_agregados():
+    u, fech, vol, fund, fim = _base()
+    fech.loc[fech.index[500]:, "BBBB3"] *= 150   # grupamento não ajustado
+    d = estudo.montar(u, fech, vol, fund, 0.10, fim)
+    beta = next(e for e in d["empresas"] if e["empresa"] == "Beta")
+    assert beta["suspeito"] is True and beta["elegivel"] is False
+
+
+def test_mediana_ignora_vazio_e_nan():
+    assert multiplos.mediana([None, float("nan"), 4.0, 2.0, 9.0]) == pytest.approx(4.0)
+    assert multiplos.mediana([None, float("nan")]) is None
 
 
 def test_precos_depois_do_pregao_esperado_sao_ignorados():
@@ -67,10 +91,11 @@ def test_saida_nao_tem_nan():
 
 
 def test_limpar_trata_prejuizo_e_valores_absurdos():
-    m = multiplos.limpar({"trailingPE": -5.0, "trailingEps": -1.0, "priceToBook": 500, "dividendYield": 95.0,
+    m = multiplos.limpar({"trailingPE": -5.0, "trailingEps": -1.0, "priceToBook": 500,
                           "returnOnEquity": 0.15, "debtToEquity": 80.0})
     assert m["pl"] is None and m["prejuizo"] is True
-    assert m["pvp"] is None and m["dy"] is None
+    assert m["pvp"] is None
+    assert multiplos.dividend_yield(95.0, 100.0) is None and multiplos.dividend_yield(6.0, 100.0) == pytest.approx(0.06)
     assert m["roe"] == pytest.approx(0.15) and m["div_pl"] == pytest.approx(0.8)
 
 
