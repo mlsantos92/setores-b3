@@ -176,3 +176,12 @@ def test_unit_sem_resultado_oficial_fica_sem_pl_do_yahoo():
     d = estudo.montar(u, fech, vol, fund, 0.10, fim)
     beta = next(e for e in d["empresas"] if e["empresa"] == "Beta")
     assert beta["pl"] is None and beta["pvp"] == pytest.approx(3.0) and beta["fonte"] == "Yahoo"
+
+
+def test_resultado_muito_antigo_nao_gera_multiplo():
+    u, fech, vol, fund, fim = _base()
+    fund["AAAA4"]["marketCap"] = 1_000.0
+    of = {"AAAA4": {"lucro_12m": 100.0, "patrimonio": 500.0, "resultado_ate": "2025-06-30", "documento": "ITR"}}
+    d = estudo.montar(u, fech, vol, fund, 0.10, fim, oficiais=of)
+    alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
+    assert alfa["atrasado"] is True and alfa["pl"] is None and alfa["pvp"] is None and alfa["fonte"] is None

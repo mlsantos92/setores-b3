@@ -99,13 +99,24 @@ def valor_de_mercado(of: dict, ticker: str, precos: pd.DataFrame, referencia: fl
     return None
 
 
-def _base_oficial(m: dict, of: dict) -> dict:
-    """Troca os múltiplos do Yahoo pelos calculados das demonstrações da CVM, guardando a conferência."""
+ATRASO_MAXIMO = 270   # dias entre a data-base do último resultado e o pregão
+
+
+def _base_oficial(m: dict, of: dict, fim: pd.Timestamp | None = None) -> dict:
+    """Troca os múltiplos do Yahoo pelos calculados das demonstrações da CVM, guardando a conferência.
+
+    Empresa que não protocola resultado há mais de ``ATRASO_MAXIMO`` dias fica sem P/L, P/VP,
+    ROE e margem: nenhum número de 12 meses dela seria atual.
+    """
     extra = {"fonte": "Yahoo" if any(m.get(k) is not None for k in ("pl", "pvp", "roe")) else None,
              "pl_yahoo": m.get("pl"), "pvp_yahoo": m.get("pvp"), "divergente": False,
              "resultado_ate": of.get("resultado_ate"), "documento": of.get("documento"),
              "auditor": of.get("auditor"), "big4": of.get("big4"), "parecer": of.get("parecer"),
              "site": of.get("site"), "lucro_12m": of.get("lucro_12m"), "patrimonio": of.get("patrimonio")}
+    extra["atrasado"] = bool(fim is not None and of.get("resultado_ate")
+                             and (fim - pd.Timestamp(of["resultado_ate"])).days > ATRASO_MAXIMO)
+    if extra["atrasado"]:
+        return {**extra, "fonte": None, "pl": None, "pvp": None, "roe": None, "margem": None}
     if of.get("_unit_sem_cvm"):
         extra["pl"] = None
     calc = multiplos.de_resultado(m.get("valor_mercado"), of.get("lucro_12m"), of.get("patrimonio"), of.get("receita_12m"))
@@ -161,7 +172,7 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
         m["valor_mercado_fonte"] = "Yahoo" if m.get("valor_mercado") is not None else None
         if vm:
             m["valor_mercado"], m["valor_mercado_fonte"] = vm, "CVM"
-        m.update(_base_oficial(m, of))
+        m.update(_base_oficial(m, of, fim))
         m["dy"] = None
         if proventos is not None and e.ticker in proventos.columns:
             pago = proventos[e.ticker]

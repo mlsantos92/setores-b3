@@ -301,7 +301,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     {k:"ret_aa",t:"Retorno a.a.",f:v=>fS(v),cor:1},{k:"ret_12m",t:"12 meses",f:v=>fS(v),cor:1},{k:"ret_ano",t:"No ano",f:v=>fS(v),cor:1},
     {k:"vol",t:"Volatilidade",f:v=>fP(v)},{k:"drawdown",t:"Maior queda",f:v=>fP(v)},{k:"sharpe",t:"Sharpe",f:v=>fN(v,2),h:"(retorno a.a. − CDI a.a.) ÷ volatilidade"},
     {k:"pl_mediana",t:"P/L",f:v=>fN(v)},{k:"pvp_mediana",t:"P/VP",f:v=>fN(v,2)},{k:"ev_ebitda_mediana",t:"EV/EBITDA",f:v=>fN(v)},
-    {k:"dy_mediana",t:"Div. yield",f:v=>fP(v)},{k:"roe_mediana",t:"ROE",f:v=>fP(v)},{k:"com_prejuizo",t:"Com prejuízo",f:v=>v??"–",h:"Empresas elegíveis com lucro por ação negativo em 12 meses"}
+    {k:"dy_mediana",t:"Div. yield",f:v=>fP(v)},{k:"roe_mediana",t:"ROE",f:v=>fP(v)},{k:"com_prejuizo",t:"Com prejuízo",f:v=>v??"–",h:"Empresas elegíveis com prejuízo nos últimos 12 meses"}
   ],()=>S.filter(x=>x.lista===stLista),{k:"ret_aa",d:-1});
   dSet();seg("stLista",v=>{stLista=v;dSet()});
 
@@ -309,7 +309,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
   const filtra=()=>{const q=$("eBusca").value.trim().toUpperCase(),l=$("eLista").value,st=$("eSetor").value,eg=$("eEleg").checked;
     return E.filter(e=>e.ticker&&(!eg||e.elegivel)&&(!l||e.lista===l)&&(!st||e.setor===st)&&(!q||e.empresa.toUpperCase().includes(q)||(e.ticker||"").includes(q)||(e.tickers_lista||"").includes(q)))};
   const dEmp=tabela("tEmp",[
-    {k:"empresa",t:"Empresa",txt:1,f:(v,r)=>(r.site?'<a href="'+esc(r.site)+'" target="_blank" rel="noopener" title="Site da empresa (relações com investidores)">'+esc(v)+'</a>':esc(v))+(r.suspeito?'<span class="tag" title="Salto de preço de um dia que indica grupamento ou troca de código não ajustados na fonte. Fora dos agregados.">dado suspeito</span>':r.elegivel?"":'<span class="tag" title="Fora dos agregados: pouca liquidez">pouca liquidez</span>')+(r.prejuizo?'<span class="tag" title="Lucro por ação negativo em 12 meses">prejuízo</span>':"")},
+    {k:"empresa",t:"Empresa",txt:1,f:(v,r)=>(r.site?'<a href="'+esc(r.site)+'" target="_blank" rel="noopener" title="Site da empresa (relações com investidores)">'+esc(v)+'</a>':esc(v))+(r.suspeito?'<span class="tag" title="Salto de preço de um dia que indica grupamento ou troca de código não ajustados na fonte. Fora dos agregados.">dado suspeito</span>':r.elegivel?"":'<span class="tag" title="Fora dos agregados: pouca liquidez">pouca liquidez</span>')+(r.prejuizo?'<span class="tag" title="Prejuízo nos últimos 12 meses">prejuízo</span>':"")+(r.atrasado?'<span class="tag" title="Último resultado protocolado na CVM tem mais de 9 meses: sem múltiplos">resultado atrasado</span>':"")},
     {k:"ticker",t:"Código",txt:1,f:v=>esc(v)},{k:"setor",t:"Setor",txt:1,f:(v,r)=>esc(curto(v))+(r.subsetor?" · "+esc(r.subsetor):"")},
     {k:"lista",t:"Lista",txt:1,f:v=>v.startsWith("Large")?"Large e mid":"Small e micro"},
     {k:"ret_aa",t:"Retorno a.a.",f:v=>fS(v),cor:1},{k:"ret_12m",t:"12 meses",f:v=>fS(v),cor:1},{k:"ret_ano",t:"No ano",f:v=>fS(v),cor:1},
@@ -337,6 +337,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     "<b>Resultados oficiais e auditados.</b> P/L, P/VP, ROE e margem saem das demonstrações que a empresa protocola na CVM, as mesmas publicadas no portal de relações com investidores: DFP anual, auditada, e ITR trimestral, revisado pelo auditor independente. O lucro é o dos últimos 12 meses atribuído aos controladores; o patrimônio exclui minoritários. O nome da empresa leva ao site dela.",
     "<b>Auditor:</b> a coluna mostra o auditor independente informado à CVM e marca as Big 4 (Deloitte, EY, KPMG e PwC). O painel não lê o texto do parecer.",
     "<b>Conferência com o Yahoo:</b> quando a CVM não tem o dado (BDRs, por exemplo), o múltiplo vem do Yahoo Finance e a coluna “Base dos múltiplos” avisa. Quando as duas fontes diferem mais de 25%, a empresa ganha a marca “≠ Yahoo” e vale o número da CVM. O valor de mercado é o número de ações informado à CVM, fora a tesouraria, vezes o preço de cada classe (em units, o preço é dividido pelas ações que a unit representa). Como a CVM não informa se a quantidade está em unidades ou em milhares, o valor de mercado do Yahoo serve de referência para a escala. O EV/EBITDA vem do Yahoo.",
+    "<b>Resultado atrasado:</b> empresa que não protocola resultado há mais de 9 meses fica sem P/L, P/VP e ROE.",
     "<b>Dividend yield</b> é calculado aqui: proventos pagos em 12 meses ÷ preço atual. P/L só existe para empresas com lucro; valores fora de faixas plausíveis são descartados.",
     "<b>Dado suspeito:</b> alta de mais de 100% ou queda de mais de 80% em um único dia costuma ser grupamento ou troca de código que a fonte não ajustou. Essas empresas aparecem na tabela com a marca e ficam fora dos agregados.",
     "<b>Selo:</b> verde quando pelo menos 95% das large e mid caps têm preço do último pregão fechado, há fundamentos para 80% das elegíveis e os testes automáticos passam.",
