@@ -55,11 +55,11 @@ def valor_de_mercado(of: dict, ticker: str, precos: pd.DataFrame, referencia: fl
     - Classe sem preço (ou com preço de papel quase sem negócio, que destoa muito) usa o preço
       por ação do código escolhido; em unit, o preço da unit dividido pelas ações que ela representa.
     - A CVM não diz se a quantidade de ações está em unidades ou em milhares. ``referencia``
-      (o valor de mercado de outra fonte) decide a escala; sem ela, ou se nenhuma escala chega
-      perto, a função devolve None e vale a outra fonte.
+      (o valor de mercado de outra fonte) decide a escala; se nenhuma escala chega perto, a
+      função devolve None e vale a outra fonte. Sem referência, decide o patrimônio líquido.
     """
     on, pn = of.get("acoes_on"), of.get("acoes_pn")
-    if on is None or pn is None or ticker not in precos.columns or not referencia:
+    if on is None or pn is None or ticker not in precos.columns:
         return None
 
     def ultimo(t):
@@ -68,8 +68,9 @@ def valor_de_mercado(of: dict, ticker: str, precos: pd.DataFrame, referencia: fl
             return float(x.iloc[-1]) if len(x) else None
         return None
 
+    unit = ticker.endswith("11")
     ref = ultimo(ticker)
-    if ticker.endswith("11"):
+    if unit:
         n_on, n_pn = of.get("unit") or (0, 0)
         ref = ref / (n_on + n_pn) if ref and n_on + n_pn > 0 else None
     raiz = ticker[:4]
@@ -85,10 +86,16 @@ def valor_de_mercado(of: dict, ticker: str, precos: pd.DataFrame, referencia: fl
     if (on > 0 and not p_on) or (pn > 0 and not p_pn):
         return None
     bruto = on * (p_on or 0.0) + pn * (p_pn or 0.0)
-    # a outra fonte pode exagerar em units (até umas 5 vezes), então a faixa de aceitação é larga
-    for escala in (1.0, 1000.0):
-        if 1 / 8 < bruto * escala / referencia < 8:
-            return bruto * escala
+    if referencia:
+        # em unit a outra fonte costuma exagerar (preço da unit × todas as ações); em ação comum
+        # uma diferença grande indica classes com direitos econômicos diferentes: vale a outra fonte
+        lo, hi = (1 / 8, 1.5) if unit else (1 / 2.5, 2.5)
+        return next((bruto * k for k in (1.0, 1000.0) if lo < bruto * k / referencia < hi), None)
+    pl = of.get("patrimonio")
+    if pl and pl > 0:
+        # sem referência: fica a escala que deixa o preço sobre o patrimônio mais perto de 1
+        k = min((1.0, 1000.0), key=lambda k: abs(np.log(bruto * k / pl)))
+        return bruto * k if 0.05 < bruto * k / pl < 30 else None
     return None
 
 
@@ -99,6 +106,8 @@ def _base_oficial(m: dict, of: dict) -> dict:
              "resultado_ate": of.get("resultado_ate"), "documento": of.get("documento"),
              "auditor": of.get("auditor"), "big4": of.get("big4"), "parecer": of.get("parecer"),
              "site": of.get("site"), "lucro_12m": of.get("lucro_12m"), "patrimonio": of.get("patrimonio")}
+    if of.get("_unit_sem_cvm"):
+        extra["pl"] = None
     calc = multiplos.de_resultado(m.get("valor_mercado"), of.get("lucro_12m"), of.get("patrimonio"), of.get("receita_12m"))
     if not calc or m.get("valor_mercado") is None:
         return extra
@@ -145,7 +154,9 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
             continue
         r = metricas.resumo(fech[e.ticker], fim, cdi_aa)
         m = multiplos.limpar(fundamentos.get(e.ticker, {}))
-        of = oficiais.get(e.ticker, {})
+        of = dict(oficiais.get(e.ticker, {}))
+        if e.ticker.endswith("11") and of.get("lucro_12m") is None:
+            of["_unit_sem_cvm"] = True   # o P/L do Yahoo para unit compara o preço da unit com o lucro por ação
         vm = valor_de_mercado(of, e.ticker, bruto, m.get("valor_mercado"))
         m["valor_mercado_fonte"] = "Yahoo" if m.get("valor_mercado") is not None else None
         if vm:

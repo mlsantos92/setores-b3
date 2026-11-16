@@ -155,11 +155,24 @@ def test_valor_de_mercado_soma_classes_trata_unit_e_escala():
     assert estudo.valor_de_mercado(of, "XPTO11", precos, 10_000.0) == pytest.approx(certo)
     # sem preço das classes: preço da unit dividido pelas 3 ações que ela representa
     so_unit = precos[["XPTO11"]]
-    assert estudo.valor_de_mercado({**of, "unit": (1.0, 2.0)}, "XPTO11", so_unit, 3000.0) == pytest.approx(300 * 34 / 3)
+    assert estudo.valor_de_mercado({**of, "unit": (1.0, 2.0)}, "XPTO11", so_unit, 4000.0) == pytest.approx(300 * 34 / 3)
     assert estudo.valor_de_mercado(of, "XPTO11", so_unit, 3000.0) is None
     # quantidade informada em milhares: a referência decide a escala
     assert estudo.valor_de_mercado(of, "XPTO4", precos, 3_300_000.0) == pytest.approx(certo * 1000)
-    # nenhuma escala chega perto da referência, ou não há referência: fica sem valor
+    # nenhuma escala chega perto da referência: fica sem valor (vale a outra fonte)
     assert estudo.valor_de_mercado(of, "XPTO4", precos, 90_000.0) is None
+    # sem referência, decide o patrimônio líquido; sem os dois, nada
+    assert estudo.valor_de_mercado({**of, "patrimonio": 2_000_000.0}, "XPTO4", precos, None) == pytest.approx(certo * 1000)
     assert estudo.valor_de_mercado(of, "XPTO4", precos, None) is None
     assert estudo.valor_de_mercado({}, "SOLO3", precos, 100.0) is None
+
+
+def test_unit_sem_resultado_oficial_fica_sem_pl_do_yahoo():
+    u, fech, vol, fund, fim = _base()
+    for df in (fech, vol):
+        df["BBBB11"] = df["BBBB3"]
+    u.loc[u.empresa == "Beta", "tickers"] = pd.Series([["BBBB11"]], index=u.index[u.empresa == "Beta"])
+    fund["BBBB11"] = {"trailingPE": 86.0, "priceToBook": 3.0, "trailingEps": 1.0}
+    d = estudo.montar(u, fech, vol, fund, 0.10, fim)
+    beta = next(e for e in d["empresas"] if e["empresa"] == "Beta")
+    assert beta["pl"] is None and beta["pvp"] == pytest.approx(3.0) and beta["fonte"] == "Yahoo"

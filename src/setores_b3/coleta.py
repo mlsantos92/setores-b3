@@ -33,12 +33,16 @@ def precos(tickers: list[str], anos: int = 5, lote: int = 40, pausa: float = 1.0
     import yfinance as yf
 
     tab = {"ajustado": {}, "bruto": {}, "volume": {}, "proventos": {}}
-    for i in range(0, len(tickers), lote):
-        grupo = tickers[i:i + lote]
+    grupos = [(tickers[i:i + lote], True) for i in range(0, len(tickers), lote)] + [(None, False)]
+    for i, (grupo, paralelo) in enumerate(grupos):
+        if grupo is None:   # marca do fim dos lotes: repete, sem paralelismo, o que não veio
+            faltam = [t for t in tickers if t not in tab["ajustado"]]
+            grupos.extend((faltam[j:j + lote], False) for j in range(0, len(faltam), lote))
+            continue
         for tentativa in range(3):
             try:
                 d = yf.download([_simbolo(t) for t in grupo], period=f"{anos}y", interval="1d", auto_adjust=False,
-                                actions=True, progress=False, group_by="ticker", threads=True)
+                                actions=True, progress=False, group_by="ticker", threads=paralelo)
                 break
             except Exception as erro:  # rede ou limite de requisições
                 print(f"lote {i}: {type(erro).__name__}; nova tentativa")

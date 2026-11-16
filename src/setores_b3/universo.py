@@ -20,7 +20,7 @@ def carregar(caminho: Path | None = None) -> pd.DataFrame:
 def carregar_ajustes(caminho: Path | None = None) -> dict:
     """Códigos que mudaram (renomear) e empresas que saíram da bolsa (fora)."""
     d = json.loads((caminho or RAW / "ajustes_tickers.json").read_text(encoding="utf-8"))
-    return {"renomear": d.get("renomear", {}), "fora": d.get("fora", {})}
+    return {"renomear": d.get("renomear", {}), "fora": d.get("fora", {}), "cnpj": d.get("cnpj", {})}
 
 
 def aplicar_ajustes(u: pd.DataFrame, ajustes: dict) -> pd.DataFrame:

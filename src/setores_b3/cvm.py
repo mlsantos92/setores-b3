@@ -268,14 +268,15 @@ def resultados(tab: dict[str, pd.DataFrame], cnpjs: set[str]) -> dict[str, dict]
     return out
 
 
-def oficiais(tab: dict[str, pd.DataFrame], tickers: list[str], irmaos: dict[str, list[str]] | None = None) -> dict[str, dict]:
+def oficiais(tab: dict[str, pd.DataFrame], tickers: list[str], irmaos: dict[str, list[str]] | None = None,
+             cnpj_manual: dict[str, str] | None = None) -> dict[str, dict]:
     """Código -> resultado oficial + auditor + capital + site, para os códigos que a CVM conhece.
 
     ``irmaos`` lista, por código, outros códigos da mesma empresa (outra classe de ação ou o
     código antigo): servem para achar o cadastro quando o código escolhido não aparece nele.
     """
     vm = tab.get("fca_valor_mobiliario", pd.DataFrame())
-    mapa = mapa_tickers(vm)
+    mapa = {**mapa_tickers(vm), **(cnpj_manual or {})}   # o cadastro da CVM não traz o código de todas
     cnpj = {}
     for t in tickers:
         achado = next((mapa[x] for x in [t] + list((irmaos or {}).get(t, [])) if x in mapa), None)

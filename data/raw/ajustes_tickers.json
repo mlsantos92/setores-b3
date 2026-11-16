@@ -28,5 +28,12 @@
     "ELMD3": "Fechamento de capital em 2025 após compra pela Globo",
     "KRSA3": "Fechamento de capital em 2025 após OPA do controlador",
     "GOLL4": "Reorganização societária em 2026: a holding foi incorporada pela Gol Linhas Aéreas e as ações deixaram de ser negociadas"
+  },
+  "_nota_cnpj": "CNPJ de empresas cujo código não aparece no cadastro (FCA) da CVM, para localizar as demonstrações.",
+  "cnpj": {
+    "BPAC11": "30.306.294/0001-45",
+    "CSNA3": "33.042.730/0001-04",
+    "CMIN3": "08.902.291/0001-15",
+    "MBRF3": "03.853.896/0001-40"
   }
 }
