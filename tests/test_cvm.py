@@ -203,3 +203,26 @@ def test_original_guardado_nao_e_trocado_por_valor_cruzado():
     novo = {"2025T2": {"lucro": 21.0, "cruzado": True}, "2025T3": {"lucro": 15.0, "cruzado": False}, "2026T1": {"lucro": 5.0, "cruzado": True}}
     m = cvm.mesclar(antigo, novo)
     assert m["2025T2"]["lucro"] == 20.0 and m["2025T3"]["lucro"] == 15.0 and m["2026T1"]["lucro"] == 5.0
+
+
+def test_ebitda_soma_depreciacao_da_dva_e_balanco_traz_passivo_e_divida():
+    L = "Lucro/Prejuízo Consolidado do Período"
+    E = "Resultado Antes do Resultado Financeiro e dos Tributos"
+    linhas = []
+    for fim, ebit, da in (("2025-03-31", 40, -10), ("2025-06-30", 100, -22)):
+        linhas += [_l("ITR", fim, "ÚLTIMO", "2025-01-01", fim, "3.01", "Receita", 500),
+                   _l("ITR", fim, "ÚLTIMO", "2025-01-01", fim, "3.05", E, ebit),
+                   _l("ITR", fim, "ÚLTIMO", "2025-01-01", fim, "3.11", L, 20),
+                   _l("ITR", fim, "ÚLTIMO", "2025-01-01", fim, "7.04.01", "Depreciação, Amortização e Exaustão", da)]
+    b = lambda cd, ds, v: {"CNPJ_CIA": C, "DT_REFER": "2025-06-30", "VERSAO": "1", "ESCALA_MOEDA": "MIL", "ORDEM_EXERC": "ÚLTIMO",
+                           "DT_FIM_EXERC": "2025-06-30", "CD_CONTA": cd, "DS_CONTA": ds, "VL_CONTA": str(v), "TIPO": "ITR"}
+    bpp = pd.DataFrame([b("2", "Passivo Total", 3000), b("2.01.04", "Empréstimos e Financiamentos", 300),
+                        b("2.02.01", "Empréstimos e Financiamentos", 700), b("2.03", "Patrimônio Líquido Consolidado", 1200),
+                        b("2.03.09", "Participação dos Acionistas Não Controladores", 200)])
+    t = cvm.trimestres_empresa(cvm._preparar(pd.DataFrame(linhas)), cvm._preparar(bpp))
+    assert t["2025T1"]["ebitda"] == pytest.approx(50_000)                 # 40 + 10
+    assert t["2025T2"]["ebitda"] == pytest.approx((60 + 12) * 1000)       # trimestre: EBIT 60, D&A 12
+    assert "da" not in t["2025T2"]
+    assert t["2025T2"]["pl"] == pytest.approx(1_000_000)                  # sem minoritários
+    assert t["2025T2"]["passivo"] == pytest.approx(1_800_000)             # 3.000 − 1.200
+    assert t["2025T2"]["divida"] == pytest.approx(1_000_000)

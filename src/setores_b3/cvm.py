@@ -62,10 +62,11 @@ def baixar_demonstracoes(ano: int, anos_atras: int = 1, cnpjs: set[str] | None =
     for a in range(ano - anos_atras, ano + 1):
         for tipo in ("DFP", "ITR"):
             z = _zip(f"{tipo}/DADOS/{tipo.lower()}_cia_aberta_{a}.zip")
-            for parte in ("DRE_con", "DRE_ind", "BPP_con", "BPP_ind"):
+            for parte in ("DRE_con", "DRE_ind", "BPP_con", "BPP_ind", "DVA_con", "DVA_ind"):
                 d = _csv(z, f"{tipo.lower()}_cia_aberta_{parte}_{a}.csv", cnpjs)
                 if len(d):
-                    out[parte.lower()].append(d.assign(TIPO=tipo))
+                    # a DVA entra na mesma tabela da DRE: dela só interessa a depreciação e amortização
+                    out[parte.lower().replace("dva", "dre")].append(d.assign(TIPO=tipo))
             d = _csv(z, f"{tipo.lower()}_cia_aberta_composicao_capital_{a}.csv", cnpjs)
             if len(d):
                 out["capital"].append(d)
@@ -195,6 +196,7 @@ def _dre(x: pd.DataFrame) -> dict:
     return {"lucro": ctrl if ctrl not in (None, 0.0) or lucro == 0 else lucro,
             "receita": float(receita.iloc[0]) if len(receita) and pd.notna(receita.iloc[0]) else None,
             "ebit": _conta(x, "resultado antes do resultado financeiro e dos tributos"),
+            "da": _conta(x, "depreciacao, amortizacao", nivel=7),
             "ini": x["DT_INI_EXERC"].iloc[0], "fim": x["DT_FIM_EXERC"].iloc[0]}
 
 
@@ -206,6 +208,24 @@ def _patrimonio(bpp_doc: pd.DataFrame) -> float | None:
     total = float(linha["VALOR"].iloc[0])
     minor = _conta(x, "participacao dos acionistas nao controladores", nivel=7, pai=linha["CD_CONTA"].iloc[0])
     return total - (minor or 0.0)
+
+
+def _balanco(bpp_doc: pd.DataFrame) -> dict:
+    """Do balanço de uma data: patrimônio dos controladores, passivo exigível e dívida bruta.
+
+    Passivo exigível = passivo total − patrimônio líquido total (tudo o que a empresa deve).
+    Dívida bruta = empréstimos e financiamentos de curto e longo prazo (bancos não têm essa linha).
+    """
+    pl = _patrimonio(bpp_doc)
+    if pl is None:
+        return {}
+    x = bpp_doc[bpp_doc["ULTIMO"]]
+    total = _conta(x, "passivo total", nivel=1)
+    pl_total = _conta(x, "patrimonio liquido")
+    divida = x[(x["CD_CONTA"].str.len() == 7) & x["DS"].map(lambda t: t.startswith("emprestimos e financiamentos")).astype(bool)]["VALOR"].dropna()
+    return {"pl": pl,
+            "passivo": None if total is None or pl_total is None else total - pl_total,
+            "divida": float(divida.sum()) if len(divida) else None}
 
 
 def resultado_empresa(dre: pd.DataFrame, bpp: pd.DataFrame) -> dict:
@@ -283,6 +303,7 @@ def rotulo_trimestre(fim: str) -> str:
 
 
 ORIGINAL, TRIMESTRE_SEGUINTE, ANO_SEGUINTE = 0, 1, 2
+FLUXOS = ("receita", "ebit", "lucro", "da")
 
 
 def _pontos(dre: pd.DataFrame) -> tuple[dict, dict]:
@@ -329,7 +350,7 @@ def _pontos(dre: pd.DataFrame) -> tuple[dict, dict]:
                     if cheio and cheio["fim"] == fim:        # acumulado − trimestre = acumulado do trimestre anterior
                         antes = (pd.Timestamp(ini) - pd.Timedelta(days=1)).date().isoformat()
                         dif = {k: (None if cheio.get(k) is None or r.get(k) is None else cheio[k] - r[k])
-                               for k in ("receita", "ebit", "lucro")}
+                               for k in FLUXOS}
                         guarda(acum, (ini_ex, antes), {**dif, "ini": ini_ex, "fim": antes},
                                max(origem, TRIMESTRE_SEGUINTE))
     return acum, isol
@@ -360,7 +381,7 @@ def trimestres_empresa(dre: pd.DataFrame, bpp: pd.DataFrame) -> dict[str, dict]:
             dias = (pd.Timestamp(r["fim"]) - inicio).days
             if 80 <= dias <= 100:
                 q = {k: (None if r.get(k) is None or (ant and ant.get(k) is None) else r[k] - (ant[k] if ant else 0.0))
-                     for k in ("receita", "ebit", "lucro")}
+                     for k in FLUXOS}
                 origem = max(r["origem"], ant["origem"] if ant else ORIGINAL)
                 rot = rotulo_trimestre(r["fim"])
                 if rot not in out or origem < out[rot]["origem"]:
@@ -369,20 +390,24 @@ def trimestres_empresa(dre: pd.DataFrame, bpp: pd.DataFrame) -> dict[str, dict]:
     for fim, r in isol.items():                      # trimestre isolado informado direto, se a diferença não deu
         rot = rotulo_trimestre(fim)
         if rot not in out or r["origem"] < out[rot]["origem"]:
-            out[rot] = {k: r.get(k) for k in ("receita", "ebit", "lucro")} | {"fim": fim, "origem": r["origem"]}
+            out[rot] = {k: r.get(k) for k in FLUXOS} | {"fim": fim, "origem": r["origem"]}
+    for q in out.values():      # EBITDA = resultado operacional + depreciação e amortização (vem da DVA, negativa)
+        da = q.pop("da", None)
+        q["ebitda"] = None if q.get("ebit") is None or da is None else q["ebit"] + abs(da)
     if len(bpp):
-        # patrimônio: o do próprio documento; se faltar, o que um documento posterior repete como exercício anterior
-        pl: dict[str, tuple] = {}
+        # balanço: o do próprio documento; se faltar, o que um documento posterior repete como exercício anterior
+        bal: dict[str, tuple] = {}
         for (ref, ultimo, fim), b in bpp.groupby(["DT_REFER", "ULTIMO", "DT_FIM_EXERC"]):
             tipo = "DFP" if (b["TIPO"] == "DFP").any() else "ITR"
-            v = _patrimonio(b[b["TIPO"] == tipo].assign(ULTIMO=True))
+            v = _balanco(b[b["TIPO"] == tipo].assign(ULTIMO=True))
             origem = ORIGINAL if ultimo else ANO_SEGUINTE
-            if v is not None and (fim not in pl or origem < pl[fim][1]):
-                pl[fim] = (v, origem)
+            if v.get("pl") is not None and (fim not in bal or origem < bal[fim][1]):
+                bal[fim] = (v, origem)
         for q in out.values():
-            if q["fim"] in pl:
-                q["pl"] = pl[q["fim"]][0]
-                q["origem"] = max(q["origem"], pl[q["fim"]][1]) if q.get("lucro") is None else q["origem"]
+            if q["fim"] in bal:
+                q.update(bal[q["fim"]][0])
+                if q.get("lucro") is None:
+                    q["origem"] = max(q["origem"], bal[q["fim"]][1])
     for q in out.values():
         q["cruzado"] = q.pop("origem") != ORIGINAL
     return out

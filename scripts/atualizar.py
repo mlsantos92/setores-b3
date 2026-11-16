@@ -81,7 +81,7 @@ except Exception as erro:
 rotulos = sorted({r for c in set(cnpjs.values()) for r in historico.get(c, {})})
 serie = lambda h, k: [None if h.get(r, {}).get(k) is None else round(h[r][k] / 1e6, 1) for r in rotulos]  # noqa: E731
 painel_hist = {"trimestres": rotulos, "unidade": "R$ milhões", "empresas": {
-    t: {**{k: serie(historico[c], k) for k in ("receita", "ebit", "lucro", "pl")},
+    t: {**{k: serie(historico[c], k) for k in ("receita", "ebit", "ebitda", "lucro", "pl", "passivo", "divida")},
         "x": [1 if historico[c].get(r, {}).get("cruzado") else 0 for r in rotulos]}
     for t, c in cnpjs.items() if c in historico}}
 (RAIZ / "docs").mkdir(exist_ok=True)
