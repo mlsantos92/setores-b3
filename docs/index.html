@@ -67,6 +67,8 @@ tbody tr:hover td{background:var(--bg)}
 .leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .leg i.l{width:16px;height:2px;border-radius:0;vertical-align:3px}
 svg{display:block;width:100%;height:auto;overflow:visible}
+.gr{overflow-x:auto}
+.gr svg{min-width:760px}
 svg text{fill:var(--text2);font-size:12px}
 svg .tit{fill:var(--mut);font-size:11.5px}
 .tip{position:fixed;pointer-events:none;background:var(--text);color:var(--surface);font-size:12.5px;line-height:1.4;padding:7px 10px;border-radius:7px;max-width:260px;z-index:9;opacity:0;transition:opacity .08s}
@@ -99,14 +101,14 @@ a{color:var(--s1)}
         <button data-v="Small e Micro Caps" aria-pressed="false">Small e micro</button>
       </div>
     </div>
-    <div id="scatter"></div>
+    <div id="scatter" class="gr"></div>
   </section>
 
   <section class="card">
     <h2>Large e mid caps contra small e micro caps</h2>
-    <p class="mut">Retorno ao ano de cada grupo dentro do setor, no período todo. Índice de pesos iguais das empresas elegíveis.</p>
+    <p class="mut">Retorno ao ano de cada grupo dentro do setor, no período todo. Índice de pesos iguais das empresas elegíveis; grupos com menos de 3 empresas não aparecem.</p>
     <div class="leg"><span><i style="background:var(--s1)"></i>Large e mid caps</span><span><i style="background:var(--s2)"></i>Small e micro caps</span></div>
-    <div id="halteres"></div>
+    <div id="halteres" class="gr"></div>
   </section>
 
   <section class="card">
@@ -115,7 +117,7 @@ a{color:var(--s1)}
       <label for="evSel">Série</label>
       <select id="evSel"></select>
     </div>
-    <div id="evolucao"></div>
+    <div id="evolucao" class="gr"></div>
   </section>
 
   <section class="card">
@@ -165,6 +167,7 @@ const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 const el=(n,a={},t)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e};
 const CURTO={"Petróleo, Gás e Biocombustíveis":"Petróleo e gás","Tecnologia da Informação":"Tecnologia","Consumo Não Cíclico":"Consumo não cíclico","Consumo Cíclico":"Consumo cíclico","Materiais Básicos":"Materiais básicos","Bens Industriais":"Bens industriais","Utilidade Pública":"Utilidade pública"};
 const curto=s=>CURTO[s]||s;
+const MIN_GRUPO=3; // grupo com menos empresas elegíveis não vira ponto nos gráficos
 
 const tip=$("tip");
 function mostra(ev,html){tip.innerHTML=html;tip.style.opacity=1;const r=tip.getBoundingClientRect();let x=ev.clientX+14,y=ev.clientY+14;if(x+r.width>innerWidth-8)x=ev.clientX-r.width-14;if(y+r.height>innerHeight-8)y=ev.clientY-r.height-14;tip.style.left=Math.max(8,x)+"px";tip.style.top=Math.max(8,y)+"px"}
@@ -192,7 +195,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
 
   // ---------- dispersão retorno x risco
   function scatter(lista){
-    const pts=S.filter(x=>x.lista===lista&&x.ret_aa!=null&&x.vol!=null&&x.elegiveis>=2);
+    const pts=S.filter(x=>x.lista===lista&&x.ret_aa!=null&&x.vol!=null&&x.elegiveis>=MIN_GRUPO);
     const W=1100,H=440,m={l:54,r:24,t:14,b:44};
     const xs=pts.map(p=>p.vol),ys=pts.map(p=>p.ret_aa).concat(M.cdi_aa!=null?[M.cdi_aa]:[]);
     const x0=Math.max(0,Math.min(...xs)-.03),x1=Math.max(...xs)+.04,y0=Math.min(...ys,0)-.03,y1=Math.max(...ys)+.04;
@@ -219,14 +222,14 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     });
     $("scatter").replaceChildren(svg);
   }
-  $("scTxt").textContent="Cada ponto é um setor: índice de pesos iguais das empresas elegíveis, de "+fD(M.inicio)+" a "+fD(M.pregao)+". Acima da linha tracejada, o setor rendeu mais que o CDI.";
+  $("scTxt").textContent="Cada ponto é um setor: índice de pesos iguais das empresas elegíveis, de "+fD(M.inicio)+" a "+fD(M.pregao)+". Acima da linha tracejada, o setor rendeu mais que o CDI. Grupos com menos de 3 empresas elegíveis ficam fora dos gráficos.";
   scatter("Todas");seg("scLista",scatter);
 
   // ---------- halteres large x small
   (function(){
     const nomes=[...new Set(S.map(x=>x.setor))];
     const linhas=nomes.map(n=>({n,g:S.find(x=>x.setor===n&&x.lista==="Large e Mid Caps"),p:S.find(x=>x.setor===n&&x.lista==="Small e Micro Caps")}))
-      .filter(l=>(l.g&&l.g.ret_aa!=null)||(l.p&&l.p.ret_aa!=null)).sort((a,b)=>((b.g&&b.g.ret_aa)??-9)-((a.g&&a.g.ret_aa)??-9));
+      .map(l=>({n:l.n,g:l.g&&l.g.elegiveis>=MIN_GRUPO?l.g:null,p:l.p&&l.p.elegiveis>=MIN_GRUPO?l.p:null})).filter(l=>(l.g&&l.g.ret_aa!=null)||(l.p&&l.p.ret_aa!=null)).sort((a,b)=>((b.g&&b.g.ret_aa)??-9)-((a.g&&a.g.ret_aa)??-9));
     const W=1100,rh=30,m={l:170,r:60,t:26,b:8},H=m.t+m.b+rh*linhas.length;
     const vals=linhas.flatMap(l=>[l.g&&l.g.ret_aa,l.p&&l.p.ret_aa]).filter(v=>v!=null);
     const a=Math.min(...vals,0)-.02,b=Math.max(...vals,0)+.02,X=v=>m.l+(v-a)/(b-a)*(W-m.l-m.r);
