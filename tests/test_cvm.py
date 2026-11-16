@@ -127,7 +127,8 @@ def _dre_ano_cheio():
         linhas += [_l(tipo, fim, "ÚLTIMO", "2025-01-01", fim, "3.01", "Receita de Venda", rec),
                    _l(tipo, fim, "ÚLTIMO", "2025-01-01", fim, "3.11", L, luc)]
         if fim == "2025-09-30":   # o ITR também traz o trimestre isolado: não pode confundir o acumulado
-            linhas += [_l(tipo, fim, "ÚLTIMO", "2025-07-01", fim, "3.01", "Receita de Venda", 200)]
+            linhas += [_l(tipo, fim, "ÚLTIMO", "2025-07-01", fim, "3.01", "Receita de Venda", 200),
+                       _l(tipo, fim, "ÚLTIMO", "2025-07-01", fim, "3.11", L, 15)]
     return pd.DataFrame(linhas)
 
 
@@ -137,10 +138,21 @@ def test_trimestre_isolado_e_a_diferenca_entre_acumulados():
     assert t["2025T4"]["lucro"] == pytest.approx(35_000)          # DFP 80 − ITR do 3º trimestre 45
 
 
-def test_documento_faltando_nao_vira_trimestre_falso():
+def test_documento_faltando_usa_o_trimestre_seguinte():
+    # falta o ITR de junho; o de setembro traz acumulado (450) e trimestre isolado (200): junho acumulado = 250
     d = _dre_ano_cheio()
     t = cvm.trimestres_empresa(cvm._preparar(d[d.DT_REFER != "2025-06-30"]), pd.DataFrame())
-    assert set(t) == {"2025T1", "2025T4"}                          # o 3º cobriria seis meses: descartado
+    assert t["2025T2"]["receita"] == pytest.approx(150_000) and t["2025T2"]["cruzado"] is True
+    assert t["2025T3"]["receita"] == pytest.approx(200_000)
+    assert t["2025T2"]["lucro"] == pytest.approx(20_000)           # (45 − 15) − 10 do 1º trimestre
+    assert t["2025T1"]["cruzado"] is False and t["2025T4"]["cruzado"] is False
+
+
+def test_sem_referencia_nenhuma_o_trimestre_fica_vazio():
+    d = _dre_ano_cheio()
+    d = d[~d.DT_REFER.isin(["2025-06-30", "2025-09-30"])]
+    t = cvm.trimestres_empresa(cvm._preparar(d), pd.DataFrame())
+    assert set(t) == {"2025T1"}                    # o 4º cobriria nove meses: descartado
 
 
 def test_exercicio_fora_do_ano_civil_usa_o_trimestre_civil_do_fim():
@@ -169,3 +181,25 @@ def test_visao_com_documento_mais_recente_vence():
     assert r["visao"] == "individual" and r["resultado_ate"] == "2026-09-30"
     r = cvm.resultados({"dre_con": _dre(), "bpp_con": _bpp(), "dre_ind": _dre(), "bpp_ind": _bpp()}, {C})[C]
     assert r["visao"] == "consolidado"
+
+
+def test_documento_faltando_usa_o_mesmo_periodo_do_ano_seguinte():
+    # 2026 completo até setembro; de 2025 só existe o que os documentos de 2026 repetem (coluna do exercício anterior)
+    L = "Lucro/Prejuízo Consolidado do Período"
+    linhas = []
+    for fim, rec26, luc26, rec25, luc25 in (("03-31", 110, 11, 100, 10), ("06-30", 270, 33, 250, 30), ("09-30", 480, 50, 450, 45)):
+        ref = f"2026-{fim}"
+        for ordem, ano, rec, luc in (("ÚLTIMO", "2026", rec26, luc26), ("PENÚLTIMO", "2025", rec25, luc25)):
+            linhas += [_l("ITR", ref, ordem, f"{ano}-01-01", f"{ano}-{fim}", "3.01", "Receita", rec),
+                       _l("ITR", ref, ordem, f"{ano}-01-01", f"{ano}-{fim}", "3.11", L, luc)]
+    t = cvm.trimestres_empresa(cvm._preparar(pd.DataFrame(linhas)), pd.DataFrame())
+    assert t["2026T2"]["receita"] == pytest.approx(160_000) and t["2026T2"]["cruzado"] is False
+    assert t["2025T2"]["receita"] == pytest.approx(150_000) and t["2025T2"]["cruzado"] is True
+    assert t["2025T3"]["lucro"] == pytest.approx(15_000)
+
+
+def test_original_guardado_nao_e_trocado_por_valor_cruzado():
+    antigo = {"2025T2": {"lucro": 20.0, "cruzado": False}, "2025T3": {"lucro": 1.0, "cruzado": True}}
+    novo = {"2025T2": {"lucro": 21.0, "cruzado": True}, "2025T3": {"lucro": 15.0, "cruzado": False}, "2026T1": {"lucro": 5.0, "cruzado": True}}
+    m = cvm.mesclar(antigo, novo)
+    assert m["2025T2"]["lucro"] == 20.0 and m["2025T3"]["lucro"] == 15.0 and m["2026T1"]["lucro"] == 5.0

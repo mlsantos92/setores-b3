@@ -282,26 +282,75 @@ def rotulo_trimestre(fim: str) -> str:
     return f"{d.year}T{(d.month - 1) // 3 + 1}"
 
 
+ORIGINAL, TRIMESTRE_SEGUINTE, ANO_SEGUINTE = 0, 1, 2
+
+
+def _pontos(dre: pd.DataFrame) -> tuple[dict, dict]:
+    """Lê todos os períodos de todos os documentos da empresa.
+
+    Devolve (acumulados, isolados):
+    - acumulados[(início do exercício, fim)] = resultado acumulado até a data;
+    - isolados[fim] = resultado de um trimestre sozinho.
+    Cada valor guarda a origem. Além do documento do próprio período (ORIGINAL), entram:
+    - TRIMESTRE_SEGUINTE: o ITR seguinte traz o acumulado e o trimestre isolado; a diferença
+      é o acumulado até o trimestre anterior;
+    - ANO_SEGUINTE: os documentos do ano seguinte repetem, na coluna do exercício anterior,
+      o acumulado e o trimestre do mesmo período.
+    Quando há mais de uma origem para o mesmo período, vale a de menor número.
+    """
+    acum: dict[tuple, dict] = {}
+    isol: dict[str, dict] = {}
+
+    def guarda(destino, chave, r, origem):
+        if chave not in destino or origem < destino[chave]["origem"]:
+            destino[chave] = {**r, "origem": origem}
+
+    for ref, doc in dre.groupby("DT_REFER"):
+        tipo = "DFP" if (doc["TIPO"] == "DFP").any() else "ITR"      # na mesma data, a DFP (auditada) vence
+        doc = doc[doc["TIPO"] == tipo]
+        periodos = {}
+        for (ultimo, ini, fim), linhas in doc.groupby(["ULTIMO", "DT_INI_EXERC", "DT_FIM_EXERC"]):
+            r = _dre(linhas)
+            if r:
+                periodos[(bool(ultimo), ini, fim)] = r
+        for ultimo in (True, False):
+            deste = {(ini, fim): r for (u, ini, fim), r in periodos.items() if u == ultimo}
+            if not deste:
+                continue
+            ini_ex = min(ini for ini, _ in deste)
+            origem = ORIGINAL if ultimo else ANO_SEGUINTE
+            cheio = next((r for (ini, _), r in deste.items() if ini == ini_ex), None)
+            if cheio:
+                guarda(acum, (ini_ex, cheio["fim"]), cheio, origem)
+            for (ini, fim), r in deste.items():
+                dias = (pd.Timestamp(fim) - pd.Timestamp(ini)).days
+                if ini != ini_ex and 80 <= dias <= 100:
+                    guarda(isol, fim, r, origem)
+                    if cheio and cheio["fim"] == fim:        # acumulado − trimestre = acumulado do trimestre anterior
+                        antes = (pd.Timestamp(ini) - pd.Timedelta(days=1)).date().isoformat()
+                        dif = {k: (None if cheio.get(k) is None or r.get(k) is None else cheio[k] - r[k])
+                               for k in ("receita", "ebit", "lucro")}
+                        guarda(acum, (ini_ex, antes), {**dif, "ini": ini_ex, "fim": antes},
+                               max(origem, TRIMESTRE_SEGUINTE))
+    return acum, isol
+
+
 def trimestres_empresa(dre: pd.DataFrame, bpp: pd.DataFrame) -> dict[str, dict]:
     """Resultado de cada trimestre isolado de UMA empresa, por rótulo ('2026T3').
 
     Cada documento traz o acumulado do exercício até a data-base. O trimestre é a diferença entre
     dois acumulados seguidos do mesmo exercício (o 4º trimestre sai da DFP menos o ITR do 3º).
-    Se falta um documento no meio, a diferença cobriria mais de um trimestre e é descartada.
+    Se falta o documento de um período, o valor é buscado no trimestre seguinte ou no mesmo
+    período do ano seguinte (ver ``_pontos``) e o trimestre sai marcado com ``cruzado``.
+    Sem nenhuma dessas referências, o trimestre fica vazio: nada é estimado.
     ``dre`` e ``bpp`` já preparados e filtrados para a empresa.
     """
     if not len(dre):
         return {}
-    pontos = {}
-    for (ref, tipo), doc in dre.groupby(["DT_REFER", "TIPO"]):
-        r = _dre(_acumulado(doc, True))
-        if r and r.get("fim") == ref:
-            atual = pontos.get(ref)
-            if atual is None or tipo == "DFP":      # na mesma data, a DFP (auditada) vence o ITR
-                pontos[ref] = r
+    acum, isol = _pontos(dre)
     exercicios: dict[str, list] = {}
-    for r in pontos.values():
-        exercicios.setdefault(r["ini"], []).append(r)
+    for (ini, _), r in acum.items():
+        exercicios.setdefault(ini, []).append(r)
     out = {}
     for ini, lista in exercicios.items():
         lista.sort(key=lambda r: r["fim"])
@@ -312,14 +361,41 @@ def trimestres_empresa(dre: pd.DataFrame, bpp: pd.DataFrame) -> dict[str, dict]:
             if 80 <= dias <= 100:
                 q = {k: (None if r.get(k) is None or (ant and ant.get(k) is None) else r[k] - (ant[k] if ant else 0.0))
                      for k in ("receita", "ebit", "lucro")}
-                out[rotulo_trimestre(r["fim"])] = {**q, "fim": r["fim"]}
+                origem = max(r["origem"], ant["origem"] if ant else ORIGINAL)
+                rot = rotulo_trimestre(r["fim"])
+                if rot not in out or origem < out[rot]["origem"]:
+                    out[rot] = {**q, "fim": r["fim"], "origem": origem}
             ant = r
+    for fim, r in isol.items():                      # trimestre isolado informado direto, se a diferença não deu
+        rot = rotulo_trimestre(fim)
+        if rot not in out or r["origem"] < out[rot]["origem"]:
+            out[rot] = {k: r.get(k) for k in ("receita", "ebit", "lucro")} | {"fim": fim, "origem": r["origem"]}
     if len(bpp):
-        for rot, q in out.items():
-            b = bpp[bpp["DT_REFER"] == q["fim"]]
-            if len(b):
-                tipo = "DFP" if (b["TIPO"] == "DFP").any() else "ITR"
-                q["pl"] = _patrimonio(b[b["TIPO"] == tipo])
+        # patrimônio: o do próprio documento; se faltar, o que um documento posterior repete como exercício anterior
+        pl: dict[str, tuple] = {}
+        for (ref, ultimo, fim), b in bpp.groupby(["DT_REFER", "ULTIMO", "DT_FIM_EXERC"]):
+            tipo = "DFP" if (b["TIPO"] == "DFP").any() else "ITR"
+            v = _patrimonio(b[b["TIPO"] == tipo].assign(ULTIMO=True))
+            origem = ORIGINAL if ultimo else ANO_SEGUINTE
+            if v is not None and (fim not in pl or origem < pl[fim][1]):
+                pl[fim] = (v, origem)
+        for q in out.values():
+            if q["fim"] in pl:
+                q["pl"] = pl[q["fim"]][0]
+                q["origem"] = max(q["origem"], pl[q["fim"]][1]) if q.get("lucro") is None else q["origem"]
+    for q in out.values():
+        q["cruzado"] = q.pop("origem") != ORIGINAL
+    return out
+
+
+def mesclar(antigo: dict[str, dict], novo: dict[str, dict]) -> dict[str, dict]:
+    """Junta trimestres já guardados com os recém-calculados. O novo entra por cima, menos quando
+    é um valor cruzado e o guardado veio do documento original do período."""
+    out = dict(antigo)
+    for rot, q in novo.items():
+        if rot in out and q.get("cruzado") and not out[rot].get("cruzado"):
+            continue
+        out[rot] = q
     return out
 
 

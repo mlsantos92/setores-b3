@@ -64,11 +64,13 @@ try:
     print("CVM sem 12 meses:", " ".join(t for t, d in oficiais.items() if d.get("lucro_12m") is None))
     # histórico por trimestre, guardado por CNPJ: o que chega hoje entra por cima do que já havia
     for c, trimestres in cvm.historico(tab_cvm, {c: c for c in set(cnpjs.values())}).items():
-        historico.setdefault(c, {}).update(trimestres)
+        historico[c] = cvm.mesclar(historico.get(c, {}), trimestres)
     HIST.parent.mkdir(parents=True, exist_ok=True)
     HIST.write_text(json.dumps(historico, ensure_ascii=False, sort_keys=True), encoding="utf-8")
     n_tri = sorted(len(v) for v in historico.values())
-    print(f"Histórico: {len(historico)} empresas, mediana de {n_tri[len(n_tri) // 2] if n_tri else 0} trimestres")
+    cruz = sum(1 for v in historico.values() for q in v.values() if q.get("cruzado"))
+    print(f"Histórico: {len(historico)} empresas, mediana de {n_tri[len(n_tri) // 2] if n_tri else 0} trimestres, "
+          f"{cruz} de {sum(n_tri)} trimestres por referência cruzada")
     if "PETR4" in cnpjs:
         h = historico.get(cnpjs["PETR4"], {})
         print("Histórico PETR4:", {k: round(h[k]["lucro"] / 1e9, 1) for k in sorted(h)[-6:] if h[k].get("lucro") is not None})
@@ -79,7 +81,8 @@ except Exception as erro:
 rotulos = sorted({r for c in set(cnpjs.values()) for r in historico.get(c, {})})
 serie = lambda h, k: [None if h.get(r, {}).get(k) is None else round(h[r][k] / 1e6, 1) for r in rotulos]  # noqa: E731
 painel_hist = {"trimestres": rotulos, "unidade": "R$ milhões", "empresas": {
-    t: {k: serie(historico[c], k) for k in ("receita", "ebit", "lucro", "pl")}
+    t: {**{k: serie(historico[c], k) for k in ("receita", "ebit", "lucro", "pl")},
+        "x": [1 if historico[c].get(r, {}).get("cruzado") else 0 for r in rotulos]}
     for t, c in cnpjs.items() if c in historico}}
 (RAIZ / "docs").mkdir(exist_ok=True)
 (RAIZ / "docs" / "historico.json").write_text(json.dumps(painel_hist, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
