@@ -49,15 +49,17 @@ def escolher_tickers(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFra
     return out
 
 
-def valor_de_mercado(of: dict, ticker: str, precos: pd.DataFrame) -> float | None:
+def valor_de_mercado(of: dict, ticker: str, precos: pd.DataFrame, referencia: float | None = None) -> float | None:
     """Valor de mercado pelas ações informadas à CVM: ON × preço da ON + PN × preço da PN.
 
-    Se a classe não tem preço (ou o preço é de um papel quase sem negócio e destoa muito),
-    usa o preço do código escolhido. Em unit, o preço por ação é o da unit dividido pelo
-    número de ações que ela representa.
+    - Classe sem preço (ou com preço de papel quase sem negócio, que destoa muito) usa o preço
+      por ação do código escolhido; em unit, o preço da unit dividido pelas ações que ela representa.
+    - A CVM não diz se a quantidade de ações está em unidades ou em milhares. ``referencia``
+      (o valor de mercado de outra fonte) decide a escala; sem ela, ou se nenhuma escala chega
+      perto, a função devolve None e vale a outra fonte.
     """
     on, pn = of.get("acoes_on"), of.get("acoes_pn")
-    if on is None or pn is None or ticker not in precos.columns:
+    if on is None or pn is None or ticker not in precos.columns or not referencia:
         return None
 
     def ultimo(t):
@@ -69,21 +71,25 @@ def valor_de_mercado(of: dict, ticker: str, precos: pd.DataFrame) -> float | Non
     ref = ultimo(ticker)
     if ticker.endswith("11"):
         n_on, n_pn = of.get("unit") or (0, 0)
-        if n_on + n_pn <= 0:
-            return None
-        ref = ref / (n_on + n_pn)
-    if not ref:
-        return None
+        ref = ref / (n_on + n_pn) if ref and n_on + n_pn > 0 else None
     raiz = ticker[:4]
 
     def classe(codigos):
         for t in codigos:
             x = ultimo(t)
-            if x and 1 / 3 < x / ref < 3:
+            if x and (ref is None or 1 / 3 < x / ref < 3):
                 return x
         return ref
 
-    return on * classe([raiz + "3"]) + pn * classe([raiz + "4", raiz + "5", raiz + "6"])
+    p_on, p_pn = classe([raiz + "3"]), classe([raiz + "4", raiz + "5", raiz + "6"])
+    if (on > 0 and not p_on) or (pn > 0 and not p_pn):
+        return None
+    bruto = on * (p_on or 0.0) + pn * (p_pn or 0.0)
+    # a outra fonte pode exagerar em units (até umas 5 vezes), então a faixa de aceitação é larga
+    for escala in (1.0, 1000.0):
+        if 1 / 8 < bruto * escala / referencia < 8:
+            return bruto * escala
+    return None
 
 
 def _base_oficial(m: dict, of: dict) -> dict:
@@ -140,7 +146,7 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
         r = metricas.resumo(fech[e.ticker], fim, cdi_aa)
         m = multiplos.limpar(fundamentos.get(e.ticker, {}))
         of = oficiais.get(e.ticker, {})
-        vm = valor_de_mercado(of, e.ticker, bruto)
+        vm = valor_de_mercado(of, e.ticker, bruto, m.get("valor_mercado"))
         m["valor_mercado_fonte"] = "Yahoo" if m.get("valor_mercado") is not None else None
         if vm:
             m["valor_mercado"], m["valor_mercado_fonte"] = vm, "CVM"

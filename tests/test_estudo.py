@@ -145,17 +145,21 @@ def test_prejuizo_oficial_tira_o_pl():
     assert r["prejuizo"] is True and r["pl"] is None and r["pvp"] == pytest.approx(2.5)
 
 
-def test_valor_de_mercado_soma_classes_e_trata_unit():
+def test_valor_de_mercado_soma_classes_trata_unit_e_escala():
     idx = pd.bdate_range("2026-11-09", periods=3)
-    precos = pd.DataFrame({"XPTO3": [10.0, 10.0, 10.0], "XPTO4": [12.0, 12.0, 12.0], "XPTO11": [34.0, 34.0, 34.0],
-                           "SOLO3": [5.0, 5.0, 5.0]}, index=idx)
+    precos = pd.DataFrame({"XPTO3": [10.0] * 3, "XPTO4": [12.0] * 3, "XPTO11": [34.0] * 3, "SOLO3": [5.0] * 3}, index=idx)
     of = {"acoes_on": 100.0, "acoes_pn": 200.0}
-    assert estudo.valor_de_mercado(of, "XPTO4", precos) == pytest.approx(100 * 10 + 200 * 12)
-    # unit de 1 ON + 2 PN, com preço das duas classes
-    assert estudo.valor_de_mercado({**of, "unit": (1.0, 2.0)}, "XPTO11", precos) == pytest.approx(100 * 10 + 200 * 12)
+    certo = 100 * 10 + 200 * 12
+    assert estudo.valor_de_mercado(of, "XPTO4", precos, 3500.0) == pytest.approx(certo)
+    # unit sem composição informada: basta ter o preço das duas classes
+    assert estudo.valor_de_mercado(of, "XPTO11", precos, 10_000.0) == pytest.approx(certo)
     # sem preço das classes: preço da unit dividido pelas 3 ações que ela representa
     so_unit = precos[["XPTO11"]]
-    assert estudo.valor_de_mercado({**of, "unit": (1.0, 2.0)}, "XPTO11", so_unit) == pytest.approx(300 * 34 / 3)
-    # só ON listada: a PN (se houver) usa o mesmo preço
-    assert estudo.valor_de_mercado({"acoes_on": 50.0, "acoes_pn": 0.0}, "SOLO3", precos) == pytest.approx(250)
-    assert estudo.valor_de_mercado({}, "SOLO3", precos) is None
+    assert estudo.valor_de_mercado({**of, "unit": (1.0, 2.0)}, "XPTO11", so_unit, 3000.0) == pytest.approx(300 * 34 / 3)
+    assert estudo.valor_de_mercado(of, "XPTO11", so_unit, 3000.0) is None
+    # quantidade informada em milhares: a referência decide a escala
+    assert estudo.valor_de_mercado(of, "XPTO4", precos, 3_300_000.0) == pytest.approx(certo * 1000)
+    # nenhuma escala chega perto da referência, ou não há referência: fica sem valor
+    assert estudo.valor_de_mercado(of, "XPTO4", precos, 90_000.0) is None
+    assert estudo.valor_de_mercado(of, "XPTO4", precos, None) is None
+    assert estudo.valor_de_mercado({}, "SOLO3", precos, 100.0) is None
