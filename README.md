@@ -77,7 +77,7 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 | Painel estático | `docs/index.html`, que lê `docs/dados.json` e `docs/historico.json` |
 | Atualização diária | `.github/workflows/atualizar.yml` |
 
-Só os módulos de coleta falam com a rede. Os cálculos recebem tabelas prontas, o que permite testar tudo sem internet: são 43 testes com dados sintéticos (`pytest`), incluindo demonstrações fictícias no formato da CVM.
+Só os módulos de coleta falam com a rede. Os cálculos recebem tabelas prontas, o que permite testar tudo sem internet: são 44 testes com dados sintéticos (`pytest`), incluindo demonstrações fictícias no formato da CVM.
 
 **Selo:** verde quando pelo menos 95% das large e mid caps têm preço do último pregão fechado, há fundamentos para 80% das elegíveis e os testes passam. Amarelo quando algum desses pontos falha. Vermelho quando a coleta ou os testes quebram.
 
