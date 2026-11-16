@@ -64,3 +64,32 @@ def dividend_yield(proventos_12m: float | None, preco: float | None) -> float | 
     if p is None or x is None or x <= 0 or p < 0:
         return None
     return _faixa("dy", p / x)
+
+
+DIVERGENCIA = 0.25
+
+
+def de_resultado(valor_mercado, lucro_12m, patrimonio, receita_12m=None) -> dict:
+    """Múltiplos a partir das demonstrações oficiais: lucro e patrimônio da controladora.
+
+    Devolve só o que dá para calcular. P/L exige lucro positivo; P/VP e ROE, patrimônio positivo.
+    """
+    vm, lucro, pl, rec = _num(valor_mercado), _num(lucro_12m), _num(patrimonio), _num(receita_12m)
+    out = {}
+    if lucro is not None:
+        out["prejuizo"] = lucro < 0
+        out["pl"] = _faixa("pl", vm / lucro) if vm and lucro > 0 else None
+        if rec and rec > 0:
+            out["margem"] = _faixa("margem", lucro / rec)
+    if pl is not None and pl > 0:
+        if vm:
+            out["pvp"] = _faixa("pvp", vm / pl)
+        if lucro is not None:
+            out["roe"] = _faixa("roe", lucro / pl)
+    return out
+
+
+def diverge(a, b, tolerancia: float = DIVERGENCIA) -> bool:
+    """Dois valores do mesmo indicador que diferem mais que a tolerância (25%)."""
+    a, b = _num(a), _num(b)
+    return bool(a and b and abs(a / b - 1) > tolerancia)

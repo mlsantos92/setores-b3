@@ -49,6 +49,22 @@ def escolher_tickers(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFra
     return out
 
 
+def _base_oficial(m: dict, of: dict) -> dict:
+    """Troca os múltiplos do Yahoo pelos calculados das demonstrações da CVM, guardando a conferência."""
+    extra = {"fonte": "Yahoo" if any(m.get(k) is not None for k in ("pl", "pvp", "roe")) else None,
+             "pl_yahoo": m.get("pl"), "pvp_yahoo": m.get("pvp"), "divergente": False,
+             "resultado_ate": of.get("resultado_ate"), "documento": of.get("documento"),
+             "auditor": of.get("auditor"), "big4": of.get("big4"), "parecer": of.get("parecer"),
+             "site": of.get("site"), "lucro_12m": of.get("lucro_12m"), "patrimonio": of.get("patrimonio")}
+    calc = multiplos.de_resultado(m.get("valor_mercado"), of.get("lucro_12m"), of.get("patrimonio"), of.get("receita_12m"))
+    if not calc or m.get("valor_mercado") is None:
+        return extra
+    completo = of.get("lucro_12m") is not None and of.get("patrimonio") is not None
+    extra["fonte"] = "CVM" if completo else "CVM e Yahoo"
+    extra["divergente"] = multiplos.diverge(calc.get("pl"), m.get("pl")) or multiplos.diverge(calc.get("pvp"), m.get("pvp"))
+    return {**extra, **calc}
+
+
 def _agregado(nome: dict, emp: pd.DataFrame, fech: pd.DataFrame, fim: pd.Timestamp, cdi_aa: float) -> dict:
     eleg = emp[emp["elegivel"]]
     indice = metricas.indice_igual(fech[list(eleg["ticker"])]) if len(eleg) else pd.Series(dtype=float)
@@ -60,12 +76,15 @@ def _agregado(nome: dict, emp: pd.DataFrame, fech: pd.DataFrame, fim: pd.Timesta
 
 def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundamentos: dict,
            cdi_aa: float, fim: pd.Timestamp, bruto: pd.DataFrame | None = None,
-           proventos: pd.DataFrame | None = None) -> dict:
+           proventos: pd.DataFrame | None = None, oficiais: dict | None = None) -> dict:
     """Devolve {"empresas": [...], "setores": [...], "listas": [...], "series": {...}}.
 
     ``fech`` é o preço ajustado por proventos. ``bruto`` (preço negociado) e ``proventos``
     são opcionais: sem eles a liquidez usa o preço ajustado e não há dividend yield.
+    ``oficiais`` traz, por código, o resultado protocolado na CVM e o auditor: quando existe,
+    P/L, P/VP, ROE e margem saem dele e os números do Yahoo ficam só como conferência.
     """
+    oficiais = oficiais or {}
     fech = fech[fech.index <= fim]
     vol = vol[vol.index <= fim]
     bruto = fech if bruto is None else bruto[bruto.index <= fim]
@@ -78,10 +97,12 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
                 "liq_mediana": e.liq_mediana, "presenca_12m": e.presenca_12m, "elegivel": bool(e.elegivel),
                 "suspeito": bool(e.suspeito)}
         if not isinstance(e.ticker, str):
-            reg.append({**base, **{k: None for k in INDICADORES}, "prejuizo": False, "valor_mercado": None})
+            reg.append({**base, **{k: None for k in INDICADORES}, "prejuizo": False, "valor_mercado": None,
+                        "fonte": None, "divergente": False, "big4": None, "auditor": None})
             continue
         r = metricas.resumo(fech[e.ticker], fim, cdi_aa)
         m = multiplos.limpar(fundamentos.get(e.ticker, {}))
+        m.update(_base_oficial(m, oficiais.get(e.ticker, {})))
         m["dy"] = None
         if proventos is not None and e.ticker in proventos.columns:
             pago = proventos[e.ticker]

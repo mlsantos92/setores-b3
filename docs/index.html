@@ -40,7 +40,7 @@ p{margin:0 0 10px}
 .selo::before{content:"";width:8px;height:8px;border-radius:50%;background:#fff;opacity:.9}
 .cab{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:8px 0 18px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:0 0 16px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:0 0 16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:0 0 16px}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .kpi b{display:block;font-size:1.45rem;line-height:1.2;font-variant-numeric:tabular-nums}
 .kpi span{color:var(--text2);font-size:13px}
@@ -190,7 +190,8 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     ["Large e mid caps",fS(lg.ret_aa)+" a.a.","volatilidade "+fP(lg.vol)+" · "+lg.elegiveis+" empresas"],
     ["Small e micro caps",fS(sm.ret_aa)+" a.a.","volatilidade "+fP(sm.vol)+" · "+sm.elegiveis+" empresas"],
     ["Ibovespa",R.Ibovespa?fS(R.Ibovespa.ret_aa)+" a.a.":"–",R.Ibovespa?"volatilidade "+fP(R.Ibovespa.vol):""],
-    ["CDI",R.CDI?fS(R.CDI.ret_aa)+" a.a.":"–","referência sem risco do período"]
+    ["CDI",R.CDI?fS(R.CDI.ret_aa)+" a.a.":"–","referência sem risco do período"],
+    ["Resultados auditados",M.base?M.base.cvm+" de "+M.base.elegiveis:"–",M.base?M.base.big4+" com auditor Big 4 · "+M.base.divergentes+" divergem do Yahoo":""]
   ].map(k=>'<div class="kpi"><span>'+k[0]+'</span><b>'+k[1]+'</b><small>'+k[2]+'</small></div>').join("");
 
   // ---------- dispersão retorno x risco
@@ -308,14 +309,18 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
   const filtra=()=>{const q=$("eBusca").value.trim().toUpperCase(),l=$("eLista").value,st=$("eSetor").value,eg=$("eEleg").checked;
     return E.filter(e=>e.ticker&&(!eg||e.elegivel)&&(!l||e.lista===l)&&(!st||e.setor===st)&&(!q||e.empresa.toUpperCase().includes(q)||(e.ticker||"").includes(q)||(e.tickers_lista||"").includes(q)))};
   const dEmp=tabela("tEmp",[
-    {k:"empresa",t:"Empresa",txt:1,f:(v,r)=>esc(v)+(r.suspeito?'<span class="tag" title="Salto de preço de um dia que indica grupamento ou troca de código não ajustados na fonte. Fora dos agregados.">dado suspeito</span>':r.elegivel?"":'<span class="tag" title="Fora dos agregados: pouca liquidez">pouca liquidez</span>')+(r.prejuizo?'<span class="tag" title="Lucro por ação negativo em 12 meses">prejuízo</span>':"")},
+    {k:"empresa",t:"Empresa",txt:1,f:(v,r)=>(r.site?'<a href="'+esc(r.site)+'" target="_blank" rel="noopener" title="Site da empresa (relações com investidores)">'+esc(v)+'</a>':esc(v))+(r.suspeito?'<span class="tag" title="Salto de preço de um dia que indica grupamento ou troca de código não ajustados na fonte. Fora dos agregados.">dado suspeito</span>':r.elegivel?"":'<span class="tag" title="Fora dos agregados: pouca liquidez">pouca liquidez</span>')+(r.prejuizo?'<span class="tag" title="Lucro por ação negativo em 12 meses">prejuízo</span>':"")},
     {k:"ticker",t:"Código",txt:1,f:v=>esc(v)},{k:"setor",t:"Setor",txt:1,f:(v,r)=>esc(curto(v))+(r.subsetor?" · "+esc(r.subsetor):"")},
     {k:"lista",t:"Lista",txt:1,f:v=>v.startsWith("Large")?"Large e mid":"Small e micro"},
     {k:"ret_aa",t:"Retorno a.a.",f:v=>fS(v),cor:1},{k:"ret_12m",t:"12 meses",f:v=>fS(v),cor:1},{k:"ret_ano",t:"No ano",f:v=>fS(v),cor:1},
     {k:"vol",t:"Volatilidade",f:v=>fP(v)},{k:"drawdown",t:"Maior queda",f:v=>fP(v)},{k:"sharpe",t:"Sharpe",f:v=>fN(v,2)},
     {k:"pl",t:"P/L",f:v=>fN(v)},{k:"pl_vs_setor",t:"P/L × setor",f:v=>fS(v,0),h:"P/L da empresa frente à mediana do setor"},
     {k:"pvp",t:"P/VP",f:v=>fN(v,2)},{k:"ev_ebitda",t:"EV/EBITDA",f:v=>fN(v)},{k:"dy",t:"Div. yield",f:v=>fP(v)},{k:"roe",t:"ROE",f:v=>fP(v)},
-    {k:"valor_mercado",t:"Valor de mercado",f:v=>fM(v)},{k:"liq_mediana",t:"Liquidez/dia",f:v=>fM(v)},{k:"desde",t:"Preços desde",f:v=>fD(v)}
+    {k:"valor_mercado",t:"Valor de mercado",f:v=>fM(v)},{k:"liq_mediana",t:"Liquidez/dia",f:v=>fM(v)},
+    {k:"fonte",t:"Base dos múltiplos",txt:1,h:"CVM: demonstrações protocoladas pela empresa. Yahoo: reserva quando a CVM não tem o dado.",f:(v,r)=>(v?esc(v):"–")+(r.divergente?'<span class="tag" title="P/L ou P/VP da CVM difere mais de 25% do Yahoo (P/L '+fN(r.pl_yahoo)+', P/VP '+fN(r.pvp_yahoo,2)+' no Yahoo)">≠ Yahoo</span>':"")},
+    {k:"resultado_ate",t:"Resultado até",f:(v,r)=>v?fD(v)+" · "+esc(r.documento):"–",h:"Data-base do último ITR (revisado) ou DFP (auditada) usado"},
+    {k:"auditor",t:"Auditor",txt:1,f:(v,r)=>v?(r.big4?esc(r.big4)+'<span class="tag">Big 4</span>':esc(v.replace(/ (auditores|auditoria|s\/s|ltda|s\.s\.).*$/i,"").slice(0,28)))+(r.parecer&&!/sem ressalva/i.test(r.parecer)?'<span class="tag" title="Relatório do auditor na última DFP">'+esc(r.parecer)+'</span>':""):"–"},
+    {k:"desde",t:"Preços desde",f:v=>fD(v)}
   ],filtra,{k:"valor_mercado",d:-1});
   const atualiza=()=>{$("eCont").textContent=dEmp()+" empresas"};
   ["eBusca","eLista","eSetor","eEleg"].forEach(i=>$(i).addEventListener("input",atualiza));atualiza();
@@ -329,7 +334,10 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     "<b>Elegíveis:</b> empresas que negociaram em pelo menos "+fP(cr.presenca_minima,0)+" dos pregões dos últimos 12 meses e giram ao menos "+fM(cr.liq_minima)+" por dia. Só elas entram nos índices e nas medianas dos setores.",
     "<b>Índice do setor:</b> pesos iguais entre as elegíveis, rebalanceado todo dia. Não é um índice investível e difere dos índices setoriais da B3, que pesam por valor de mercado.",
     "<b>Viés de sobrevivência:</b> a lista foi montada em 2026. Empresas que quebraram ou saíram da bolsa antes não entram, o que melhora o retorno histórico, sobretudo das small caps.",
-    "<b>Múltiplos</b> vêm do Yahoo Finance, com base nos últimos 12 meses. P/L só existe para empresas com lucro; valores fora de faixas plausíveis são descartados. O dividend yield é calculado aqui: proventos pagos em 12 meses ÷ preço atual.",
+    "<b>Resultados oficiais e auditados.</b> P/L, P/VP, ROE e margem saem das demonstrações que a empresa protocola na CVM, as mesmas publicadas no portal de relações com investidores: DFP anual, auditada, e ITR trimestral, revisado pelo auditor independente. O lucro é o dos últimos 12 meses atribuído aos controladores; o patrimônio exclui minoritários. O nome da empresa leva ao site dela.",
+    "<b>Auditor:</b> a coluna mostra o auditor independente informado à CVM e marca as Big 4 (Deloitte, EY, KPMG e PwC). O painel não lê o texto do parecer.",
+    "<b>Conferência com o Yahoo:</b> quando a CVM não tem o dado (BDRs, por exemplo), o múltiplo vem do Yahoo Finance e a coluna “Base dos múltiplos” avisa. Quando as duas fontes diferem mais de 25%, a empresa ganha a marca “≠ Yahoo” e vale o número da CVM. Valor de mercado e EV/EBITDA vêm do Yahoo.",
+    "<b>Dividend yield</b> é calculado aqui: proventos pagos em 12 meses ÷ preço atual. P/L só existe para empresas com lucro; valores fora de faixas plausíveis são descartados.",
     "<b>Dado suspeito:</b> alta de mais de 100% ou queda de mais de 80% em um único dia costuma ser grupamento ou troca de código que a fonte não ajustou. Essas empresas aparecem na tabela com a marca e ficam fora dos agregados.",
     "<b>Selo:</b> verde quando pelo menos 95% das large e mid caps têm preço do último pregão fechado, há fundamentos para 80% das elegíveis e os testes automáticos passam.",
     "<b>Fonte:</b> "+esc(M.fonte)+"."

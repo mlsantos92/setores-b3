@@ -122,3 +122,24 @@ def test_codigo_so_com_preco_depois_do_corte_fica_sem_dado():
     d = estudo.montar(u, fech, vol, fund, 0.10, fech.index[-2])
     delta = next(e for e in d["empresas"] if e["empresa"] == "Delta")
     assert delta["ticker"] is None
+
+
+def test_resultado_oficial_substitui_o_yahoo_e_marca_divergencia():
+    u, fech, vol, fund, fim = _base()
+    fund["AAAA4"]["marketCap"] = 1_000.0
+    of = {"AAAA4": {"lucro_12m": 100.0, "patrimonio": 500.0, "receita_12m": 400.0, "resultado_ate": "2026-09-30",
+                    "documento": "ITR", "auditor": "KPMG Auditores Independentes", "big4": "KPMG"}}
+    d = estudo.montar(u, fech, vol, fund, 0.10, fim, oficiais=of)
+    alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
+    beta = next(e for e in d["empresas"] if e["empresa"] == "Beta")
+    assert alfa["fonte"] == "CVM" and alfa["big4"] == "KPMG"
+    assert alfa["pl"] == pytest.approx(10.0) and alfa["pvp"] == pytest.approx(2.0)
+    assert alfa["roe"] == pytest.approx(0.2) and alfa["margem"] == pytest.approx(0.25)
+    assert alfa["pl_yahoo"] == pytest.approx(8.0)
+    assert alfa["divergente"] is True            # P/VP 2,0 na CVM contra 1,0 no Yahoo
+    assert beta["fonte"] == "Yahoo" and beta["pl"] == pytest.approx(12.0)
+
+
+def test_prejuizo_oficial_tira_o_pl():
+    r = multiplos.de_resultado(1000.0, -50.0, 400.0)
+    assert r["prejuizo"] is True and r["pl"] is None and r["pvp"] == pytest.approx(2.5)
