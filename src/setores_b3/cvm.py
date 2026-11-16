@@ -244,7 +244,8 @@ def resultado_empresa(dre: pd.DataFrame, bpp: pd.DataFrame) -> dict:
 
 
 def resultados(tab: dict[str, pd.DataFrame], cnpjs: set[str]) -> dict[str, dict]:
-    """CNPJ -> resultado. Usa o consolidado quando a empresa publica; senão, o individual."""
+    """CNPJ -> resultado. Vale a visão (consolidada ou individual) com o documento mais recente;
+    no empate, a consolidada. Há empresas que deixaram de consolidar e seguem só com a individual."""
     prep = {}
     for k in ("dre_con", "dre_ind", "bpp_con", "bpp_ind"):
         d = tab.get(k, pd.DataFrame())
@@ -257,8 +258,8 @@ def resultados(tab: dict[str, pd.DataFrame], cnpjs: set[str]) -> dict[str, dict]
                 continue
             r = resultado_empresa(dre[dre["CNPJ_CIA"] == c], bpp[bpp["CNPJ_CIA"] == c] if len(bpp) else bpp)
             if r and (r.get("lucro_12m") is not None or r.get("patrimonio") is not None):
-                out[c] = {**r, "visao": "consolidado" if visao == "con" else "individual"}
-                break
+                if c not in out or r["resultado_ate"] > out[c]["resultado_ate"]:
+                    out[c] = {**r, "visao": "consolidado" if visao == "con" else "individual"}
     return out
 
 

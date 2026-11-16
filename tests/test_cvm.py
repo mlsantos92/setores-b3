@@ -159,3 +159,13 @@ def test_historico_traz_patrimonio_do_fim_do_trimestre():
     assert set(h) == {"XPTO3"}
     assert h["XPTO3"]["2025T4"]["pl"] == pytest.approx(750_000) and "pl" not in h["XPTO3"]["2025T1"]
     assert cvm.rotulo_trimestre("2026-08-31") == "2026T3"
+
+
+def test_visao_com_documento_mais_recente_vence():
+    velho = _dre()
+    velho = velho[velho.TIPO == "DFP"]                      # consolidado parou em 2025
+    tab = {"dre_con": velho, "bpp_con": pd.DataFrame(), "dre_ind": _dre(), "bpp_ind": _bpp()}
+    r = cvm.resultados(tab, {C})[C]
+    assert r["visao"] == "individual" and r["resultado_ate"] == "2026-09-30"
+    r = cvm.resultados({"dre_con": _dre(), "bpp_con": _bpp(), "dre_ind": _dre(), "bpp_ind": _bpp()}, {C})[C]
+    assert r["visao"] == "consolidado"
