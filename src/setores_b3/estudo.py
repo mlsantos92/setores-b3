@@ -111,7 +111,7 @@ def _base_oficial(m: dict, of: dict, fim: pd.Timestamp | None = None) -> dict:
     extra = {"fonte": "Yahoo" if any(m.get(k) is not None for k in ("pl", "pvp", "roe")) else None,
              "pl_yahoo": m.get("pl"), "pvp_yahoo": m.get("pvp"), "divergente": False,
              "resultado_ate": of.get("resultado_ate"), "documento": of.get("documento"),
-             "auditor": of.get("auditor"), "big4": of.get("big4"), "parecer": of.get("parecer"),
+             "auditor": of.get("auditor"), "big4": of.get("big4"),
              "site": of.get("site"), "lucro_12m": of.get("lucro_12m"), "patrimonio": of.get("patrimonio")}
     extra["atrasado"] = bool(fim is not None and of.get("resultado_ate")
                              and (fim - pd.Timestamp(of["resultado_ate"])).days > ATRASO_MAXIMO)

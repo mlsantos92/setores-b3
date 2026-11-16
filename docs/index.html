@@ -319,7 +319,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     {k:"valor_mercado",t:"Valor de mercado",f:v=>fM(v)},{k:"liq_mediana",t:"Liquidez/dia",f:v=>fM(v)},
     {k:"fonte",t:"Base dos múltiplos",txt:1,h:"CVM: demonstrações protocoladas pela empresa. Yahoo: reserva quando a CVM não tem o dado.",f:(v,r)=>(v?esc(v):"–")+(r.divergente?'<span class="tag" title="P/L ou P/VP da CVM difere mais de 25% do Yahoo (P/L '+fN(r.pl_yahoo)+', P/VP '+fN(r.pvp_yahoo,2)+' no Yahoo)">≠ Yahoo</span>':"")},
     {k:"resultado_ate",t:"Resultado até",f:(v,r)=>v?fD(v)+" · "+esc(r.documento):"–",h:"Data-base do último ITR (revisado) ou DFP (auditada) usado"},
-    {k:"auditor",t:"Auditor",txt:1,f:(v,r)=>v?(r.big4?esc(r.big4)+'<span class="tag">Big 4</span>':esc(v.replace(/ (auditores|auditoria|s\/s|ltda|s\.s\.).*$/i,"").slice(0,28)))+(r.parecer&&!/sem ressalva/i.test(r.parecer)?'<span class="tag" title="Relatório do auditor na última DFP">'+esc(r.parecer)+'</span>':""):"–"},
+    {k:"auditor",t:"Auditor",txt:1,f:(v,r)=>v?(r.big4?esc(r.big4)+'<span class="tag">Big 4</span>':esc(v.replace(/ (auditores|auditoria|s\/s|ltda|s\.s\.).*$/i,"").slice(0,28))):"–"},
     {k:"desde",t:"Preços desde",f:v=>fD(v)}
   ],filtra,{k:"valor_mercado",d:-1});
   const atualiza=()=>{$("eCont").textContent=dEmp()+" empresas"};
@@ -335,7 +335,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     "<b>Índice do setor:</b> pesos iguais entre as elegíveis, rebalanceado todo dia. Não é um índice investível e difere dos índices setoriais da B3, que pesam por valor de mercado.",
     "<b>Viés de sobrevivência:</b> a lista foi montada em 2026. Empresas que quebraram ou saíram da bolsa antes não entram, o que melhora o retorno histórico, sobretudo das small caps.",
     "<b>Resultados oficiais e auditados.</b> P/L, P/VP, ROE e margem saem das demonstrações que a empresa protocola na CVM, as mesmas publicadas no portal de relações com investidores: DFP anual, auditada, e ITR trimestral, revisado pelo auditor independente. O lucro é o dos últimos 12 meses atribuído aos controladores; o patrimônio exclui minoritários. O nome da empresa leva ao site dela.",
-    "<b>Auditor:</b> a coluna mostra o auditor independente informado à CVM e marca as Big 4 (Deloitte, EY, KPMG e PwC). O painel não lê o texto do parecer.",
+    "<b>Auditor:</b> a coluna mostra o auditor independente informado à CVM e marca as Big 4 (Deloitte, EY, KPMG e PwC). O estudo usa só as métricas das demonstrações; o parecer do auditor não entra na avaliação.",
     "<b>Conferência com o Yahoo:</b> quando a CVM não tem o dado (BDRs, por exemplo), o múltiplo vem do Yahoo Finance e a coluna “Base dos múltiplos” avisa. Quando as duas fontes diferem mais de 25%, a empresa ganha a marca “≠ Yahoo” e vale o número da CVM. O valor de mercado é o número de ações informado à CVM, fora a tesouraria, vezes o preço de cada classe (em units, o preço é dividido pelas ações que a unit representa). Como a CVM não informa se a quantidade está em unidades ou em milhares, o valor de mercado do Yahoo serve de referência para a escala. O EV/EBITDA vem do Yahoo.",
     "<b>Resultado atrasado:</b> empresa que não protocola resultado há mais de 9 meses fica sem P/L, P/VP e ROE.",
     "<b>Dividend yield</b> é calculado aqui: proventos pagos em 12 meses ÷ preço atual. P/L só existe para empresas com lucro; valores fora de faixas plausíveis são descartados.",

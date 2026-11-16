@@ -43,7 +43,7 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 - **Elegíveis:** negócio em pelo menos 90% dos pregões dos últimos 12 meses e giro mediano de ao menos R$ 100 mil por dia.
 - **Dado suspeito:** alta de mais de 100% ou queda de mais de 80% em um dia costuma ser grupamento ou troca de código que a fonte não ajustou. A empresa aparece na tabela com a marca e fica fora dos agregados.
 - **Resultados oficiais e auditados.** P/L, P/VP, ROE e margem saem das demonstrações que a empresa protocola na CVM, as mesmas do portal de relações com investidores: DFP anual, auditada, e ITR trimestral, revisado pelo auditor independente. O lucro é o dos últimos 12 meses atribuído aos controladores (DFP + acumulado do ano − mesmo período do ano anterior); o patrimônio exclui minoritários.
-- **Auditor de cada empresa**, com marca para as Big 4 (Deloitte, EY, KPMG e PwC) e aviso quando o relatório da última DFP tem ressalva.
+- **Só as métricas.** A avaliação usa os números das demonstrações. O parecer do auditor não é lido nem entra em nenhum critério. O painel mostra apenas o nome do auditor, com marca para as Big 4 (Deloitte, EY, KPMG e PwC).
 - **Valor de mercado próprio:** ações informadas à CVM, fora a tesouraria, vezes o preço de cada classe. Em units, vale o preço das classes ou o da unit dividido pelas ações que ela representa.
 - **Yahoo como conferência e reserva.** Diferença acima de 25% entre as fontes vira a marca “≠ Yahoo” e vale o número da CVM. Sem dado na CVM (BDRs, por exemplo), vale o Yahoo e o painel avisa. O EV/EBITDA vem do Yahoo.
 - **Resultado atrasado:** empresa sem resultado protocolado há mais de 9 meses fica sem múltiplos.
@@ -53,7 +53,7 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 ## Limitações
 
 - **Viés de sobrevivência.** A lista foi montada em 2026. Empresas que quebraram ou saíram da bolsa antes não entram, o que melhora o retorno histórico, sobretudo das small caps.
-- **O que “auditado” cobre.** O estudo usa os números das demonstrações e o nome do auditor informado à CVM. Não lê o texto do parecer nem as notas explicativas, e o ITR tem revisão limitada, não auditoria completa.
+- **O que “auditado” cobre.** O estudo usa os números das demonstrações e o nome do auditor informado à CVM. O parecer e as notas explicativas ficam de fora, e o ITR tem revisão limitada, não auditoria completa.
 - **Lucro contábil, sem ajustes.** O lucro de 12 meses inclui itens não recorrentes e operações descontinuadas, e fusões recentes (Bradsaúde, MBRF) misturam períodos de empresas diferentes. Os releases de RI costumam mostrar também um lucro ajustado, que não entra aqui.
 - **Quantidade de ações sem escala.** A CVM não informa se o número está em unidades ou em milhares; a escala é decidida por comparação com o valor de mercado do Yahoo. Empresas com classes de ações de direitos econômicos diferentes ficam com o valor de mercado do Yahoo.
 - **Preços de fonte única.** Cotações e proventos vêm do Yahoo Finance.

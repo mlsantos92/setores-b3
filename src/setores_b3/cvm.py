@@ -1,5 +1,7 @@
 """Resultados oficiais das empresas: demonstrações protocoladas na CVM (DFP anual, auditada,
-e ITR trimestral, revisada pelo auditor independente), mais o auditor de cada empresa.
+e ITR trimestral, revisada pelo auditor independente), mais o nome do auditor de cada empresa.
+
+O estudo usa só as métricas das demonstrações. O parecer do auditor não é lido nem avaliado.
 
 Fonte: Portal de Dados Abertos da CVM (dados.cvm.gov.br), conjuntos DFP, ITR e FCA.
 Só ``baixar`` fala com a rede; as demais funções recebem tabelas.
@@ -40,7 +42,7 @@ def _csv(z: zipfile.ZipFile | None, nome: str) -> pd.DataFrame:
 
 def baixar(ano: int) -> dict[str, pd.DataFrame]:
     """DFP do ano anterior e do ano, ITR do ano e FCA do ano (com o anterior de reserva)."""
-    out: dict[str, list] = {k: [] for k in ("dre_con", "dre_ind", "bpp_con", "bpp_ind", "parecer", "capital")}
+    out: dict[str, list] = {k: [] for k in ("dre_con", "dre_ind", "bpp_con", "bpp_ind", "capital")}
     for tipo, a in (("DFP", ano - 1), ("DFP", ano), ("ITR", ano - 1), ("ITR", ano)):
         z = _zip(f"{tipo}/DADOS/{tipo.lower()}_cia_aberta_{a}.zip")
         for parte in ("DRE_con", "DRE_ind", "BPP_con", "BPP_ind"):
@@ -50,10 +52,6 @@ def baixar(ano: int) -> dict[str, pd.DataFrame]:
         d = _csv(z, f"{tipo.lower()}_cia_aberta_composicao_capital_{a}.csv")
         if len(d):
             out["capital"].append(d)
-        if tipo == "DFP":
-            d = _csv(z, f"dfp_cia_aberta_parecer_{a}.csv")
-            if len(d):
-                out["parecer"].append(d)
     tab = {k: (pd.concat(v, ignore_index=True) if v else pd.DataFrame()) for k, v in out.items()}
     for nome in ("valor_mobiliario", "geral", "auditor"):
         partes = [_csv(_zip(f"FCA/DADOS/fca_cia_aberta_{a}.zip"), f"fca_cia_aberta_{nome}_{a}.csv") for a in (ano - 1, ano)]
@@ -107,14 +105,6 @@ def auditores(fca_auditor: pd.DataFrame) -> dict[str, dict]:
         nome = re.sub(r"\s+", " ", str(a)).strip()
         out[c] = {"auditor": nome, "big4": big4(nome)}
     return out
-
-
-def pareceres(parecer: pd.DataFrame) -> dict[str, str]:
-    """CNPJ -> tipo do relatório do auditor na DFP mais recente (ex.: 'Sem Ressalva'), quando a CVM informa."""
-    if not len(parecer) or "TP_RELAT_AUD" not in parecer:
-        return {}
-    d = parecer.dropna(subset=["TP_RELAT_AUD"]).sort_values(["DT_REFER", "VERSAO"])
-    return {c: str(t).strip() for c, t in zip(d["CNPJ_CIA"], d["TP_RELAT_AUD"])}
 
 
 def capital(tab_capital: pd.DataFrame) -> dict[str, dict]:
@@ -284,15 +274,12 @@ def oficiais(tab: dict[str, pd.DataFrame], tickers: list[str], irmaos: dict[str,
             cnpj[t] = achado
     res = resultados(tab, set(cnpj.values()))
     aud = auditores(tab.get("fca_auditor", pd.DataFrame()))
-    par = pareceres(tab.get("parecer", pd.DataFrame()))
     web = sites(tab.get("fca_geral", pd.DataFrame()))
     cap = capital(tab.get("capital", pd.DataFrame()))
     units = composicao_units(vm)
     out = {}
     for t, c in cnpj.items():
         d = {**res.get(c, {}), **aud.get(c, {}), **cap.get(c, {}), "cnpj": c}
-        if c in par:
-            d["parecer"] = par[c]
         if c in web:
             d["site"] = web[c]
         if t in units:

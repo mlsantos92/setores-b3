@@ -94,7 +94,6 @@ def test_empresa_sem_linha_de_controladora_ou_minoritarios_usa_o_total():
 
 def test_oficiais_junta_resultado_auditor_e_site():
     tab = {"dre_con": _dre(), "bpp_con": _bpp(), "dre_ind": pd.DataFrame(), "bpp_ind": pd.DataFrame(),
-           "parecer": pd.DataFrame(),
            "fca_valor_mobiliario": pd.DataFrame({"CNPJ_Companhia": [C], "Data_Referencia": ["2026-01-01"], "Versao": ["1"],
                                                  "Codigo_Negociacao": ["XPTO3"]}),
            "fca_geral": pd.DataFrame({"CNPJ_Companhia": [C], "Data_Referencia": ["2026-01-01"], "Versao": ["1"],
