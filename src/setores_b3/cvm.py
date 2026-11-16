@@ -141,7 +141,8 @@ def _conta(x: pd.DataFrame, *prefixos: str, nivel: int | None = 4, pai: str | No
         y = y[y["CD_CONTA"].str.len() == nivel]
     if pai:
         y = y[y["CD_CONTA"].str.startswith(pai + ".")]
-    y = y[y["DS"].map(lambda s: any(s.startswith(p) for p in prefixos))]
+    # astype(bool): com zero linhas o map devolve uma série sem tipo, que o pandas leria como lista de colunas
+    y = y[y["DS"].map(lambda s: any(s.startswith(p) for p in prefixos)).astype(bool)]
     v = y["VALOR"].dropna()
     return float(v.iloc[0]) if len(v) else None
 
@@ -153,7 +154,7 @@ def _dre(x: pd.DataFrame) -> dict:
     linha = x[(x["CD_CONTA"].str.len() == 4)
               & x["DS"].map(lambda s: s.startswith(("lucro/prejuizo consolidado do periodo", "lucro/prejuizo do periodo",
                                                     "lucro ou prejuizo liquido consolidado do periodo",
-                                                    "lucro ou prejuizo liquido do periodo")))]
+                                                    "lucro ou prejuizo liquido do periodo"))).astype(bool)]
     if not len(linha):
         return {}
     cd = linha["CD_CONTA"].iloc[0]
@@ -168,7 +169,7 @@ def _dre(x: pd.DataFrame) -> dict:
 
 def _patrimonio(bpp_doc: pd.DataFrame) -> float | None:
     x = bpp_doc[bpp_doc["ULTIMO"]]
-    linha = x[(x["CD_CONTA"].str.len() == 4) & x["DS"].map(lambda s: s.startswith("patrimonio liquido"))]
+    linha = x[(x["CD_CONTA"].str.len() == 4) & x["DS"].map(lambda s: s.startswith("patrimonio liquido")).astype(bool)]
     if not len(linha):
         return None
     total = float(linha["VALOR"].iloc[0])

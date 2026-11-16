@@ -80,3 +80,30 @@ def test_mapa_de_codigos_fica_com_o_cadastro_mais_recente():
     vm = pd.DataFrame({"CNPJ_Companhia": ["A", "B"], "Data_Referencia": ["2025-01-01", "2026-01-01"],
                        "Versao": ["1", "1"], "Codigo_Negociacao": ["XPTO3", "XPTO3"]})
     assert cvm.mapa_tickers(vm) == {"XPTO3": "B"}
+
+
+def test_empresa_sem_linha_de_controladora_ou_minoritarios_usa_o_total():
+    d = _dre()
+    d = d[d.CD_CONTA != "3.11.01"]
+    b = _bpp()
+    b = b[b.CD_CONTA != "2.03.09"]
+    r = cvm.resultado_empresa(cvm._preparar(d), cvm._preparar(b))
+    assert r["lucro_12m"] == pytest.approx((100 + 120 - 70) * 1000)
+    assert r["patrimonio"] == pytest.approx(800_000)
+
+
+def test_oficiais_junta_resultado_auditor_e_site():
+    tab = {"dre_con": _dre(), "bpp_con": _bpp(), "dre_ind": pd.DataFrame(), "bpp_ind": pd.DataFrame(),
+           "parecer": pd.DataFrame(),
+           "fca_valor_mobiliario": pd.DataFrame({"CNPJ_Companhia": [C], "Data_Referencia": ["2026-01-01"], "Versao": ["1"],
+                                                 "Codigo_Negociacao": ["XPTO3"]}),
+           "fca_geral": pd.DataFrame({"CNPJ_Companhia": [C], "Data_Referencia": ["2026-01-01"], "Versao": ["1"],
+                                      "Pagina_Web": ["ri.xpto.com.br"]}),
+           "fca_auditor": pd.DataFrame({"CNPJ_Companhia": [C, C], "Data_Referencia": ["2026-01-01"] * 2, "Versao": ["1"] * 2,
+                                        "Auditor": ["BDO RCS Auditores", "KPMG Auditores Independentes Ltda."],
+                                        "Data_Inicio_Atuacao_Auditor": ["2019-01-01", "2024-01-01"],
+                                        "Data_Fim_Atuacao_Auditor": ["2023-12-31", None]})}
+    o = cvm.oficiais(tab, ["XPTO3", "NADA3"])
+    assert set(o) == {"XPTO3"}
+    assert o["XPTO3"]["big4"] == "KPMG" and o["XPTO3"]["site"] == "https://ri.xpto.com.br"
+    assert o["XPTO3"]["lucro_12m"] == pytest.approx(135_000) and o["XPTO3"]["visao"] == "consolidado"
