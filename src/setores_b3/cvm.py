@@ -40,13 +40,16 @@ def _csv(z: zipfile.ZipFile | None, nome: str) -> pd.DataFrame:
 
 def baixar(ano: int) -> dict[str, pd.DataFrame]:
     """DFP do ano anterior e do ano, ITR do ano e FCA do ano (com o anterior de reserva)."""
-    out: dict[str, list] = {k: [] for k in ("dre_con", "dre_ind", "bpp_con", "bpp_ind", "parecer")}
+    out: dict[str, list] = {k: [] for k in ("dre_con", "dre_ind", "bpp_con", "bpp_ind", "parecer", "capital")}
     for tipo, a in (("DFP", ano - 1), ("DFP", ano), ("ITR", ano - 1), ("ITR", ano)):
         z = _zip(f"{tipo}/DADOS/{tipo.lower()}_cia_aberta_{a}.zip")
         for parte in ("DRE_con", "DRE_ind", "BPP_con", "BPP_ind"):
             d = _csv(z, f"{tipo.lower()}_cia_aberta_{parte}_{a}.csv")
             if len(d):
                 out[parte.lower()].append(d.assign(TIPO=tipo))
+        d = _csv(z, f"{tipo.lower()}_cia_aberta_composicao_capital_{a}.csv")
+        if len(d):
+            out["capital"].append(d)
         if tipo == "DFP":
             d = _csv(z, f"dfp_cia_aberta_parecer_{a}.csv")
             if len(d):
@@ -112,6 +115,40 @@ def pareceres(parecer: pd.DataFrame) -> dict[str, str]:
         return {}
     d = parecer.dropna(subset=["TP_RELAT_AUD"]).sort_values(["DT_REFER", "VERSAO"])
     return {c: str(t).strip() for c, t in zip(d["CNPJ_CIA"], d["TP_RELAT_AUD"])}
+
+
+def capital(tab_capital: pd.DataFrame) -> dict[str, dict]:
+    """CNPJ -> ações em circulação fora da tesouraria, por espécie (ON e PN), no documento mais recente."""
+    if not len(tab_capital):
+        return {}
+    col = {k: next((c for c in tab_capital.columns if p in c.upper()), None)
+           for k, p in (("on", "ORDIN_CAP"), ("pn", "PREF_CAP"), ("on_tes", "ORDIN_TESOURO"), ("pn_tes", "PREF_TESOURO"))}
+    if not col["on"] or not col["pn"]:
+        return {}
+    d = tab_capital.sort_values(["DT_REFER", "VERSAO"])
+    out = {}
+    for linha in d.to_dict("records"):
+        n = lambda k: float(pd.to_numeric(linha.get(col[k]), errors="coerce") or 0) if col[k] else 0.0  # noqa: E731
+        on, pn = n("on") - n("on_tes"), n("pn") - n("pn_tes")
+        if on + pn > 0:
+            out[linha["CNPJ_CIA"]] = {"acoes_on": on, "acoes_pn": pn}
+    return out
+
+
+def composicao_units(fca_vm: pd.DataFrame) -> dict[str, tuple[float, float]]:
+    """Código da unit -> (ações ON, ações PN) que ela representa, lido de textos como '1 ON / 2 PN'."""
+    if not len(fca_vm) or "Composicao_BDR_Unit" not in fca_vm:
+        return {}
+    out = {}
+    d = fca_vm.dropna(subset=["Codigo_Negociacao", "Composicao_BDR_Unit"]).sort_values(["Data_Referencia", "Versao"])
+    for t, texto in zip(d["Codigo_Negociacao"], d["Composicao_BDR_Unit"]):
+        alto = _norm(texto).upper()
+        on = re.search(r"(\d+(?:[.,]\d+)?)\s*(?:ACAO|ACOES)?\s*(?:ON|ORDINARIA)", alto)
+        pn = re.search(r"(\d+(?:[.,]\d+)?)\s*(?:ACAO|ACOES)?\s*(?:PN|PREFERENCIA)", alto)
+        if on or pn:
+            num = lambda m: float(m.group(1).replace(",", ".")) if m else 0.0  # noqa: E731
+            out[str(t).strip().upper()] = (num(on), num(pn))
+    return out
 
 
 # ------------------------------------------------------------------ demonstrações
@@ -231,20 +268,33 @@ def resultados(tab: dict[str, pd.DataFrame], cnpjs: set[str]) -> dict[str, dict]
     return out
 
 
-def oficiais(tab: dict[str, pd.DataFrame], tickers: list[str]) -> dict[str, dict]:
-    """Código -> resultado oficial + auditor + site, para os códigos que a CVM conhece."""
-    mapa = mapa_tickers(tab.get("fca_valor_mobiliario", pd.DataFrame()))
-    cnpj = {t: mapa[t] for t in tickers if t in mapa}
+def oficiais(tab: dict[str, pd.DataFrame], tickers: list[str], irmaos: dict[str, list[str]] | None = None) -> dict[str, dict]:
+    """Código -> resultado oficial + auditor + capital + site, para os códigos que a CVM conhece.
+
+    ``irmaos`` lista, por código, outros códigos da mesma empresa (outra classe de ação ou o
+    código antigo): servem para achar o cadastro quando o código escolhido não aparece nele.
+    """
+    vm = tab.get("fca_valor_mobiliario", pd.DataFrame())
+    mapa = mapa_tickers(vm)
+    cnpj = {}
+    for t in tickers:
+        achado = next((mapa[x] for x in [t] + list((irmaos or {}).get(t, [])) if x in mapa), None)
+        if achado:
+            cnpj[t] = achado
     res = resultados(tab, set(cnpj.values()))
     aud = auditores(tab.get("fca_auditor", pd.DataFrame()))
     par = pareceres(tab.get("parecer", pd.DataFrame()))
     web = sites(tab.get("fca_geral", pd.DataFrame()))
+    cap = capital(tab.get("capital", pd.DataFrame()))
+    units = composicao_units(vm)
     out = {}
     for t, c in cnpj.items():
-        d = {**res.get(c, {}), **aud.get(c, {}), "cnpj": c}
+        d = {**res.get(c, {}), **aud.get(c, {}), **cap.get(c, {}), "cnpj": c}
         if c in par:
             d["parecer"] = par[c]
         if c in web:
             d["site"] = web[c]
+        if t in units:
+            d["unit"] = units[t]
         out[t] = d
     return out

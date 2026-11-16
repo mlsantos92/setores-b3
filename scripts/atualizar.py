@@ -49,7 +49,14 @@ try:
     print("CVM:", {k: len(v) for k, v in tab_cvm.items()})
     print("CVM colunas auditor:", list(tab_cvm["fca_auditor"].columns))
     print("CVM colunas parecer:", list(tab_cvm["parecer"].columns))
-    oficiais = cvm.oficiais(tab_cvm, escolhidos)
+    print("CVM colunas capital:", list(tab_cvm["capital"].columns))
+    irmaos = {}
+    for linha in escolha.itertuples():
+        if isinstance(linha.ticker, str):
+            irmaos[linha.ticker] = [t for t in list(linha.tickers) + list(linha.tickers_lista) if t != linha.ticker]
+    oficiais = cvm.oficiais(tab_cvm, escolhidos, irmaos)
+    for t in ("ABEV3", "KLBN11", "TAEE11", "ITUB4", "BPAC11"):
+        print("CVM amostra", t, {k: v for k, v in oficiais.get(t, {}).items() if k in ("auditor", "acoes_on", "acoes_pn", "unit", "resultado_ate")})
     com_res = sum(1 for d in oficiais.values() if d.get("lucro_12m") is not None)
     print(f"CVM: {len(oficiais)} códigos no cadastro, {com_res} com lucro de 12 meses, "
           f"{sum(1 for d in oficiais.values() if d.get('big4'))} auditados por Big 4")

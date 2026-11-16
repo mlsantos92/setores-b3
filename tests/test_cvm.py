@@ -107,3 +107,22 @@ def test_oficiais_junta_resultado_auditor_e_site():
     assert set(o) == {"XPTO3"}
     assert o["XPTO3"]["big4"] == "KPMG" and o["XPTO3"]["site"] == "https://ri.xpto.com.br"
     assert o["XPTO3"]["lucro_12m"] == pytest.approx(135_000) and o["XPTO3"]["visao"] == "consolidado"
+
+
+def test_capital_desconta_tesouraria_e_unit_le_a_composicao():
+    cap = pd.DataFrame({"CNPJ_CIA": [C], "DT_REFER": ["2026-09-30"], "VERSAO": ["1"],
+                        "QT_ACAO_ORDIN_CAP_INTEGR": ["1000"], "QT_ACAO_PREF_CAP_INTEGR": ["2000"],
+                        "QT_ACAO_TOTAL_CAP_INTEGR": ["3000"], "QT_ACAO_ORDIN_TESOURO": ["100"],
+                        "QT_ACAO_PREF_TESOURO": ["0"], "QT_ACAO_TOTAL_TESOURO": ["100"]})
+    assert cvm.capital(cap)[C] == {"acoes_on": 900.0, "acoes_pn": 2000.0}
+    vm = pd.DataFrame({"CNPJ_Companhia": [C, C], "Data_Referencia": ["2026-01-01"] * 2, "Versao": ["1"] * 2,
+                       "Codigo_Negociacao": ["TAEE11", "KLBN11"], "Composicao_BDR_Unit": ["1 ON / 2 PN", "1 ação ordinária e 4 ações preferenciais"]})
+    u = cvm.composicao_units(vm)
+    assert u["TAEE11"] == (1.0, 2.0) and u["KLBN11"] == (1.0, 4.0)
+
+
+def test_cadastro_achado_pelo_codigo_irmao():
+    tab = {"dre_con": _dre(), "bpp_con": _bpp(), "fca_valor_mobiliario": pd.DataFrame(
+        {"CNPJ_Companhia": [C], "Data_Referencia": ["2026-01-01"], "Versao": ["1"], "Codigo_Negociacao": ["XPTO3"]})}
+    o = cvm.oficiais(tab, ["XPTO11"], {"XPTO11": ["XPTO3", "XPTO4"]})
+    assert o["XPTO11"]["lucro_12m"] == pytest.approx(135_000)

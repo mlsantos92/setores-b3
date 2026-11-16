@@ -49,6 +49,43 @@ def escolher_tickers(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFra
     return out
 
 
+def valor_de_mercado(of: dict, ticker: str, precos: pd.DataFrame) -> float | None:
+    """Valor de mercado pelas ações informadas à CVM: ON × preço da ON + PN × preço da PN.
+
+    Se a classe não tem preço (ou o preço é de um papel quase sem negócio e destoa muito),
+    usa o preço do código escolhido. Em unit, o preço por ação é o da unit dividido pelo
+    número de ações que ela representa.
+    """
+    on, pn = of.get("acoes_on"), of.get("acoes_pn")
+    if on is None or pn is None or ticker not in precos.columns:
+        return None
+
+    def ultimo(t):
+        if t in precos.columns:
+            x = precos[t].dropna()
+            return float(x.iloc[-1]) if len(x) else None
+        return None
+
+    ref = ultimo(ticker)
+    if ticker.endswith("11"):
+        n_on, n_pn = of.get("unit") or (0, 0)
+        if n_on + n_pn <= 0:
+            return None
+        ref = ref / (n_on + n_pn)
+    if not ref:
+        return None
+    raiz = ticker[:4]
+
+    def classe(codigos):
+        for t in codigos:
+            x = ultimo(t)
+            if x and 1 / 3 < x / ref < 3:
+                return x
+        return ref
+
+    return on * classe([raiz + "3"]) + pn * classe([raiz + "4", raiz + "5", raiz + "6"])
+
+
 def _base_oficial(m: dict, of: dict) -> dict:
     """Troca os múltiplos do Yahoo pelos calculados das demonstrações da CVM, guardando a conferência."""
     extra = {"fonte": "Yahoo" if any(m.get(k) is not None for k in ("pl", "pvp", "roe")) else None,
@@ -102,7 +139,12 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
             continue
         r = metricas.resumo(fech[e.ticker], fim, cdi_aa)
         m = multiplos.limpar(fundamentos.get(e.ticker, {}))
-        m.update(_base_oficial(m, oficiais.get(e.ticker, {})))
+        of = oficiais.get(e.ticker, {})
+        vm = valor_de_mercado(of, e.ticker, bruto)
+        m["valor_mercado_fonte"] = "Yahoo" if m.get("valor_mercado") is not None else None
+        if vm:
+            m["valor_mercado"], m["valor_mercado_fonte"] = vm, "CVM"
+        m.update(_base_oficial(m, of))
         m["dy"] = None
         if proventos is not None and e.ticker in proventos.columns:
             pago = proventos[e.ticker]

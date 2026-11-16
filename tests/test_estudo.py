@@ -143,3 +143,19 @@ def test_resultado_oficial_substitui_o_yahoo_e_marca_divergencia():
 def test_prejuizo_oficial_tira_o_pl():
     r = multiplos.de_resultado(1000.0, -50.0, 400.0)
     assert r["prejuizo"] is True and r["pl"] is None and r["pvp"] == pytest.approx(2.5)
+
+
+def test_valor_de_mercado_soma_classes_e_trata_unit():
+    idx = pd.bdate_range("2026-11-09", periods=3)
+    precos = pd.DataFrame({"XPTO3": [10.0, 10.0, 10.0], "XPTO4": [12.0, 12.0, 12.0], "XPTO11": [34.0, 34.0, 34.0],
+                           "SOLO3": [5.0, 5.0, 5.0]}, index=idx)
+    of = {"acoes_on": 100.0, "acoes_pn": 200.0}
+    assert estudo.valor_de_mercado(of, "XPTO4", precos) == pytest.approx(100 * 10 + 200 * 12)
+    # unit de 1 ON + 2 PN, com preço das duas classes
+    assert estudo.valor_de_mercado({**of, "unit": (1.0, 2.0)}, "XPTO11", precos) == pytest.approx(100 * 10 + 200 * 12)
+    # sem preço das classes: preço da unit dividido pelas 3 ações que ela representa
+    so_unit = precos[["XPTO11"]]
+    assert estudo.valor_de_mercado({**of, "unit": (1.0, 2.0)}, "XPTO11", so_unit) == pytest.approx(300 * 34 / 3)
+    # só ON listada: a PN (se houver) usa o mesmo preço
+    assert estudo.valor_de_mercado({"acoes_on": 50.0, "acoes_pn": 0.0}, "SOLO3", precos) == pytest.approx(250)
+    assert estudo.valor_de_mercado({}, "SOLO3", precos) is None
