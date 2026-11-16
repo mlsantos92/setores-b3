@@ -128,11 +128,11 @@ def test_resultado_oficial_substitui_o_yahoo_e_marca_divergencia():
     u, fech, vol, fund, fim = _base()
     fund["AAAA4"]["marketCap"] = 1_000.0
     of = {"AAAA4": {"lucro_12m": 100.0, "patrimonio": 500.0, "receita_12m": 400.0, "resultado_ate": "2026-09-30",
-                    "documento": "ITR", "auditor": "KPMG Auditores Independentes", "big4": "KPMG"}}
+                    "documento": "ITR", "auditor": "KPMG Auditores Independentes"}}
     d = estudo.montar(u, fech, vol, fund, 0.10, fim, oficiais=of)
     alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
     beta = next(e for e in d["empresas"] if e["empresa"] == "Beta")
-    assert alfa["fonte"] == "CVM" and alfa["big4"] == "KPMG"
+    assert alfa["fonte"] == "CVM" and alfa["auditor"].startswith("KPMG")
     assert alfa["pl"] == pytest.approx(10.0) and alfa["pvp"] == pytest.approx(2.0)
     assert alfa["roe"] == pytest.approx(0.2) and alfa["margem"] == pytest.approx(0.25)
     assert alfa["pl_yahoo"] == pytest.approx(8.0)

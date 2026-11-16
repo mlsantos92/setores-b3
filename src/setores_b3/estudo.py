@@ -111,7 +111,7 @@ def _base_oficial(m: dict, of: dict, fim: pd.Timestamp | None = None) -> dict:
     extra = {"fonte": "Yahoo" if any(m.get(k) is not None for k in ("pl", "pvp", "roe")) else None,
              "pl_yahoo": m.get("pl"), "pvp_yahoo": m.get("pvp"), "divergente": False,
              "resultado_ate": of.get("resultado_ate"), "documento": of.get("documento"),
-             "auditor": of.get("auditor"), "big4": of.get("big4"),
+             "auditor": of.get("auditor"),
              "site": of.get("site"), "lucro_12m": of.get("lucro_12m"), "patrimonio": of.get("patrimonio")}
     extra["atrasado"] = bool(fim is not None and of.get("resultado_ate")
                              and (fim - pd.Timestamp(of["resultado_ate"])).days > ATRASO_MAXIMO)
@@ -161,7 +161,7 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
                 "suspeito": bool(e.suspeito)}
         if not isinstance(e.ticker, str):
             reg.append({**base, **{k: None for k in INDICADORES}, "prejuizo": False, "valor_mercado": None,
-                        "fonte": None, "divergente": False, "big4": None, "auditor": None})
+                        "fonte": None, "divergente": False, "auditor": None})
             continue
         r = metricas.resumo(fech[e.ticker], fim, cdi_aa)
         m = multiplos.limpar(fundamentos.get(e.ticker, {}))

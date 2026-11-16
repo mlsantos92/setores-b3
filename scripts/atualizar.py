@@ -42,25 +42,47 @@ CACHE_FUND.parent.mkdir(parents=True, exist_ok=True)
 CACHE_FUND.write_text(json.dumps(guardado, ensure_ascii=False, indent=0, sort_keys=True), encoding="utf-8")
 print(f"fundamentos: {len(novos)} novos de {len(escolhidos)} escolhidos")
 
-# resultados oficiais (CVM): demonstrações auditadas ou revisadas pelo auditor independente
-oficiais = {}
+# resultados oficiais (CVM): demonstrações protocoladas pelas empresas, só as métricas
+HIST = RAIZ / "data" / "processed" / "historico_trimestral.json"
+ANOS_HISTORICO = 6
+oficiais, historico = {}, (json.loads(HIST.read_text(encoding="utf-8")) if HIST.exists() else {})
+cnpjs = {}
 try:
-    tab_cvm = cvm.baixar(esperado.year)
-    print("CVM:", {k: len(v) for k, v in tab_cvm.items()})
+    completo = os.environ.get("HIST_COMPLETO", "0") == "1" or not historico
     irmaos = {}
     for linha in escolha.itertuples():
         if isinstance(linha.ticker, str):
             irmaos[linha.ticker] = [t for t in list(linha.tickers) + list(linha.tickers_lista) if t != linha.ticker]
+    cad = cvm.baixar_cadastro(esperado.year)
+    cnpjs = cvm.cnpjs_dos_tickers(cad["fca_valor_mobiliario"], escolhidos, irmaos, ajustes["cnpj"])
+    tab_cvm = {**cad, **cvm.baixar_demonstracoes(esperado.year, ANOS_HISTORICO if completo else 1, set(cnpjs.values()))}
+    print("CVM:", "histórico completo" if completo else "ano corrente e anterior", {k: len(v) for k, v in tab_cvm.items()})
     oficiais = cvm.oficiais(tab_cvm, escolhidos, irmaos, ajustes["cnpj"])
-    nomes = dict(zip(tab_cvm["dre_con"]["CNPJ_CIA"], tab_cvm["dre_con"]["DENOM_CIA"]))
-    print("CVM CNPJ manual:", {t: nomes.get(c) for t, c in ajustes["cnpj"].items()})
     com_res = sum(1 for d in oficiais.values() if d.get("lucro_12m") is not None)
-    print(f"CVM: {len(oficiais)} códigos no cadastro, {com_res} com lucro de 12 meses, "
-          f"{sum(1 for d in oficiais.values() if d.get('big4'))} auditados por Big 4")
+    print(f"CVM: {len(oficiais)} códigos no cadastro, {com_res} com lucro de 12 meses")
     print("CVM sem cadastro:", " ".join(t for t in escolhidos if t not in oficiais))
     print("CVM sem 12 meses:", " ".join(t for t, d in oficiais.items() if d.get("lucro_12m") is None))
+    # histórico por trimestre, guardado por CNPJ: o que chega hoje entra por cima do que já havia
+    for c, trimestres in cvm.historico(tab_cvm, {c: c for c in set(cnpjs.values())}).items():
+        historico.setdefault(c, {}).update(trimestres)
+    HIST.parent.mkdir(parents=True, exist_ok=True)
+    HIST.write_text(json.dumps(historico, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+    n_tri = sorted(len(v) for v in historico.values())
+    print(f"Histórico: {len(historico)} empresas, mediana de {n_tri[len(n_tri) // 2] if n_tri else 0} trimestres")
+    if "PETR4" in cnpjs:
+        h = historico.get(cnpjs["PETR4"], {})
+        print("Histórico PETR4:", {k: round(h[k]["lucro"] / 1e9, 1) for k in sorted(h)[-6:] if h[k].get("lucro") is not None})
 except Exception as erro:
     print("CVM indisponível; múltiplos ficam com o Yahoo:", type(erro).__name__, erro)
+
+# arquivo do painel: uma série por código, em R$ milhões, alinhada à lista de trimestres
+rotulos = sorted({r for c in set(cnpjs.values()) for r in historico.get(c, {})})
+serie = lambda h, k: [None if h.get(r, {}).get(k) is None else round(h[r][k] / 1e6, 1) for r in rotulos]  # noqa: E731
+painel_hist = {"trimestres": rotulos, "unidade": "R$ milhões", "empresas": {
+    t: {k: serie(historico[c], k) for k in ("receita", "ebit", "lucro", "pl")}
+    for t, c in cnpjs.items() if c in historico}}
+(RAIZ / "docs").mkdir(exist_ok=True)
+(RAIZ / "docs" / "historico.json").write_text(json.dumps(painel_hist, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 # CDI do período, para o Sharpe e a referência
 cdi_aa, cdi_serie = float("nan"), pd.Series(dtype=float)
@@ -102,13 +124,13 @@ dados["meta"] = {
     "base": {
         "elegiveis": sum(1 for e in dados["empresas"] if e["elegivel"]),
         "cvm": sum(1 for e in dados["empresas"] if e["elegivel"] and e.get("fonte") in ("CVM", "CVM e Yahoo")),
-        "big4": sum(1 for e in dados["empresas"] if e["elegivel"] and e.get("big4")),
+        "com_historico": sum(1 for e in dados["empresas"] if e["elegivel"] and e["ticker"] in painel_hist["empresas"]),
         "yahoo": sum(1 for e in dados["empresas"] if e["elegivel"] and e.get("fonte") == "Yahoo"),
         "divergentes": sum(1 for e in dados["empresas"] if e["elegivel"] and e.get("divergente")),
     },
     "fora_da_bolsa": ajustes["fora"],
     "criterio": {"liq_minima": estudo.LIQ_MINIMA, "presenca_minima": estudo.PRESENCA_MINIMA},
-    "fonte": "CVM, dados abertos (DFP, ITR e FCA: resultados e auditor); Yahoo Finance (preços, valor de mercado, EV/EBITDA e conferência); Banco Central, SGS 12 (CDI)",
+    "fonte": "CVM, dados abertos (DFP, ITR e FCA: resultados, capital e cadastro); Yahoo Finance (preços, valor de mercado, EV/EBITDA e conferência); Banco Central, SGS 12 (CDI)",
 }
 
 (RAIZ / "docs").mkdir(exist_ok=True)

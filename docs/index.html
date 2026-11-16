@@ -61,6 +61,7 @@ th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:
 td.txt,th.txt{text-align:left}
 tbody tr:last-child td{border-bottom:0}
 tbody tr:hover td{background:var(--bg)}
+#tHEmp tbody tr{cursor:pointer}
 .pos{color:var(--pos)} .neg{color:var(--neg)}
 .tag{display:inline-block;font-size:11px;padding:0 6px;border-radius:999px;border:1px solid var(--line);color:var(--mut);margin-left:6px}
 .leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--text2);margin:2px 0 6px}
@@ -146,6 +147,40 @@ a{color:var(--s1)}
     <div class="tw" style="max-height:640px;overflow-y:auto"><table id="tEmp"></table></div>
   </section>
 
+  <section class="card" id="secHist">
+    <h2>Resultados: comparar períodos</h2>
+    <p class="mut" id="hTxt">Receita, resultado operacional, lucro e patrimônio de cada trimestre, das demonstrações protocoladas na CVM. Escolha a visão, a métrica e os dois períodos.</p>
+    <div class="ctl">
+      <div class="seg" id="hVisao" role="group" aria-label="Visão">
+        <button data-v="tri" aria-pressed="true">Trimestre</button>
+        <button data-v="sem" aria-pressed="false">Semestre</button>
+        <button data-v="acu" aria-pressed="false">Acumulado no ano</button>
+        <button data-v="ano" aria-pressed="false">Ano</button>
+      </div>
+      <select id="hMet" aria-label="Métrica">
+        <option value="lucro">Lucro líquido</option><option value="receita">Receita</option><option value="ebit">Resultado operacional (EBIT)</option>
+        <option value="mliq">Margem líquida</option><option value="mebit">Margem operacional</option><option value="roe">Lucro ÷ patrimônio</option><option value="pl">Patrimônio líquido</option>
+      </select>
+      <label for="hA">Período</label><select id="hA"></select>
+      <label for="hB">contra</label><select id="hB"></select>
+    </div>
+    <h3 style="font-size:.98rem;margin:10px 0 4px">Por setor</h3>
+    <p class="mut" id="hSetTxt"></p>
+    <div class="tw"><table id="tHSet"></table></div>
+    <h3 style="font-size:.98rem;margin:16px 0 4px">Por empresa</h3>
+    <div class="ctl">
+      <input type="search" id="hBusca" placeholder="Empresa ou código" aria-label="Buscar empresa ou código">
+      <select id="hLista" aria-label="Lista"><option value="">Todas as listas</option><option>Large e Mid Caps</option><option>Small e Micro Caps</option></select>
+      <select id="hSetor" aria-label="Setor"><option value="">Todos os setores</option></select>
+      <label><input type="checkbox" id="hEleg" checked> Só elegíveis</label>
+      <span class="mut" id="hCont"></span>
+    </div>
+    <div class="tw" style="max-height:480px;overflow-y:auto"><table id="tHEmp"></table></div>
+    <h3 style="font-size:.98rem;margin:16px 0 4px" id="hGrTit">Histórico da empresa</h3>
+    <p class="mut">Clique em uma empresa da tabela para ver a métrica em todos os períodos da visão escolhida.</p>
+    <div id="hGraf" class="gr"></div>
+  </section>
+
   <section class="card">
     <h2>Como ler</h2>
     <ul class="sub" id="metodo"></ul>
@@ -191,7 +226,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     ["Small e micro caps",fS(sm.ret_aa)+" a.a.","volatilidade "+fP(sm.vol)+" · "+sm.elegiveis+" empresas"],
     ["Ibovespa",R.Ibovespa?fS(R.Ibovespa.ret_aa)+" a.a.":"–",R.Ibovespa?"volatilidade "+fP(R.Ibovespa.vol):""],
     ["CDI",R.CDI?fS(R.CDI.ret_aa)+" a.a.":"–","referência sem risco do período"],
-    ["Resultados auditados",M.base?M.base.cvm+" de "+M.base.elegiveis:"–",M.base?M.base.big4+" com auditor Big 4 · "+M.base.divergentes+" divergem do Yahoo":""]
+    ["Resultados oficiais",M.base?M.base.cvm+" de "+M.base.elegiveis:"–",M.base?"demonstrações da CVM · "+M.base.divergentes+" divergem do Yahoo":""]
   ].map(k=>'<div class="kpi"><span>'+k[0]+'</span><b>'+k[1]+'</b><small>'+k[2]+'</small></div>').join("");
 
   // ---------- dispersão retorno x risco
@@ -319,11 +354,100 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     {k:"valor_mercado",t:"Valor de mercado",f:v=>fM(v)},{k:"liq_mediana",t:"Liquidez/dia",f:v=>fM(v)},
     {k:"fonte",t:"Base dos múltiplos",txt:1,h:"CVM: demonstrações protocoladas pela empresa. Yahoo: reserva quando a CVM não tem o dado.",f:(v,r)=>(v?esc(v):"–")+(r.divergente?'<span class="tag" title="P/L ou P/VP da CVM difere mais de 25% do Yahoo (P/L '+fN(r.pl_yahoo)+', P/VP '+fN(r.pvp_yahoo,2)+' no Yahoo)">≠ Yahoo</span>':"")},
     {k:"resultado_ate",t:"Resultado até",f:(v,r)=>v?fD(v)+" · "+esc(r.documento):"–",h:"Data-base do último ITR (revisado) ou DFP (auditada) usado"},
-    {k:"auditor",t:"Auditor",txt:1,f:(v,r)=>v?(r.big4?esc(r.big4)+'<span class="tag">Big 4</span>':esc(v.replace(/ (auditores|auditoria|s\/s|ltda|s\.s\.).*$/i,"").slice(0,28))):"–"},
+    {k:"auditor",t:"Auditor",txt:1,f:v=>v?esc(v.replace(/ (auditores|auditoria|s\/s|ltda|s\.s\.|-).*$/i,"").slice(0,30)):"–"},
     {k:"desde",t:"Preços desde",f:v=>fD(v)}
   ],filtra,{k:"valor_mercado",d:-1});
   const atualiza=()=>{$("eCont").textContent=dEmp()+" empresas"};
   ["eBusca","eLista","eSetor","eEleg"].forEach(i=>$(i).addEventListener("input",atualiza));atualiza();
+
+  // ---------- histórico: comparar períodos
+  fetch("historico.json").then(r=>r.json()).then(H=>{
+    const TR=H.trimestres,HE=H.empresas,idx=Object.fromEntries(TR.map((t,i)=>[t,i]));
+    if(!TR.length){$("secHist").style.display="none";return}
+    const fluxo=["receita","ebit","lucro"];
+    const som=(a,is,k)=>{let t=0;for(const i of is){const v=i==null?null:a[k][i];if(v==null)return null;t+=v}return t};
+    // períodos de cada visão: rótulo -> índices dos trimestres que o compõem
+    const ultimo=TR[TR.length-1],qUlt=+ultimo.slice(5),anos=[...new Set(TR.map(t=>t.slice(0,4)))];
+    const VIS={
+      tri:{nome:"trimestre",passo:4,per:TR.map(t=>({r:t.replace("T"," T"),is:[idx[t]]}))},
+      sem:{nome:"semestre",passo:2,per:anos.flatMap(a=>[[1,2],[3,4]].map((qs,j)=>({r:a+" S"+(j+1),is:qs.map(q=>idx[a+"T"+q])})))},
+      acu:{nome:"acumulado até o "+qUlt+"º trimestre",passo:1,per:anos.map(a=>({r:a+" até T"+qUlt,is:Array.from({length:qUlt},(_,j)=>idx[a+"T"+(j+1)])}))},
+      ano:{nome:"ano",passo:1,per:anos.map(a=>({r:a,is:[1,2,3,4].map(q=>idx[a+"T"+q])}))}
+    };
+    for(const v of Object.values(VIS))v.per=v.per.filter(p=>p.is.every(i=>i!=null));
+    const MET={lucro:{t:"Lucro líquido",tipo:"valor"},receita:{t:"Receita",tipo:"valor"},ebit:{t:"Resultado operacional",tipo:"valor"},
+      mliq:{t:"Margem líquida",tipo:"razao",n:"lucro",d:"receita"},mebit:{t:"Margem operacional",tipo:"razao",n:"ebit",d:"receita"},
+      roe:{t:"Lucro ÷ patrimônio",tipo:"razao",n:"lucro",d:"pl"},pl:{t:"Patrimônio líquido",tipo:"estoque"}};
+    const parte=(a,p,k)=>k==="pl"?(a.pl[p.is[p.is.length-1]]??null):som(a,p.is,k);
+    function valor(a,p,m){const M_=MET[m];if(M_.tipo==="razao"){const n=parte(a,p,M_.n),d=parte(a,p,M_.d);return n==null||d==null||d<=0?null:n/d}return parte(a,p,m)}
+    const fV=(v,m)=>v==null?"–":MET[m].tipo==="razao"?fP(v):(Math.abs(v)>=1000?"R$ "+fN(v/1000,1)+" bi":"R$ "+fN(v,0)+" mi");
+    function varia(a,b,m){if(a==null||b==null)return null;if(MET[m].tipo==="razao")return a-b;return b>0?a/b-1:null}
+    const fVar=(v,m)=>v==null?"–":MET[m].tipo==="razao"?(Math.abs(v)<.0005?"0,0":(v>0?"+":"")+fN(v*100,1))+" p.p.":fS(v);
+    let vis="tri",empSel=null;
+    const selA=$("hA"),selB=$("hB"),met=$("hMet");
+    const cobertura=p=>Object.values(HE).filter(a=>som(a,p.is,"lucro")!=null).length;
+    function periodos(){
+      const P=VIS[vis].per;selA.length=0;selB.length=0;
+      P.forEach((p,i)=>{selA.add(new Option(p.r,i));selB.add(new Option(p.r,i))});
+      // padrão: o período mais recente com pelo menos metade das empresas, contra o mesmo período um ano antes
+      const total=Object.keys(HE).length;let ia=P.length-1;while(ia>0&&cobertura(P[ia])<total/2)ia--;
+      selA.value=ia;selB.value=Math.max(0,ia-VIS[vis].passo);
+    }
+    const empresas=E.filter(e=>e.ticker&&HE[e.ticker]);
+    [...new Set(empresas.map(e=>e.setor))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(n=>$("hSetor").add(new Option(n,n)));
+    function linhasEmp(){
+      const P=VIS[vis].per,A=P[+selA.value],B=P[+selB.value],m=met.value;
+      const q=$("hBusca").value.trim().toUpperCase(),l=$("hLista").value,st=$("hSetor").value,eg=$("hEleg").checked;
+      return empresas.filter(e=>(!eg||e.elegivel)&&(!l||e.lista===l)&&(!st||e.setor===st)&&(!q||e.empresa.toUpperCase().includes(q)||e.ticker.includes(q)))
+        .map(e=>{const a=valor(HE[e.ticker],A,m),b=valor(HE[e.ticker],B,m);return {empresa:e.empresa,ticker:e.ticker,setor:e.setor,subsetor:e.subsetor,a,b,v:varia(a,b,m)}})
+        .filter(x=>x.a!=null||x.b!=null);
+    }
+    function linhasSet(){
+      const P=VIS[vis].per,A=P[+selA.value],B=P[+selB.value],m=met.value,M_=MET[m],eg=$("hEleg").checked,l=$("hLista").value;
+      const grupos={};
+      empresas.filter(e=>(!eg||e.elegivel)&&(!l||e.lista===l)).forEach(e=>{
+        const h=HE[e.ticker],ks=M_.tipo==="razao"?[M_.n,M_.d]:[m];
+        const va=ks.map(k=>parte(h,A,k)),vb=ks.map(k=>parte(h,B,k));
+        if(va.some(x=>x==null)||vb.some(x=>x==null))return;   // só entra quem tem os dois períodos
+        const g=grupos[e.setor]??={setor:e.setor,n:0,a:[0,0],b:[0,0]};g.n++;va.forEach((x,i)=>g.a[i]+=x);vb.forEach((x,i)=>g.b[i]+=x)});
+      return Object.values(grupos).map(g=>{const f=x=>M_.tipo==="razao"?(x[1]>0?x[0]/x[1]:null):x[0];const a=f(g.a),b=f(g.b);return {setor:g.setor,n:g.n,a,b,v:varia(a,b,m)}});
+    }
+    const colA=()=>VIS[vis].per[+selA.value].r,colB=()=>VIS[vis].per[+selB.value].r;
+    let dHS,dHE;
+    function monta(){
+      const m=met.value;
+      dHS=tabela("tHSet",[{k:"setor",t:"Setor",txt:1,f:v=>esc(v)},{k:"n",t:"Empresas",f:v=>v,h:"Empresas com dado nos dois períodos"},
+        {k:"b",t:colB(),f:v=>fV(v,m)},{k:"a",t:colA(),f:v=>fV(v,m)},{k:"v",t:"Variação",f:v=>fVar(v,m),cor:1}],linhasSet,{k:"v",d:-1});
+      dHE=tabela("tHEmp",[{k:"empresa",t:"Empresa",txt:1,f:v=>esc(v)},{k:"ticker",t:"Código",txt:1,f:v=>esc(v)},
+        {k:"setor",t:"Setor",txt:1,f:(v,r)=>esc(curto(v))+(r.subsetor?" · "+esc(r.subsetor):"")},
+        {k:"b",t:colB(),f:v=>fV(v,m)},{k:"a",t:colA(),f:v=>fV(v,m)},{k:"v",t:"Variação",f:v=>fVar(v,m),cor:1}],linhasEmp,{k:"a",d:-1});
+      dHS();$("hCont").textContent=dHE()+" empresas";
+      $("hSetTxt").textContent=(MET[m].tipo==="razao"?MET[m].t+" do setor: soma do numerador ÷ soma do denominador":"Soma das empresas do setor")+", só com as que têm dado nos dois períodos. Variação de valor negativo ou zero não é calculada.";
+      grafico();
+    }
+    function grafico(){
+      const box=$("hGraf");if(!empSel||!HE[empSel]){box.replaceChildren();$("hGrTit").textContent="Histórico da empresa";return}
+      const m=met.value,P=VIS[vis].per,pts=P.map(p=>({r:p.r,v:valor(HE[empSel],p,m)})),e=E.find(x=>x.ticker===empSel);
+      $("hGrTit").textContent=e.empresa+" ("+empSel+"): "+MET[m].t.toLowerCase()+" por "+VIS[vis].nome;
+      const vs=pts.map(p=>p.v).filter(v=>v!=null);if(!vs.length){box.textContent="Sem dado para essa métrica.";return}
+      const W=1100,Hh=300,mg={l:76,r:16,t:14,b:44},lo=Math.min(0,...vs),hi=Math.max(0,...vs),pad=(hi-lo||1)*.08,y0=lo-(lo<0?pad:0),y1=hi+pad;
+      const Y=v=>Hh-mg.b-(v-y0)/(y1-y0)*(Hh-mg.t-mg.b),bw=(W-mg.l-mg.r)/pts.length,svg=el("svg",{viewBox:`0 0 ${W} ${Hh}`,role:"img","aria-label":$("hGrTit").textContent});
+      ticks(y0,y1,4).forEach(t=>{svg.append(el("line",{x1:mg.l,x2:W-mg.r,y1:Y(t),y2:Y(t),stroke:t===0?"var(--line)":"var(--grid)","stroke-width":t===0?1.5:1}));svg.append(el("text",{x:mg.l-8,y:Y(t)+4,"text-anchor":"end"},MET[m].tipo==="razao"?fP(t,0):Math.abs(t)>=1000?fN(t/1000,1)+" bi":fN(t,0)+" mi"))});
+      const cada=Math.ceil(pts.length/12);
+      pts.forEach((p,i)=>{const w=Math.min(64,Math.max(2,bw-4)),x=mg.l+i*bw+(bw-w)/2;
+        if(i%cada===0||i===pts.length-1)svg.append(el("text",{x:x+w/2,y:Hh-mg.b+16,"text-anchor":"middle",style:"font-size:11px"},p.r));
+        if(p.v==null)return;const yv=Y(p.v),yz=Y(0),g=el("g");
+        g.append(el("rect",{x,y:mg.t,width:w,height:Hh-mg.t-mg.b,fill:"transparent"}),el("rect",{x,y:Math.min(yv,yz),width:w,height:Math.max(1,Math.abs(yv-yz)),rx:Math.min(4,w/2),fill:p.v<0?"var(--neg)":"var(--s1)"}));
+        hover(g,"<b>"+p.r+"</b>"+MET[m].t+": "+fV(p.v,m));svg.append(g)});
+      box.replaceChildren(svg);
+    }
+    $("tHEmp").addEventListener("click",ev=>{const tr=ev.target.closest("tbody tr");if(!tr||!tr.cells[1])return;empSel=tr.cells[1].textContent.trim();grafico();$("hGrTit").scrollIntoView({block:"nearest",behavior:"smooth"})});
+    seg("hVisao",v=>{vis=v;periodos();monta()});
+    [selA,selB,met].forEach(x=>x.addEventListener("change",monta));
+    ["hBusca","hLista","hSetor","hEleg"].forEach(i=>$(i).addEventListener("input",()=>{dHS();$("hCont").textContent=dHE()+" empresas"}));
+    $("hTxt").textContent+=" Dados de "+TR[0].replace("T"," T")+" a "+ultimo.replace("T"," T")+", em "+H.unidade+".";
+    periodos();empSel=(empresas.find(e=>e.ticker==="PETR4")||empresas[0]||{}).ticker;monta();
+  }).catch(()=>{$("secHist").style.display="none"});
 
   // ---------- método
   const cr=M.criterio;
@@ -335,8 +459,9 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     "<b>Índice do setor:</b> pesos iguais entre as elegíveis, rebalanceado todo dia. Não é um índice investível e difere dos índices setoriais da B3, que pesam por valor de mercado.",
     "<b>Viés de sobrevivência:</b> a lista foi montada em 2026. Empresas que quebraram ou saíram da bolsa antes não entram, o que melhora o retorno histórico, sobretudo das small caps.",
     "<b>Resultados oficiais e auditados.</b> P/L, P/VP, ROE e margem saem das demonstrações que a empresa protocola na CVM, as mesmas publicadas no portal de relações com investidores: DFP anual, auditada, e ITR trimestral, revisado pelo auditor independente. O lucro é o dos últimos 12 meses atribuído aos controladores; o patrimônio exclui minoritários. O nome da empresa leva ao site dela.",
-    "<b>Auditor:</b> a coluna mostra o auditor independente informado à CVM e marca as Big 4 (Deloitte, EY, KPMG e PwC). O estudo usa só as métricas das demonstrações; o parecer do auditor não entra na avaliação.",
+    "<b>Só as métricas.</b> O estudo usa os números das demonstrações; o parecer do auditor não entra na avaliação. A coluna “Auditor” traz apenas o nome informado à CVM.",
     "<b>Conferência com o Yahoo:</b> quando a CVM não tem o dado (BDRs, por exemplo), o múltiplo vem do Yahoo Finance e a coluna “Base dos múltiplos” avisa. Quando as duas fontes diferem mais de 25%, a empresa ganha a marca “≠ Yahoo” e vale o número da CVM. O valor de mercado é o número de ações informado à CVM, fora a tesouraria, vezes o preço de cada classe (em units, o preço é dividido pelas ações que a unit representa). Como a CVM não informa se a quantidade está em unidades ou em milhares, o valor de mercado do Yahoo serve de referência para a escala. O EV/EBITDA vem do Yahoo.",
+    "<b>Histórico por período:</b> cada documento da CVM traz o acumulado do exercício; o trimestre isolado é a diferença entre dois acumulados seguidos, e o 4º trimestre é o ano (DFP) menos os nove meses. Semestre, acumulado e ano são somas de trimestres civis, então empresas com exercício fora do ano civil ficam comparáveis. Os valores são os do documento original de cada período, sem reapresentações posteriores.",
     "<b>Resultado atrasado:</b> empresa que não protocola resultado há mais de 9 meses fica sem P/L, P/VP e ROE.",
     "<b>Dividend yield</b> é calculado aqui: proventos pagos em 12 meses ÷ preço atual. P/L só existe para empresas com lucro; valores fora de faixas plausíveis são descartados.",
     "<b>Dado suspeito:</b> alta de mais de 100% ou queda de mais de 80% em um único dia costuma ser grupamento ou troca de código que a fonte não ajustou. Essas empresas aparecem na tabela com a marca e ficam fora dos agregados.",

@@ -67,15 +67,6 @@ def test_dfp_mais_recente_vale_o_ano_cheio():
     assert r["documento"] == "DFP" and r["lucro_12m"] == pytest.approx(90_000)
 
 
-def test_big4_reconhece_as_quatro_e_recusa_as_outras():
-    assert cvm.big4("PricewaterhouseCoopers Auditores Independentes Ltda.") == "PwC"
-    assert cvm.big4("ERNST & YOUNG AUDITORES INDEPENDENTES S/S LTDA") == "EY"
-    assert cvm.big4("KPMG Auditores Independentes Ltda.") == "KPMG"
-    assert cvm.big4("Deloitte Touche Tohmatsu Auditores Independentes Ltda.") == "Deloitte"
-    assert cvm.big4("Grant Thornton Auditores Independentes Ltda.") is None
-    assert cvm.big4("BDO RCS Auditores Independentes") is None
-
-
 def test_mapa_de_codigos_fica_com_o_cadastro_mais_recente():
     vm = pd.DataFrame({"CNPJ_Companhia": ["A", "B"], "Data_Referencia": ["2025-01-01", "2026-01-01"],
                        "Versao": ["1", "1"], "Codigo_Negociacao": ["XPTO3", "XPTO3"]})
@@ -104,7 +95,7 @@ def test_oficiais_junta_resultado_auditor_e_site():
                                         "Data_Fim_Atuacao_Auditor": ["2023-12-31", None]})}
     o = cvm.oficiais(tab, ["XPTO3", "NADA3"])
     assert set(o) == {"XPTO3"}
-    assert o["XPTO3"]["big4"] == "KPMG" and o["XPTO3"]["site"] == "https://ri.xpto.com.br"
+    assert o["XPTO3"]["auditor"].startswith("KPMG") and o["XPTO3"]["site"] == "https://ri.xpto.com.br"
     assert o["XPTO3"]["lucro_12m"] == pytest.approx(135_000) and o["XPTO3"]["visao"] == "consolidado"
 
 
@@ -125,3 +116,46 @@ def test_cadastro_achado_pelo_codigo_irmao():
         {"CNPJ_Companhia": [C], "Data_Referencia": ["2026-01-01"], "Versao": ["1"], "Codigo_Negociacao": ["XPTO3"]})}
     o = cvm.oficiais(tab, ["XPTO11"], {"XPTO11": ["XPTO3", "XPTO4"]})
     assert o["XPTO11"]["lucro_12m"] == pytest.approx(135_000)
+
+
+def _dre_ano_cheio():
+    """Exercício de 2025 completo: acumulados de 100, 250, 450 (ITRs) e 700 (DFP) de receita."""
+    L = "Lucro/Prejuízo Consolidado do Período"
+    linhas = []
+    for tipo, fim, rec, luc in (("ITR", "2025-03-31", 100, 10), ("ITR", "2025-06-30", 250, 30),
+                                ("ITR", "2025-09-30", 450, 45), ("DFP", "2025-12-31", 700, 80)):
+        linhas += [_l(tipo, fim, "ÚLTIMO", "2025-01-01", fim, "3.01", "Receita de Venda", rec),
+                   _l(tipo, fim, "ÚLTIMO", "2025-01-01", fim, "3.11", L, luc)]
+        if fim == "2025-09-30":   # o ITR também traz o trimestre isolado: não pode confundir o acumulado
+            linhas += [_l(tipo, fim, "ÚLTIMO", "2025-07-01", fim, "3.01", "Receita de Venda", 200)]
+    return pd.DataFrame(linhas)
+
+
+def test_trimestre_isolado_e_a_diferenca_entre_acumulados():
+    t = cvm.trimestres_empresa(cvm._preparar(_dre_ano_cheio()), pd.DataFrame())
+    assert [t[k]["receita"] / 1000 for k in ("2025T1", "2025T2", "2025T3", "2025T4")] == [100, 150, 200, 250]
+    assert t["2025T4"]["lucro"] == pytest.approx(35_000)          # DFP 80 − ITR do 3º trimestre 45
+
+
+def test_documento_faltando_nao_vira_trimestre_falso():
+    d = _dre_ano_cheio()
+    t = cvm.trimestres_empresa(cvm._preparar(d[d.DT_REFER != "2025-06-30"]), pd.DataFrame())
+    assert set(t) == {"2025T1", "2025T4"}                          # o 3º cobriria seis meses: descartado
+
+
+def test_exercicio_fora_do_ano_civil_usa_o_trimestre_civil_do_fim():
+    L = "Lucro/Prejuízo Consolidado do Período"
+    linhas = [_l("ITR", "2025-06-30", "ÚLTIMO", "2025-04-01", "2025-06-30", "3.01", "Receita", 10),
+              _l("ITR", "2025-06-30", "ÚLTIMO", "2025-04-01", "2025-06-30", "3.11", L, 1),
+              _l("ITR", "2025-09-30", "ÚLTIMO", "2025-04-01", "2025-09-30", "3.01", "Receita", 25),
+              _l("ITR", "2025-09-30", "ÚLTIMO", "2025-04-01", "2025-09-30", "3.11", L, 3)]
+    t = cvm.trimestres_empresa(cvm._preparar(pd.DataFrame(linhas)), pd.DataFrame())
+    assert t["2025T2"]["receita"] == pytest.approx(10_000) and t["2025T3"]["receita"] == pytest.approx(15_000)
+
+
+def test_historico_traz_patrimonio_do_fim_do_trimestre():
+    b = _bpp().assign(DT_REFER="2025-12-31", DT_FIM_EXERC="2025-12-31", TIPO="DFP")
+    h = cvm.historico({"dre_con": _dre_ano_cheio(), "bpp_con": b}, {"XPTO3": C, "NADA3": "00"})
+    assert set(h) == {"XPTO3"}
+    assert h["XPTO3"]["2025T4"]["pl"] == pytest.approx(750_000) and "pl" not in h["XPTO3"]["2025T1"]
+    assert cvm.rotulo_trimestre("2026-08-31") == "2026T3"

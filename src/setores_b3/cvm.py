@@ -17,7 +17,6 @@ import pandas as pd
 import requests
 
 BASE = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/"
-BIG4 = {"Deloitte": r"DELOITTE", "EY": r"ERNST|\bEY\b", "KPMG": r"KPMG", "PwC": r"PRICEWATERHOUSE|\bPWC\b"}
 
 
 def _norm(s: str) -> str:
@@ -34,30 +33,43 @@ def _zip(caminho: str, timeout: int = 240) -> zipfile.ZipFile | None:
     return zipfile.ZipFile(io.BytesIO(r.content))
 
 
-def _csv(z: zipfile.ZipFile | None, nome: str) -> pd.DataFrame:
+def _csv(z: zipfile.ZipFile | None, nome: str, cnpjs: set[str] | None = None) -> pd.DataFrame:
+    """Lê um CSV do zip. Com ``cnpjs``, guarda só essas empresas e as contas até o 3º nível."""
     if z is None or nome not in z.namelist():
         return pd.DataFrame()
-    return pd.read_csv(z.open(nome), sep=";", encoding="latin1", dtype=str)
+    d = pd.read_csv(z.open(nome), sep=";", encoding="latin1", dtype=str)
+    if cnpjs is not None and "CNPJ_CIA" in d:
+        d = d[d["CNPJ_CIA"].isin(cnpjs)]
+        if "CD_CONTA" in d:
+            d = d[d["CD_CONTA"].str.len() <= 7]
+    return d
 
 
-def baixar(ano: int) -> dict[str, pd.DataFrame]:
-    """DFP do ano anterior e do ano, ITR do ano e FCA do ano (com o anterior de reserva)."""
-    out: dict[str, list] = {k: [] for k in ("dre_con", "dre_ind", "bpp_con", "bpp_ind", "capital")}
-    for tipo, a in (("DFP", ano - 1), ("DFP", ano), ("ITR", ano - 1), ("ITR", ano)):
-        z = _zip(f"{tipo}/DADOS/{tipo.lower()}_cia_aberta_{a}.zip")
-        for parte in ("DRE_con", "DRE_ind", "BPP_con", "BPP_ind"):
-            d = _csv(z, f"{tipo.lower()}_cia_aberta_{parte}_{a}.csv")
-            if len(d):
-                out[parte.lower()].append(d.assign(TIPO=tipo))
-        d = _csv(z, f"{tipo.lower()}_cia_aberta_composicao_capital_{a}.csv")
-        if len(d):
-            out["capital"].append(d)
-    tab = {k: (pd.concat(v, ignore_index=True) if v else pd.DataFrame()) for k, v in out.items()}
+def baixar_cadastro(ano: int) -> dict[str, pd.DataFrame]:
+    """FCA do ano e do anterior: códigos de negociação, site e auditor."""
+    tab = {}
+    zips = [(a, _zip(f"FCA/DADOS/fca_cia_aberta_{a}.zip")) for a in (ano - 1, ano)]
     for nome in ("valor_mobiliario", "geral", "auditor"):
-        partes = [_csv(_zip(f"FCA/DADOS/fca_cia_aberta_{a}.zip"), f"fca_cia_aberta_{nome}_{a}.csv") for a in (ano - 1, ano)]
+        partes = [_csv(z, f"fca_cia_aberta_{nome}_{a}.csv") for a, z in zips]
         partes = [p for p in partes if len(p)]
         tab[f"fca_{nome}"] = pd.concat(partes, ignore_index=True) if partes else pd.DataFrame()
     return tab
+
+
+def baixar_demonstracoes(ano: int, anos_atras: int = 1, cnpjs: set[str] | None = None) -> dict[str, pd.DataFrame]:
+    """DFP e ITR de ``ano - anos_atras`` até ``ano``: DRE, balanço (passivo) e composição do capital."""
+    out: dict[str, list] = {k: [] for k in ("dre_con", "dre_ind", "bpp_con", "bpp_ind", "capital")}
+    for a in range(ano - anos_atras, ano + 1):
+        for tipo in ("DFP", "ITR"):
+            z = _zip(f"{tipo}/DADOS/{tipo.lower()}_cia_aberta_{a}.zip")
+            for parte in ("DRE_con", "DRE_ind", "BPP_con", "BPP_ind"):
+                d = _csv(z, f"{tipo.lower()}_cia_aberta_{parte}_{a}.csv", cnpjs)
+                if len(d):
+                    out[parte.lower()].append(d.assign(TIPO=tipo))
+            d = _csv(z, f"{tipo.lower()}_cia_aberta_composicao_capital_{a}.csv", cnpjs)
+            if len(d):
+                out["capital"].append(d)
+    return {k: (pd.concat(v, ignore_index=True) if v else pd.DataFrame()) for k, v in out.items()}
 
 
 # ------------------------------------------------------------------ cadastro
@@ -81,14 +93,6 @@ def sites(fca_geral: pd.DataFrame) -> dict[str, str]:
     return out
 
 
-def big4(nome: str | None) -> str | None:
-    """Nome curto da Big 4, ou None se o auditor for outro."""
-    if not nome:
-        return None
-    alto = _norm(nome).upper()
-    return next((curto for curto, padrao in BIG4.items() if re.search(padrao, alto)), None)
-
-
 def auditores(fca_auditor: pd.DataFrame) -> dict[str, dict]:
     """CNPJ -> auditor independente atual (o de início de atuação mais recente, sem data de fim)."""
     if not len(fca_auditor) or "Auditor" not in fca_auditor:
@@ -103,7 +107,7 @@ def auditores(fca_auditor: pd.DataFrame) -> dict[str, dict]:
     out = {}
     for c, a in zip(d["CNPJ_Companhia"], d["Auditor"]):
         nome = re.sub(r"\s+", " ", str(a)).strip()
-        out[c] = {"auditor": nome, "big4": big4(nome)}
+        out[c] = {"auditor": nome}
     return out
 
 
@@ -258,6 +262,85 @@ def resultados(tab: dict[str, pd.DataFrame], cnpjs: set[str]) -> dict[str, dict]
     return out
 
 
+def cnpjs_dos_tickers(fca_vm: pd.DataFrame, tickers: list[str], irmaos: dict[str, list[str]] | None = None,
+                      cnpj_manual: dict[str, str] | None = None) -> dict[str, str]:
+    """Código -> CNPJ, tentando o próprio código, depois os irmãos; o CNPJ manual vence o cadastro."""
+    mapa = {**mapa_tickers(fca_vm), **(cnpj_manual or {})}   # o cadastro da CVM não traz o código de todas
+    cnpj = {}
+    for t in tickers:
+        achado = next((mapa[x] for x in [t] + list((irmaos or {}).get(t, [])) if x in mapa), None)
+        if achado:
+            cnpj[t] = achado
+    return cnpj
+
+
+# ------------------------------------------------------------------ histórico por trimestre
+def rotulo_trimestre(fim: str) -> str:
+    """Trimestre civil em que o período termina: '2026-09-30' -> '2026T3'."""
+    d = pd.Timestamp(fim)
+    return f"{d.year}T{(d.month - 1) // 3 + 1}"
+
+
+def trimestres_empresa(dre: pd.DataFrame, bpp: pd.DataFrame) -> dict[str, dict]:
+    """Resultado de cada trimestre isolado de UMA empresa, por rótulo ('2026T3').
+
+    Cada documento traz o acumulado do exercício até a data-base. O trimestre é a diferença entre
+    dois acumulados seguidos do mesmo exercício (o 4º trimestre sai da DFP menos o ITR do 3º).
+    Se falta um documento no meio, a diferença cobriria mais de um trimestre e é descartada.
+    ``dre`` e ``bpp`` já preparados e filtrados para a empresa.
+    """
+    if not len(dre):
+        return {}
+    pontos = {}
+    for (ref, tipo), doc in dre.groupby(["DT_REFER", "TIPO"]):
+        r = _dre(_acumulado(doc, True))
+        if r and r.get("fim") == ref:
+            atual = pontos.get(ref)
+            if atual is None or tipo == "DFP":      # na mesma data, a DFP (auditada) vence o ITR
+                pontos[ref] = r
+    exercicios: dict[str, list] = {}
+    for r in pontos.values():
+        exercicios.setdefault(r["ini"], []).append(r)
+    out = {}
+    for ini, lista in exercicios.items():
+        lista.sort(key=lambda r: r["fim"])
+        ant = None
+        for r in lista:
+            inicio = pd.Timestamp(ant["fim"]) if ant else pd.Timestamp(ini) - pd.Timedelta(days=1)
+            dias = (pd.Timestamp(r["fim"]) - inicio).days
+            if 80 <= dias <= 100:
+                q = {k: (None if r.get(k) is None or (ant and ant.get(k) is None) else r[k] - (ant[k] if ant else 0.0))
+                     for k in ("receita", "ebit", "lucro")}
+                out[rotulo_trimestre(r["fim"])] = {**q, "fim": r["fim"]}
+            ant = r
+    if len(bpp):
+        for rot, q in out.items():
+            b = bpp[bpp["DT_REFER"] == q["fim"]]
+            if len(b):
+                tipo = "DFP" if (b["TIPO"] == "DFP").any() else "ITR"
+                q["pl"] = _patrimonio(b[b["TIPO"] == tipo])
+    return out
+
+
+def historico(tab: dict[str, pd.DataFrame], cnpj_por_ticker: dict[str, str]) -> dict[str, dict]:
+    """Código -> {rótulo do trimestre -> receita, EBIT, lucro e patrimônio}. Consolidado; senão, individual."""
+    cnpjs = set(cnpj_por_ticker.values())
+    prep = {}
+    for k in ("dre_con", "dre_ind", "bpp_con", "bpp_ind"):
+        d = tab.get(k, pd.DataFrame())
+        prep[k] = _preparar(d[d["CNPJ_CIA"].isin(cnpjs)]) if len(d) else d
+    por_cnpj = {}
+    for c in cnpjs:
+        junto: dict[str, dict] = {}
+        for visao in ("ind", "con"):               # o consolidado entra por último e vence
+            dre, bpp = prep[f"dre_{visao}"], prep[f"bpp_{visao}"]
+            if len(dre):
+                junto.update(trimestres_empresa(dre[dre["CNPJ_CIA"] == c], bpp[bpp["CNPJ_CIA"] == c] if len(bpp) else bpp))
+        if junto:
+            por_cnpj[c] = junto
+    return {t: por_cnpj[c] for t, c in cnpj_por_ticker.items() if c in por_cnpj}
+
+
 def oficiais(tab: dict[str, pd.DataFrame], tickers: list[str], irmaos: dict[str, list[str]] | None = None,
              cnpj_manual: dict[str, str] | None = None) -> dict[str, dict]:
     """Código -> resultado oficial + auditor + capital + site, para os códigos que a CVM conhece.
@@ -266,12 +349,7 @@ def oficiais(tab: dict[str, pd.DataFrame], tickers: list[str], irmaos: dict[str,
     código antigo): servem para achar o cadastro quando o código escolhido não aparece nele.
     """
     vm = tab.get("fca_valor_mobiliario", pd.DataFrame())
-    mapa = {**mapa_tickers(vm), **(cnpj_manual or {})}   # o cadastro da CVM não traz o código de todas
-    cnpj = {}
-    for t in tickers:
-        achado = next((mapa[x] for x in [t] + list((irmaos or {}).get(t, [])) if x in mapa), None)
-        if achado:
-            cnpj[t] = achado
+    cnpj = cnpjs_dos_tickers(vm, tickers, irmaos, cnpj_manual)
     res = resultados(tab, set(cnpj.values()))
     aud = auditores(tab.get("fca_auditor", pd.DataFrame()))
     web = sites(tab.get("fca_geral", pd.DataFrame()))

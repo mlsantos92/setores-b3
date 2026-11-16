@@ -18,7 +18,7 @@ Estudo de **282 empresas da B3**, divididas em large e mid caps e em small e mic
 - **Os piores:** Saúde (−11,3% a.a.), Consumo Não Cíclico (−7,2% a.a.) e Consumo Cíclico (−7,0% a.a.). O Consumo Cíclico teve a maior volatilidade (35,4%).
 - **Tamanho ajudou na maioria dos setores.** As large e mid caps renderam mais que as small e micro caps em 7 dos 11 setores. As exceções: Financeiro, Materiais Básicos, Consumo Cíclico e Tecnologia. Em quatro setores um dos grupos tem menos de 3 empresas elegíveis, então a comparação ali é frágil.
 - **Small caps são mais baratas nos múltiplos, com motivo:** P/L mediano de 7,7 contra 9,5 das grandes e P/VP de 0,87 contra 1,38, com ROE menor (8,7% contra 12,9%).
-- **Base auditada:** 189 das 192 empresas elegíveis têm os múltiplos calculados das demonstrações protocoladas na CVM. Das 192, 159 são auditadas por uma Big 4. Em 42 empresas o número oficial difere mais de 25% do Yahoo Finance; nas units o Yahoo chega a errar o P/L em várias vezes (BTG Pactual: 13 pela CVM, 86 no Yahoo).
+- **Base oficial:** 189 das 192 empresas elegíveis têm os múltiplos calculados das demonstrações protocoladas na CVM. Em 42 empresas o número oficial difere mais de 25% do Yahoo Finance; nas units o Yahoo chega a errar o P/L em várias vezes (BTG Pactual: 13 pela CVM, 86 no Yahoo).
 
 Os números mudam a cada atualização; o painel traz sempre o retrato mais recente.
 
@@ -43,7 +43,8 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 - **Elegíveis:** negócio em pelo menos 90% dos pregões dos últimos 12 meses e giro mediano de ao menos R$ 100 mil por dia.
 - **Dado suspeito:** alta de mais de 100% ou queda de mais de 80% em um dia costuma ser grupamento ou troca de código que a fonte não ajustou. A empresa aparece na tabela com a marca e fica fora dos agregados.
 - **Resultados oficiais e auditados.** P/L, P/VP, ROE e margem saem das demonstrações que a empresa protocola na CVM, as mesmas do portal de relações com investidores: DFP anual, auditada, e ITR trimestral, revisado pelo auditor independente. O lucro é o dos últimos 12 meses atribuído aos controladores (DFP + acumulado do ano − mesmo período do ano anterior); o patrimônio exclui minoritários.
-- **Só as métricas.** A avaliação usa os números das demonstrações. O parecer do auditor não é lido nem entra em nenhum critério. O painel mostra apenas o nome do auditor, com marca para as Big 4 (Deloitte, EY, KPMG e PwC).
+- **Só as métricas.** A avaliação usa os números das demonstrações. O parecer do auditor não é lido nem entra em nenhum critério; o painel mostra apenas o nome do auditor informado à CVM.
+- **Histórico por período.** Receita, resultado operacional, lucro e patrimônio de cada trimestre desde 2020. Cada documento da CVM traz o acumulado do exercício: o trimestre isolado é a diferença entre dois acumulados seguidos, e o 4º trimestre é o ano (DFP) menos os nove meses. Semestre, acumulado no ano e ano são somas de trimestres civis, o que deixa comparáveis as empresas com exercício fora do ano civil. O painel compara dois períodos quaisquer, por empresa e por setor.
 - **Valor de mercado próprio:** ações informadas à CVM, fora a tesouraria, vezes o preço de cada classe. Em units, vale o preço das classes ou o da unit dividido pelas ações que ela representa.
 - **Yahoo como conferência e reserva.** Diferença acima de 25% entre as fontes vira a marca “≠ Yahoo” e vale o número da CVM. Sem dado na CVM (BDRs, por exemplo), vale o Yahoo e o painel avisa. O EV/EBITDA vem do Yahoo.
 - **Resultado atrasado:** empresa sem resultado protocolado há mais de 9 meses fica sem múltiplos.
@@ -54,6 +55,7 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 
 - **Viés de sobrevivência.** A lista foi montada em 2026. Empresas que quebraram ou saíram da bolsa antes não entram, o que melhora o retorno histórico, sobretudo das small caps.
 - **O que “auditado” cobre.** O estudo usa os números das demonstrações e o nome do auditor informado à CVM. O parecer e as notas explicativas ficam de fora, e o ITR tem revisão limitada, não auditoria completa.
+- **Histórico sem reapresentação.** Cada trimestre usa o documento original do período. Se a empresa reapresentou números depois, a comparação entre anos pode misturar critérios. Trimestre com documento faltando fica vazio, não estimado.
 - **Lucro contábil, sem ajustes.** O lucro de 12 meses inclui itens não recorrentes e operações descontinuadas, e fusões recentes (Bradsaúde, MBRF) misturam períodos de empresas diferentes. Os releases de RI costumam mostrar também um lucro ajustado, que não entra aqui.
 - **Quantidade de ações sem escala.** A CVM não informa se o número está em unidades ou em milhares; a escala é decidida por comparação com o valor de mercado do Yahoo. Empresas com classes de ações de direitos econômicos diferentes ficam com o valor de mercado do Yahoo.
 - **Preços de fonte única.** Cotações e proventos vêm do Yahoo Finance.
@@ -67,15 +69,15 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 |---|---|
 | Universo e ajustes de código | `data/raw/`, `src/setores_b3/universo.py` |
 | Coleta de preços (Yahoo Finance) e do CDI (Banco Central) | `src/setores_b3/coleta.py` |
-| Resultados oficiais, capital e auditor (CVM: DFP, ITR e FCA) | `src/setores_b3/cvm.py` |
+| Resultados oficiais, histórico por trimestre e capital (CVM: DFP, ITR e FCA) | `src/setores_b3/cvm.py` |
 | Retorno, volatilidade, maior queda, Sharpe, índice de pesos iguais | `src/setores_b3/metricas.py` |
 | Múltiplos, conferência entre fontes e mediana do setor | `src/setores_b3/multiplos.py` |
 | Escolha do código, elegibilidade e agregados | `src/setores_b3/estudo.py` |
 | Calendário de pregões e selo de situação | `src/setores_b3/calendario.py`, `src/setores_b3/selo.py` |
-| Painel estático | `docs/index.html`, que lê `docs/dados.json` |
+| Painel estático | `docs/index.html`, que lê `docs/dados.json` e `docs/historico.json` |
 | Atualização diária | `.github/workflows/atualizar.yml` |
 
-Só os módulos de coleta falam com a rede. Os cálculos recebem tabelas prontas, o que permite testar tudo sem internet: são 40 testes com dados sintéticos (`pytest`), incluindo demonstrações fictícias no formato da CVM.
+Só os módulos de coleta falam com a rede. Os cálculos recebem tabelas prontas, o que permite testar tudo sem internet: são 43 testes com dados sintéticos (`pytest`), incluindo demonstrações fictícias no formato da CVM.
 
 **Selo:** verde quando pelo menos 95% das large e mid caps têm preço do último pregão fechado, há fundamentos para 80% das elegíveis e os testes passam. Amarelo quando algum desses pontos falha. Vermelho quando a coleta ou os testes quebram.
 

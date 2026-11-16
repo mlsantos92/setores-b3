@@ -6,6 +6,11 @@ on:
     - cron: "30 11 * * 1-5"
     - cron: "15 22 * * 1-5"
   workflow_dispatch:
+    inputs:
+      historico_completo:
+        description: "Baixar de novo os 6 anos de demonstrações da CVM"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -37,6 +42,7 @@ jobs:
       - name: Coletar dados e calcular o estudo
         env:
           TESTES_OK: ${{ steps.testes.outcome == 'success' && '1' || '0' }}
+          HIST_COMPLETO: ${{ inputs.historico_completo && '1' || '0' }}
         run: python scripts/atualizar.py
 
       - name: Gravar alterações
