@@ -86,3 +86,14 @@ def test_universo_do_arquivo():
     assert len(u) == 282
     assert set(u.lista) == {"Large e Mid Caps", "Small e Micro Caps"}
     assert u.setor.nunique() == 11
+
+
+def test_codigo_so_com_preco_depois_do_corte_fica_sem_dado():
+    u, fech, vol, fund, fim = _base()
+    fech["NOVA3"] = np.nan
+    fech.loc[fech.index[-1], "NOVA3"] = 10.0
+    vol["NOVA3"] = 100.0
+    u.loc[u.empresa == "Delta", "tickers"] = pd.Series([["NOVA3"]], index=u.index[u.empresa == "Delta"])
+    d = estudo.montar(u, fech, vol, fund, 0.10, fech.index[-2])
+    delta = next(e for e in d["empresas"] if e["empresa"] == "Delta")
+    assert delta["ticker"] is None

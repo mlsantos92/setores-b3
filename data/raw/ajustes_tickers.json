@@ -1,5 +1,32 @@
 {
-  "_nota": "Códigos que mudaram desde a lista original (renomear: antigo -> atual) e empresas que saíram da bolsa (fora). A lista original não é alterada.",
-  "renomear": {},
-  "fora": {}
+  "_nota": "Códigos que mudaram desde a lista original (renomear: antigo -> atual) e empresas que saíram da bolsa (fora: código da lista -> motivo). A lista original não é alterada. Fontes: comunicados das empresas e da B3 noticiados em 2025 e 2026.",
+  "renomear": {
+    "ELET3": "AXIA3",
+    "ELET6": "AXIA6",
+    "CCRO3": "MOTV3",
+    "EMBR3": "EMBJ3",
+    "NTCO3": "NATU3",
+    "JBSS3": "JBSS32",
+    "ODPV3": "SAUD3",
+    "MRFG3": "MBRF3",
+    "AZUL4": "AZUL3",
+    "GOLL4": "GOLL54",
+    "GUAR3": "RIAA3",
+    "PETZ3": "AUAU3",
+    "LVTC3": "WDCN3",
+    "TRAD3": "ECOM3",
+    "ATOM3": "FICT3",
+    "BRIT3": "BRST3"
+  },
+  "fora": {
+    "BRFS3": "Incorporada pela Marfrig em 2025; a empresa combinada é a MBRF (MBRF3), que aparece na linha da Marfrig",
+    "NEOE3": "Fechamento de capital após oferta pública (OPA) da controladora Iberdrola",
+    "STBP3": "Fechamento de capital em 2025 após OPA da CMA CGM",
+    "CRFB3": "Fechamento de capital em 2025 após OPA do Carrefour França",
+    "BPAN4": "Saiu da bolsa em janeiro de 2026, incorporado pelo BTG Pactual",
+    "SRNA3": "Fechamento de capital após OPA em 2025",
+    "PORT3": "Fechamento de capital em dezembro de 2025 após OPA da MSC",
+    "ELMD3": "Fechamento de capital em 2025 após compra pela Globo",
+    "KRSA3": "Fechamento de capital em 2025 após OPA do controlador"
+  }
 }

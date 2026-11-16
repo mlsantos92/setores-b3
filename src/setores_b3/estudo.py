@@ -28,7 +28,7 @@ def escolher_tickers(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFra
     for e in universo.itertuples():
         melhor, liq_melhor = None, None
         for t in e.tickers:
-            if t not in fech.columns:
+            if t not in fech.columns or not fech[t].notna().any():
                 continue
             liq = metricas.liquidez(fech[t], vol[t])
             if melhor is None or liq["liq_mediana"] > liq_melhor["liq_mediana"]:
