@@ -1,0 +1,16 @@
+[project]
+name = "setores-b3"
+version = "1.0.0"
+description = "Setores e empresas da B3: retorno, risco e múltiplos"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pandas", "requests", "yfinance"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]

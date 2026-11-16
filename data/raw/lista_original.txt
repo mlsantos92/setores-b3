@@ -1,0 +1,633 @@
+Lista 1: Large e Mid Caps (Ações B3)
+1. Financeiro:
+
+Itaú Unibanco (ITUB4, ITUB3)
+
+Bradesco (BBDC4, BBDC3)
+
+Banco do Brasil (BBAS3)
+
+BTG Pactual (BPAC11, BPAC3, BPAC5)
+
+Santander Brasil (SANB11, SANB3, SANB4)
+
+B3 (B3SA3)
+
+BB Seguridade (BBSE3)
+
+Caixa Seguridade (CXSE3)
+
+Porto Seguro (PSSA3)
+
+IRB Brasil RE (IRBR3)
+
+Multiplan (MULT3)
+
+Allos (ALOS3)
+
+Iguatemi (IGTI11, IGTI3)
+
+JHSF (JHSF3)
+
+2. Utilidade Pública:
+
+Axia Energia / Eletrobras (ELET3, ELET6)
+
+Sabesp (SBSP3)
+
+Equatorial (EQTL3)
+
+Eneva (ENEV3)
+
+CPFL Energia (CPFE3)
+
+Copel (CPLE6, CPLE3)
+
+Engie Brasil (EGIE3)
+
+Cemig (CMIG4, CMIG3)
+
+Energisa (ENGI11, ENGI3, ENGI4)
+
+Neoenergia (NEOE3)
+
+Taesa (TAEE11, TAEE3, TAEE4)
+
+ISA Energia Brasil / CTEEP (ISAE4, ISAE3)
+
+Copasa (CSMG3)
+
+Sanepar (SAPR11, SAPR4, SAPR3)
+
+3. Materiais Básicos — Celulose:
+
+Suzano (SUZB3)
+
+Klabin (KLBN11, KLBN4, KLBN3)
+
+3. Materiais Básicos — Siderurgia:
+
+Gerdau (GGBR4, GGBR3)
+
+Metalúrgica Gerdau (GOAU4, GOAU3)
+
+CSN (CSNA3)
+
+Usiminas (USIM5, USIM3)
+
+3. Materiais Básicos — Mineração (e Petroquímicos):
+
+Vale (VALE3)
+
+CSN Mineração (CMIN3)
+
+Bradespar (BRAP4, BRAP3)
+
+Braskem (BRKM5, BRKM3)
+
+4. Petróleo, Gás e Biocombustíveis:
+
+Petrobras (PETR4, PETR3)
+
+PRIO (PRIO3)
+
+Ultrapar (UGPA3)
+
+Vibra Energia (VBBR3)
+
+Cosan (CSAN3)
+
+5. Bens Industriais:
+
+WEG (WEGE3)
+
+Embraer (EMBR3)
+
+Rumo (RAIL3)
+
+Localiza (RENT3)
+
+Motiva / CCR (CCRO3)
+
+Santos Brasil (STBP3)
+
+Ecorodovias (ECOR3)
+
+Marcopolo (POMO4, POMO3)
+
+Taurus Armas (TASA4, TASA3)
+
+6. Consumo Cíclico — Varejo:
+
+Lojas Renner (LREN3)
+
+Magazine Luiza (MGLU3)
+
+Vivara (VIVA3)
+
+Azzas 2154 (AZZA3)
+
+Casas Bahia (BHIA3)
+
+Alpargatas (ALPA4, ALPA3)
+
+6. Consumo Cíclico — Imobiliário:
+
+Cyrela (CYRE3)
+
+MRV (MRVE3)
+
+Direcional (DIRR3)
+
+Eztec (EZTC3)
+
+6. Consumo Cíclico — Restante:
+
+Smart Fit (SMFT3)
+
+Cogna (COGN3)
+
+Yduqs (YDUQ3)
+
+Movida (MOVI3)
+
+Automob (AMOB3)
+
+7. Consumo Não Cíclico — Alimentos:
+
+Ambev (ABEV3)
+
+JBS (JBSS3)
+
+BRF (BRFS3)
+
+Marfrig (MRFG3)
+
+São Martinho (SMTO3)
+
+7. Consumo Não Cíclico — Agro:
+
+SLC Agrícola (SLCE3)
+
+7. Consumo Não Cíclico — Restante:
+
+Assaí (ASAI3)
+
+Carrefour Brasil (CRFB3)
+
+Natura &Co (NTCO3)
+
+8. Saúde:
+
+Rede D'Or (RDOR3)
+
+Hapvida (HAPV3)
+
+Bradsaúde / Odontoprev (ODPV3)
+
+Raia Drogasil (RADL3)
+
+Hypera (HYPE3)
+
+Fleury (FLRY3)
+
+Dasa (DASA3)
+
+9. Tecnologia da Informação:
+
+TOTVS (TOTS3)
+
+Intelbras (INTB3)
+
+10. Comunicações:
+
+Telefônica Brasil / Vivo (VIVT3)
+
+TIM (TIMS3)
+
+11. Outros:
+
+Itaúsa (ITSA4, ITSA3)
+
+Simpar (SIMH3)
+
+Lista 2: Small Caps e Micro Caps (Ações B3)
+1. Financeiro:
+
+Banco ABC Brasil (ABCB4)
+
+Banrisul (BRSR6, BRSR3)
+
+Banco Pan (BPAN4)
+
+Banco BMG (BMGB4)
+
+Banco Pine (PINE4, PINE3)
+
+BR Partners (BRBI11)
+
+Banco Mercantil do Brasil (BMEB4, BMEB3)
+
+Banco da Amazônia (BAZA3)
+
+Banco do Nordeste (BNBR3)
+
+Paraná Banco (PRBC4)
+
+Méliuz (CASH3)
+
+Log Commercial Properties (LOGG3)
+
+São Carlos (SCAR3)
+
+Syn Prop e Tech (SYNE3)
+
+General Shopping (GSHP3)
+
+Alper Consultoria (APER3)
+
+2. Utilidade Pública:
+
+Alupar (ALUP11, ALUP4, ALUP3)
+
+Auren Energia (AURE3)
+
+Serena Energia (SRNA3)
+
+Light (LIGT3)
+
+Celesc (CLSC4, CLSC3)
+
+Coelba (CEEB5, CEEB3)
+
+Celpe (CEPE5, CEPE6, CEPE3)
+
+Cosern (CSRN3, CSRN5, CSRN6)
+
+Elektro (EKTR4, EKTR3)
+
+Emae (EMAE4, EMAE3)
+
+Afluente T (AFLT3)
+
+CEB (CEBR3, CEBR5, CEBR6)
+
+Cemar / Equatorial Maranhão (EQMA3B)
+
+Ambipar (AMBP3)
+
+Orizon (ORVR3)
+
+3. Materiais Básicos — Celulose:
+
+Irani (RANI3)
+
+Dexco (DXCO3)
+
+Eucatex (EUCA4, EUCA3)
+
+3. Materiais Básicos — Siderurgia:
+
+Ferbasa (FESA4, FESA3)
+
+Paranapanema (PMAM3)
+
+Mangels (MGEL4, MGEL3)
+
+Tekno (TKNO4, TKNO3)
+
+Wetzel (MWET4, MWET3)
+
+Aliperti (APTI4, APTI3)
+
+Haga (HAGA4, HAGA3)
+
+Nordon (NORD3)
+
+3. Materiais Básicos — Mineração (e Petroquímicos):
+
+Unipar (UNIP6, UNIP3, UNIP5)
+
+CBA — Companhia Brasileira de Alumínio (CBAV3)
+
+Nutriplant (NUTR3)
+
+4. Petróleo, Gás e Biocombustíveis:
+
+Brava Energia (BRAV3)
+
+PetroRecôncavo (RECV3)
+
+Raízen (RAIZ4)
+
+Lupatech (LUPA3)
+
+OSX Brasil (OSXB3)
+
+Refinaria de Manguinhos (RPMG3)
+
+5. Bens Industriais:
+
+Randoncorp (RAPT4, RAPT3)
+
+Tupy (TUPY3)
+
+Frasle Mobility (FRAS3)
+
+Mahle Metal Leve (LEVE3)
+
+Iochpe-Maxion (MYPK3)
+
+Kepler Weber (KEPL3)
+
+Romi (ROMI3)
+
+Schulz (SHUL4, SHUL3)
+
+Aeris (AERI3)
+
+Bardella (BDLL4, BDLL3)
+
+Metisa (MTSA4, MTSA3)
+
+Micheletto (MCHL3)
+
+Recrusul (RCSL4, RCSL3)
+
+Hidrovias do Brasil (HBSA3)
+
+JSL (JSLG3)
+
+Tegma (TGMA3)
+
+Wilson Sons (PORT3)
+
+Log-In (LOGN3)
+
+Azul (AZUL4)
+
+Gol (GOLL4)
+
+Mills (MILS3)
+
+Armac (ARML3)
+
+Vamos (VAMO3)
+
+Priner (PRNR3)
+
+GPS (GGPS3)
+
+Sequoia Logística (SEQL3)
+
+Estapar (ALPK3)
+
+Triunfo Participações (TPIS3)
+
+Arteris (ARTR3)
+
+6. Consumo Cíclico — Varejo:
+
+Vulcabras (VULC3)
+
+Grendene (GRND3)
+
+Guararapes / Riachuelo (GUAR3)
+
+C&A Brasil (CEAB3)
+
+Lojas Marisa (AMAR3)
+
+Lojas Quero-Quero (LJQQ3)
+
+Petz (PETZ3)
+
+Track & Field (TFCO4)
+
+Westwing (WEST3)
+
+Enjoei (ENJU3)
+
+Infracommerce (IFCM3)
+
+Allied Tecnologia (ALLD3)
+
+Multilaser / Multi (MLAS3)
+
+Americanas (AMER3)
+
+Espaçolaser (ESPA3)
+
+Veste / Le Lis Blanc (VSTE3)
+
+Grazziotin (CGRA4, CGRA3)
+
+Saraiva (SLED4, SLED3)
+
+Technos (TECN3)
+
+6. Consumo Cíclico — Imobiliário:
+
+Even (EVEN3)
+
+Lavvi (LAVV3)
+
+Trisul (TRIS3)
+
+Moura Dubeux (MDNE3)
+
+Tenda (TEND3)
+
+Helbor (HBOR3)
+
+Mitre Realty (MTRE3)
+
+Plano & Plano (PLPL3)
+
+Melnick (MELK3)
+
+Cury (CURY3)
+
+Tecnisa (TCSA3)
+
+Gafisa (GFSA3)
+
+Rossi Residencial (RSID3)
+
+PDG Realty (PDGR3)
+
+Viver Incorporadora (VIVR3)
+
+João Fortes (JFEN3)
+
+RNI (RDNI3)
+
+CR2 (CRDE3)
+
+Inter Construtora (INNT3)
+
+Lopes Brasil (LPSB3)
+
+Nexpe / Brasil Brokers (NEXP3)
+
+6. Consumo Cíclico — Restante:
+
+CVC Brasil (CVCB3)
+
+Ser Educacional (SEER3)
+
+Ânima Educação (ANIM3)
+
+Cruzeiro do Sul Educacional (CSED3)
+
+Bahema Educação (BAHI3)
+
+Dotz (DOTZ3)
+
+Time For Fun (SHOW3)
+
+São Paulo Turismo (AHEB3, AHEB5, AHEB6)
+
+Hotéis Othon (HOOT4, HOOT3)
+
+Bicicletas Monark (BMKS3)
+
+Estrela (ESTR4, ESTR3)
+
+Cedro Têxtil (CEDO4, CEDO3)
+
+Coteminas (CTNM4, CTNM3)
+
+Dohler (DOHL4, DOHL3)
+
+Karsten (CTKA4, CTKA3)
+
+Pettenati (PTNT4, PTNT3)
+
+Santanense (CTSA4, CTSA3)
+
+Têxtil Renauxview (TXRX4, TXRX3)
+
+Cambuci / Penalty (CAMB3)
+
+Plascar (PLAS3)
+
+Mundial (MNDL3)
+
+7. Consumo Não Cíclico — Alimentos:
+
+Minerva Foods (BEEF3)
+
+Camil Alimentos (CAML3)
+
+M. Dias Branco (MDIA3)
+
+Jalles Machado (JALL3)
+
+Excelsior Alimentos (BAUH4)
+
+Josapar (JOPA4, JOPA3)
+
+Oderich (ODER4, ODER3)
+
+7. Consumo Não Cíclico — Agro:
+
+3tentos (TTEN3)
+
+Boa Safra Sementes (SOJA3)
+
+BrasilAgro (AGRO3)
+
+Vittia (VITT3)
+
+AgroGalaxy (AGXY3)
+
+Terra Santa Propriedades Agrícolas (LAND3)
+
+Pomifrutas (FRTA3)
+
+7. Consumo Não Cíclico — Restante:
+
+Grupo Mateus (GMAT3)
+
+Pão de Açúcar / GPA (PCAR3)
+
+Dimed / Panvel (PNVL3)
+
+Viveo (VVEO3)
+
+Bombril (BOBR4, BOBR3)
+
+8. Saúde:
+
+Oncoclínicas (ONCO3)
+
+Mater Dei (MATD3)
+
+Blau Farmacêutica (BLAU3)
+
+Pague Menos (PGMN3)
+
+Alliança Saúde (AALR3)
+
+Kora Saúde (KRSA3)
+
+Qualicorp (QUAL3)
+
+Biomm (BIOM3)
+
+Nortec Química (NRTQ3)
+
+Ourofino Saúde Animal (OFSA3)
+
+Baumer (BALM4, BALM3)
+
+9. Tecnologia da Informação:
+
+Locaweb / LWSA (LWSA3)
+
+Positivo Tecnologia (POSI3)
+
+Bemobi Tech (BMOB3)
+
+Valid (VLID3)
+
+Padtec (PDTC3)
+
+WDC Networks (LVTC3)
+
+TC — Traders Club (TRAD3)
+
+Atom Educação (ATOM3)
+
+Grupo Toky (TOKY3)
+
+10. Comunicações:
+
+Desktop (DESK3)
+
+Unifique (FIQE3)
+
+Brisanet (BRIT3)
+
+Eletromidia (ELMD3)
+
+Oi (OIBR3, OIBR4)
+
+Algar Telecom (ALGT3)
+
+Telebras (TELB4, TELB3)
+
+Dtcom (DTCY3)
+
+11. Outros:
+
+Metalúrgica Riosulense (RSUL4, RSUL3)
+
+Cemepe Investimentos (MAPT4, MAPT3)
+
+Trevisa Investimentos (LUXM4, LUXM3)
+
+Contax (ATMP3)
+
+Revee (RVEE3)

@@ -1,0 +1,88 @@
+import numpy as np
+import pandas as pd
+import pytest
+
+from setores_b3 import estudo, multiplos, universo
+
+
+def _base():
+    idx = pd.bdate_range("2021-11-16", "2026-11-13")
+    n = len(idx)
+    rng = np.random.default_rng(1)
+    def caminho(mu):
+        return 100 * np.cumprod(1 + rng.normal(mu, 0.015, n))
+    fech = pd.DataFrame({"AAAA4": caminho(0.0005), "AAAA3": caminho(0.0005), "BBBB3": caminho(0.0002),
+                         "CCCC3": caminho(0.0)}, index=idx)
+    vol = pd.DataFrame({"AAAA4": 1e6, "AAAA3": 1e4, "BBBB3": 5e5, "CCCC3": 10.0}, index=idx)
+    vol.loc[vol.index[::3], "CCCC3"] = 0  # micro cap que não negocia todo dia
+    u = pd.DataFrame({
+        "lista": ["Large e Mid Caps", "Large e Mid Caps", "Small e Micro Caps", "Small e Micro Caps"],
+        "setor": ["Financeiro", "Financeiro", "Financeiro", "Saúde"],
+        "subsetor": ["", "", "", ""],
+        "empresa": ["Alfa", "Beta", "Gama", "Delta"],
+        "tickers": [["AAAA4", "AAAA3"], ["BBBB3"], ["CCCC3"], ["ZZZZ3"]],
+    })
+    fund = {"AAAA4": {"trailingPE": 8.0, "priceToBook": 1.0, "dividendYield": 6.0, "trailingEps": 2.0},
+            "BBBB3": {"trailingPE": 12.0, "priceToBook": 2.0, "dividendYield": 2.0, "trailingEps": 1.0}}
+    return u, fech, vol, fund, idx[-1]
+
+
+def test_escolhe_o_codigo_mais_liquido():
+    u, fech, vol, _, _ = _base()
+    e = estudo.escolher_tickers(u, fech, vol)
+    assert e.loc[e.empresa == "Alfa", "ticker"].item() == "AAAA4"
+    assert e.loc[e.empresa == "Delta", "ticker"].item() is None
+
+
+def test_pouca_liquidez_fica_fora_dos_agregados():
+    u, fech, vol, fund, fim = _base()
+    d = estudo.montar(u, fech, vol, fund, 0.10, fim)
+    emp = {e["empresa"]: e for e in d["empresas"]}
+    assert emp["Gama"]["elegivel"] is False and emp["Alfa"]["elegivel"] is True
+    fin = next(s for s in d["setores"] if s["setor"] == "Financeiro" and s["lista"] == "Todas")
+    assert fin["empresas"] == 3 and fin["elegiveis"] == 2
+
+
+def test_mediana_do_setor_e_posicao_relativa():
+    u, fech, vol, fund, fim = _base()
+    d = estudo.montar(u, fech, vol, fund, 0.10, fim)
+    fin = next(s for s in d["setores"] if s["setor"] == "Financeiro" and s["lista"] == "Todas")
+    assert fin["pl_mediana"] == pytest.approx(10.0)
+    alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
+    assert alfa["pl_vs_setor"] == pytest.approx(-0.2)
+    assert alfa["dy"] == pytest.approx(0.06)
+
+
+def test_precos_depois_do_pregao_esperado_sao_ignorados():
+    u, fech, vol, fund, fim = _base()
+    corte = fech.index[-3]
+    d = estudo.montar(u, fech, vol, fund, 0.10, corte)
+    assert all(e["ultimo_preco_em"] <= corte.date().isoformat() for e in d["empresas"] if e["ticker"])
+
+
+def test_saida_nao_tem_nan():
+    import json
+    u, fech, vol, fund, fim = _base()
+    json.dumps(estudo.montar(u, fech, vol, fund, float("nan"), fim), allow_nan=False)
+
+
+def test_limpar_trata_prejuizo_e_valores_absurdos():
+    m = multiplos.limpar({"trailingPE": -5.0, "trailingEps": -1.0, "priceToBook": 500, "dividendYield": 95.0,
+                          "returnOnEquity": 0.15, "debtToEquity": 80.0})
+    assert m["pl"] is None and m["prejuizo"] is True
+    assert m["pvp"] is None and m["dy"] is None
+    assert m["roe"] == pytest.approx(0.15) and m["div_pl"] == pytest.approx(0.8)
+
+
+def test_ajustes_trocam_codigo_sem_repetir():
+    u = pd.DataFrame({"empresa": ["X"], "tickers": [["ELET3", "ELET6", "AXIA3"]]})
+    out = universo.aplicar_ajustes(u, {"renomear": {"ELET3": "AXIA3", "ELET6": "AXIA6"}, "fora": {}})
+    assert out.tickers.iloc[0] == ["AXIA3", "AXIA6"]
+    assert out.tickers_lista.iloc[0] == ["ELET3", "ELET6", "AXIA3"]
+
+
+def test_universo_do_arquivo():
+    u = universo.carregar()
+    assert len(u) == 282
+    assert set(u.lista) == {"Large e Mid Caps", "Small e Micro Caps"}
+    assert u.setor.nunique() == 11

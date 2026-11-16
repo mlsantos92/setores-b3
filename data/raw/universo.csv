@@ -1,0 +1,283 @@
+lista,setor,subsetor,empresa,tickers
+Large e Mid Caps,Financeiro,,Itaú Unibanco,ITUB4 ITUB3
+Large e Mid Caps,Financeiro,,Bradesco,BBDC4 BBDC3
+Large e Mid Caps,Financeiro,,Banco do Brasil,BBAS3
+Large e Mid Caps,Financeiro,,BTG Pactual,BPAC11 BPAC3 BPAC5
+Large e Mid Caps,Financeiro,,Santander Brasil,SANB11 SANB3 SANB4
+Large e Mid Caps,Financeiro,,B3,B3SA3
+Large e Mid Caps,Financeiro,,BB Seguridade,BBSE3
+Large e Mid Caps,Financeiro,,Caixa Seguridade,CXSE3
+Large e Mid Caps,Financeiro,,Porto Seguro,PSSA3
+Large e Mid Caps,Financeiro,,IRB Brasil RE,IRBR3
+Large e Mid Caps,Financeiro,,Multiplan,MULT3
+Large e Mid Caps,Financeiro,,Allos,ALOS3
+Large e Mid Caps,Financeiro,,Iguatemi,IGTI11 IGTI3
+Large e Mid Caps,Financeiro,,JHSF,JHSF3
+Large e Mid Caps,Utilidade Pública,,Axia Energia / Eletrobras,ELET3 ELET6
+Large e Mid Caps,Utilidade Pública,,Sabesp,SBSP3
+Large e Mid Caps,Utilidade Pública,,Equatorial,EQTL3
+Large e Mid Caps,Utilidade Pública,,Eneva,ENEV3
+Large e Mid Caps,Utilidade Pública,,CPFL Energia,CPFE3
+Large e Mid Caps,Utilidade Pública,,Copel,CPLE6 CPLE3
+Large e Mid Caps,Utilidade Pública,,Engie Brasil,EGIE3
+Large e Mid Caps,Utilidade Pública,,Cemig,CMIG4 CMIG3
+Large e Mid Caps,Utilidade Pública,,Energisa,ENGI11 ENGI3 ENGI4
+Large e Mid Caps,Utilidade Pública,,Neoenergia,NEOE3
+Large e Mid Caps,Utilidade Pública,,Taesa,TAEE11 TAEE3 TAEE4
+Large e Mid Caps,Utilidade Pública,,ISA Energia Brasil / CTEEP,ISAE4 ISAE3
+Large e Mid Caps,Utilidade Pública,,Copasa,CSMG3
+Large e Mid Caps,Utilidade Pública,,Sanepar,SAPR11 SAPR4 SAPR3
+Large e Mid Caps,Materiais Básicos,Celulose,Suzano,SUZB3
+Large e Mid Caps,Materiais Básicos,Celulose,Klabin,KLBN11 KLBN4 KLBN3
+Large e Mid Caps,Materiais Básicos,Siderurgia,Gerdau,GGBR4 GGBR3
+Large e Mid Caps,Materiais Básicos,Siderurgia,Metalúrgica Gerdau,GOAU4 GOAU3
+Large e Mid Caps,Materiais Básicos,Siderurgia,CSN,CSNA3
+Large e Mid Caps,Materiais Básicos,Siderurgia,Usiminas,USIM5 USIM3
+Large e Mid Caps,Materiais Básicos,Mineração (e Petroquímicos),Vale,VALE3
+Large e Mid Caps,Materiais Básicos,Mineração (e Petroquímicos),CSN Mineração,CMIN3
+Large e Mid Caps,Materiais Básicos,Mineração (e Petroquímicos),Bradespar,BRAP4 BRAP3
+Large e Mid Caps,Materiais Básicos,Mineração (e Petroquímicos),Braskem,BRKM5 BRKM3
+Large e Mid Caps,"Petróleo, Gás e Biocombustíveis",,Petrobras,PETR4 PETR3
+Large e Mid Caps,"Petróleo, Gás e Biocombustíveis",,PRIO,PRIO3
+Large e Mid Caps,"Petróleo, Gás e Biocombustíveis",,Ultrapar,UGPA3
+Large e Mid Caps,"Petróleo, Gás e Biocombustíveis",,Vibra Energia,VBBR3
+Large e Mid Caps,"Petróleo, Gás e Biocombustíveis",,Cosan,CSAN3
+Large e Mid Caps,Bens Industriais,,WEG,WEGE3
+Large e Mid Caps,Bens Industriais,,Embraer,EMBR3
+Large e Mid Caps,Bens Industriais,,Rumo,RAIL3
+Large e Mid Caps,Bens Industriais,,Localiza,RENT3
+Large e Mid Caps,Bens Industriais,,Motiva / CCR,CCRO3
+Large e Mid Caps,Bens Industriais,,Santos Brasil,STBP3
+Large e Mid Caps,Bens Industriais,,Ecorodovias,ECOR3
+Large e Mid Caps,Bens Industriais,,Marcopolo,POMO4 POMO3
+Large e Mid Caps,Bens Industriais,,Taurus Armas,TASA4 TASA3
+Large e Mid Caps,Consumo Cíclico,Varejo,Lojas Renner,LREN3
+Large e Mid Caps,Consumo Cíclico,Varejo,Magazine Luiza,MGLU3
+Large e Mid Caps,Consumo Cíclico,Varejo,Vivara,VIVA3
+Large e Mid Caps,Consumo Cíclico,Varejo,Azzas 2154,AZZA3
+Large e Mid Caps,Consumo Cíclico,Varejo,Casas Bahia,BHIA3
+Large e Mid Caps,Consumo Cíclico,Varejo,Alpargatas,ALPA4 ALPA3
+Large e Mid Caps,Consumo Cíclico,Imobiliário,Cyrela,CYRE3
+Large e Mid Caps,Consumo Cíclico,Imobiliário,MRV,MRVE3
+Large e Mid Caps,Consumo Cíclico,Imobiliário,Direcional,DIRR3
+Large e Mid Caps,Consumo Cíclico,Imobiliário,Eztec,EZTC3
+Large e Mid Caps,Consumo Cíclico,Restante,Smart Fit,SMFT3
+Large e Mid Caps,Consumo Cíclico,Restante,Cogna,COGN3
+Large e Mid Caps,Consumo Cíclico,Restante,Yduqs,YDUQ3
+Large e Mid Caps,Consumo Cíclico,Restante,Movida,MOVI3
+Large e Mid Caps,Consumo Cíclico,Restante,Automob,AMOB3
+Large e Mid Caps,Consumo Não Cíclico,Alimentos,Ambev,ABEV3
+Large e Mid Caps,Consumo Não Cíclico,Alimentos,JBS,JBSS3
+Large e Mid Caps,Consumo Não Cíclico,Alimentos,BRF,BRFS3
+Large e Mid Caps,Consumo Não Cíclico,Alimentos,Marfrig,MRFG3
+Large e Mid Caps,Consumo Não Cíclico,Alimentos,São Martinho,SMTO3
+Large e Mid Caps,Consumo Não Cíclico,Agro,SLC Agrícola,SLCE3
+Large e Mid Caps,Consumo Não Cíclico,Restante,Assaí,ASAI3
+Large e Mid Caps,Consumo Não Cíclico,Restante,Carrefour Brasil,CRFB3
+Large e Mid Caps,Consumo Não Cíclico,Restante,Natura &Co,NTCO3
+Large e Mid Caps,Saúde,,Rede D'Or,RDOR3
+Large e Mid Caps,Saúde,,Hapvida,HAPV3
+Large e Mid Caps,Saúde,,Bradsaúde / Odontoprev,ODPV3
+Large e Mid Caps,Saúde,,Raia Drogasil,RADL3
+Large e Mid Caps,Saúde,,Hypera,HYPE3
+Large e Mid Caps,Saúde,,Fleury,FLRY3
+Large e Mid Caps,Saúde,,Dasa,DASA3
+Large e Mid Caps,Tecnologia da Informação,,TOTVS,TOTS3
+Large e Mid Caps,Tecnologia da Informação,,Intelbras,INTB3
+Large e Mid Caps,Comunicações,,Telefônica Brasil / Vivo,VIVT3
+Large e Mid Caps,Comunicações,,TIM,TIMS3
+Large e Mid Caps,Outros,,Itaúsa,ITSA4 ITSA3
+Large e Mid Caps,Outros,,Simpar,SIMH3
+Small e Micro Caps,Financeiro,,Banco ABC Brasil,ABCB4
+Small e Micro Caps,Financeiro,,Banrisul,BRSR6 BRSR3
+Small e Micro Caps,Financeiro,,Banco Pan,BPAN4
+Small e Micro Caps,Financeiro,,Banco BMG,BMGB4
+Small e Micro Caps,Financeiro,,Banco Pine,PINE4 PINE3
+Small e Micro Caps,Financeiro,,BR Partners,BRBI11
+Small e Micro Caps,Financeiro,,Banco Mercantil do Brasil,BMEB4 BMEB3
+Small e Micro Caps,Financeiro,,Banco da Amazônia,BAZA3
+Small e Micro Caps,Financeiro,,Banco do Nordeste,BNBR3
+Small e Micro Caps,Financeiro,,Paraná Banco,PRBC4
+Small e Micro Caps,Financeiro,,Méliuz,CASH3
+Small e Micro Caps,Financeiro,,Log Commercial Properties,LOGG3
+Small e Micro Caps,Financeiro,,São Carlos,SCAR3
+Small e Micro Caps,Financeiro,,Syn Prop e Tech,SYNE3
+Small e Micro Caps,Financeiro,,General Shopping,GSHP3
+Small e Micro Caps,Financeiro,,Alper Consultoria,APER3
+Small e Micro Caps,Utilidade Pública,,Alupar,ALUP11 ALUP4 ALUP3
+Small e Micro Caps,Utilidade Pública,,Auren Energia,AURE3
+Small e Micro Caps,Utilidade Pública,,Serena Energia,SRNA3
+Small e Micro Caps,Utilidade Pública,,Light,LIGT3
+Small e Micro Caps,Utilidade Pública,,Celesc,CLSC4 CLSC3
+Small e Micro Caps,Utilidade Pública,,Coelba,CEEB5 CEEB3
+Small e Micro Caps,Utilidade Pública,,Celpe,CEPE5 CEPE6 CEPE3
+Small e Micro Caps,Utilidade Pública,,Cosern,CSRN3 CSRN5 CSRN6
+Small e Micro Caps,Utilidade Pública,,Elektro,EKTR4 EKTR3
+Small e Micro Caps,Utilidade Pública,,Emae,EMAE4 EMAE3
+Small e Micro Caps,Utilidade Pública,,Afluente T,AFLT3
+Small e Micro Caps,Utilidade Pública,,CEB,CEBR3 CEBR5 CEBR6
+Small e Micro Caps,Utilidade Pública,,Cemar / Equatorial Maranhão,EQMA3B
+Small e Micro Caps,Utilidade Pública,,Ambipar,AMBP3
+Small e Micro Caps,Utilidade Pública,,Orizon,ORVR3
+Small e Micro Caps,Materiais Básicos,Celulose,Irani,RANI3
+Small e Micro Caps,Materiais Básicos,Celulose,Dexco,DXCO3
+Small e Micro Caps,Materiais Básicos,Celulose,Eucatex,EUCA4 EUCA3
+Small e Micro Caps,Materiais Básicos,Siderurgia,Ferbasa,FESA4 FESA3
+Small e Micro Caps,Materiais Básicos,Siderurgia,Paranapanema,PMAM3
+Small e Micro Caps,Materiais Básicos,Siderurgia,Mangels,MGEL4 MGEL3
+Small e Micro Caps,Materiais Básicos,Siderurgia,Tekno,TKNO4 TKNO3
+Small e Micro Caps,Materiais Básicos,Siderurgia,Wetzel,MWET4 MWET3
+Small e Micro Caps,Materiais Básicos,Siderurgia,Aliperti,APTI4 APTI3
+Small e Micro Caps,Materiais Básicos,Siderurgia,Haga,HAGA4 HAGA3
+Small e Micro Caps,Materiais Básicos,Siderurgia,Nordon,NORD3
+Small e Micro Caps,Materiais Básicos,Mineração (e Petroquímicos),Unipar,UNIP6 UNIP3 UNIP5
+Small e Micro Caps,Materiais Básicos,Mineração (e Petroquímicos),CBA — Companhia Brasileira de Alumínio,CBAV3
+Small e Micro Caps,Materiais Básicos,Mineração (e Petroquímicos),Nutriplant,NUTR3
+Small e Micro Caps,"Petróleo, Gás e Biocombustíveis",,Brava Energia,BRAV3
+Small e Micro Caps,"Petróleo, Gás e Biocombustíveis",,PetroRecôncavo,RECV3
+Small e Micro Caps,"Petróleo, Gás e Biocombustíveis",,Raízen,RAIZ4
+Small e Micro Caps,"Petróleo, Gás e Biocombustíveis",,Lupatech,LUPA3
+Small e Micro Caps,"Petróleo, Gás e Biocombustíveis",,OSX Brasil,OSXB3
+Small e Micro Caps,"Petróleo, Gás e Biocombustíveis",,Refinaria de Manguinhos,RPMG3
+Small e Micro Caps,Bens Industriais,,Randoncorp,RAPT4 RAPT3
+Small e Micro Caps,Bens Industriais,,Tupy,TUPY3
+Small e Micro Caps,Bens Industriais,,Frasle Mobility,FRAS3
+Small e Micro Caps,Bens Industriais,,Mahle Metal Leve,LEVE3
+Small e Micro Caps,Bens Industriais,,Iochpe-Maxion,MYPK3
+Small e Micro Caps,Bens Industriais,,Kepler Weber,KEPL3
+Small e Micro Caps,Bens Industriais,,Romi,ROMI3
+Small e Micro Caps,Bens Industriais,,Schulz,SHUL4 SHUL3
+Small e Micro Caps,Bens Industriais,,Aeris,AERI3
+Small e Micro Caps,Bens Industriais,,Bardella,BDLL4 BDLL3
+Small e Micro Caps,Bens Industriais,,Metisa,MTSA4 MTSA3
+Small e Micro Caps,Bens Industriais,,Micheletto,MCHL3
+Small e Micro Caps,Bens Industriais,,Recrusul,RCSL4 RCSL3
+Small e Micro Caps,Bens Industriais,,Hidrovias do Brasil,HBSA3
+Small e Micro Caps,Bens Industriais,,JSL,JSLG3
+Small e Micro Caps,Bens Industriais,,Tegma,TGMA3
+Small e Micro Caps,Bens Industriais,,Wilson Sons,PORT3
+Small e Micro Caps,Bens Industriais,,Log-In,LOGN3
+Small e Micro Caps,Bens Industriais,,Azul,AZUL4
+Small e Micro Caps,Bens Industriais,,Gol,GOLL4
+Small e Micro Caps,Bens Industriais,,Mills,MILS3
+Small e Micro Caps,Bens Industriais,,Armac,ARML3
+Small e Micro Caps,Bens Industriais,,Vamos,VAMO3
+Small e Micro Caps,Bens Industriais,,Priner,PRNR3
+Small e Micro Caps,Bens Industriais,,GPS,GGPS3
+Small e Micro Caps,Bens Industriais,,Sequoia Logística,SEQL3
+Small e Micro Caps,Bens Industriais,,Estapar,ALPK3
+Small e Micro Caps,Bens Industriais,,Triunfo Participações,TPIS3
+Small e Micro Caps,Bens Industriais,,Arteris,ARTR3
+Small e Micro Caps,Consumo Cíclico,Varejo,Vulcabras,VULC3
+Small e Micro Caps,Consumo Cíclico,Varejo,Grendene,GRND3
+Small e Micro Caps,Consumo Cíclico,Varejo,Guararapes / Riachuelo,GUAR3
+Small e Micro Caps,Consumo Cíclico,Varejo,C&A Brasil,CEAB3
+Small e Micro Caps,Consumo Cíclico,Varejo,Lojas Marisa,AMAR3
+Small e Micro Caps,Consumo Cíclico,Varejo,Lojas Quero-Quero,LJQQ3
+Small e Micro Caps,Consumo Cíclico,Varejo,Petz,PETZ3
+Small e Micro Caps,Consumo Cíclico,Varejo,Track & Field,TFCO4
+Small e Micro Caps,Consumo Cíclico,Varejo,Westwing,WEST3
+Small e Micro Caps,Consumo Cíclico,Varejo,Enjoei,ENJU3
+Small e Micro Caps,Consumo Cíclico,Varejo,Infracommerce,IFCM3
+Small e Micro Caps,Consumo Cíclico,Varejo,Allied Tecnologia,ALLD3
+Small e Micro Caps,Consumo Cíclico,Varejo,Multilaser / Multi,MLAS3
+Small e Micro Caps,Consumo Cíclico,Varejo,Americanas,AMER3
+Small e Micro Caps,Consumo Cíclico,Varejo,Espaçolaser,ESPA3
+Small e Micro Caps,Consumo Cíclico,Varejo,Veste / Le Lis Blanc,VSTE3
+Small e Micro Caps,Consumo Cíclico,Varejo,Grazziotin,CGRA4 CGRA3
+Small e Micro Caps,Consumo Cíclico,Varejo,Saraiva,SLED4 SLED3
+Small e Micro Caps,Consumo Cíclico,Varejo,Technos,TECN3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Even,EVEN3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Lavvi,LAVV3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Trisul,TRIS3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Moura Dubeux,MDNE3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Tenda,TEND3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Helbor,HBOR3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Mitre Realty,MTRE3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Plano & Plano,PLPL3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Melnick,MELK3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Cury,CURY3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Tecnisa,TCSA3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Gafisa,GFSA3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Rossi Residencial,RSID3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,PDG Realty,PDGR3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Viver Incorporadora,VIVR3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,João Fortes,JFEN3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,RNI,RDNI3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,CR2,CRDE3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Inter Construtora,INNT3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Lopes Brasil,LPSB3
+Small e Micro Caps,Consumo Cíclico,Imobiliário,Nexpe / Brasil Brokers,NEXP3
+Small e Micro Caps,Consumo Cíclico,Restante,CVC Brasil,CVCB3
+Small e Micro Caps,Consumo Cíclico,Restante,Ser Educacional,SEER3
+Small e Micro Caps,Consumo Cíclico,Restante,Ânima Educação,ANIM3
+Small e Micro Caps,Consumo Cíclico,Restante,Cruzeiro do Sul Educacional,CSED3
+Small e Micro Caps,Consumo Cíclico,Restante,Bahema Educação,BAHI3
+Small e Micro Caps,Consumo Cíclico,Restante,Dotz,DOTZ3
+Small e Micro Caps,Consumo Cíclico,Restante,Time For Fun,SHOW3
+Small e Micro Caps,Consumo Cíclico,Restante,São Paulo Turismo,AHEB3 AHEB5 AHEB6
+Small e Micro Caps,Consumo Cíclico,Restante,Hotéis Othon,HOOT4 HOOT3
+Small e Micro Caps,Consumo Cíclico,Restante,Bicicletas Monark,BMKS3
+Small e Micro Caps,Consumo Cíclico,Restante,Estrela,ESTR4 ESTR3
+Small e Micro Caps,Consumo Cíclico,Restante,Cedro Têxtil,CEDO4 CEDO3
+Small e Micro Caps,Consumo Cíclico,Restante,Coteminas,CTNM4 CTNM3
+Small e Micro Caps,Consumo Cíclico,Restante,Dohler,DOHL4 DOHL3
+Small e Micro Caps,Consumo Cíclico,Restante,Karsten,CTKA4 CTKA3
+Small e Micro Caps,Consumo Cíclico,Restante,Pettenati,PTNT4 PTNT3
+Small e Micro Caps,Consumo Cíclico,Restante,Santanense,CTSA4 CTSA3
+Small e Micro Caps,Consumo Cíclico,Restante,Têxtil Renauxview,TXRX4 TXRX3
+Small e Micro Caps,Consumo Cíclico,Restante,Cambuci / Penalty,CAMB3
+Small e Micro Caps,Consumo Cíclico,Restante,Plascar,PLAS3
+Small e Micro Caps,Consumo Cíclico,Restante,Mundial,MNDL3
+Small e Micro Caps,Consumo Não Cíclico,Alimentos,Minerva Foods,BEEF3
+Small e Micro Caps,Consumo Não Cíclico,Alimentos,Camil Alimentos,CAML3
+Small e Micro Caps,Consumo Não Cíclico,Alimentos,M. Dias Branco,MDIA3
+Small e Micro Caps,Consumo Não Cíclico,Alimentos,Jalles Machado,JALL3
+Small e Micro Caps,Consumo Não Cíclico,Alimentos,Excelsior Alimentos,BAUH4
+Small e Micro Caps,Consumo Não Cíclico,Alimentos,Josapar,JOPA4 JOPA3
+Small e Micro Caps,Consumo Não Cíclico,Alimentos,Oderich,ODER4 ODER3
+Small e Micro Caps,Consumo Não Cíclico,Agro,3tentos,TTEN3
+Small e Micro Caps,Consumo Não Cíclico,Agro,Boa Safra Sementes,SOJA3
+Small e Micro Caps,Consumo Não Cíclico,Agro,BrasilAgro,AGRO3
+Small e Micro Caps,Consumo Não Cíclico,Agro,Vittia,VITT3
+Small e Micro Caps,Consumo Não Cíclico,Agro,AgroGalaxy,AGXY3
+Small e Micro Caps,Consumo Não Cíclico,Agro,Terra Santa Propriedades Agrícolas,LAND3
+Small e Micro Caps,Consumo Não Cíclico,Agro,Pomifrutas,FRTA3
+Small e Micro Caps,Consumo Não Cíclico,Restante,Grupo Mateus,GMAT3
+Small e Micro Caps,Consumo Não Cíclico,Restante,Pão de Açúcar / GPA,PCAR3
+Small e Micro Caps,Consumo Não Cíclico,Restante,Dimed / Panvel,PNVL3
+Small e Micro Caps,Consumo Não Cíclico,Restante,Viveo,VVEO3
+Small e Micro Caps,Consumo Não Cíclico,Restante,Bombril,BOBR4 BOBR3
+Small e Micro Caps,Saúde,,Oncoclínicas,ONCO3
+Small e Micro Caps,Saúde,,Mater Dei,MATD3
+Small e Micro Caps,Saúde,,Blau Farmacêutica,BLAU3
+Small e Micro Caps,Saúde,,Pague Menos,PGMN3
+Small e Micro Caps,Saúde,,Alliança Saúde,AALR3
+Small e Micro Caps,Saúde,,Kora Saúde,KRSA3
+Small e Micro Caps,Saúde,,Qualicorp,QUAL3
+Small e Micro Caps,Saúde,,Biomm,BIOM3
+Small e Micro Caps,Saúde,,Nortec Química,NRTQ3
+Small e Micro Caps,Saúde,,Ourofino Saúde Animal,OFSA3
+Small e Micro Caps,Saúde,,Baumer,BALM4 BALM3
+Small e Micro Caps,Tecnologia da Informação,,Locaweb / LWSA,LWSA3
+Small e Micro Caps,Tecnologia da Informação,,Positivo Tecnologia,POSI3
+Small e Micro Caps,Tecnologia da Informação,,Bemobi Tech,BMOB3
+Small e Micro Caps,Tecnologia da Informação,,Valid,VLID3
+Small e Micro Caps,Tecnologia da Informação,,Padtec,PDTC3
+Small e Micro Caps,Tecnologia da Informação,,WDC Networks,LVTC3
+Small e Micro Caps,Tecnologia da Informação,,TC — Traders Club,TRAD3
+Small e Micro Caps,Tecnologia da Informação,,Atom Educação,ATOM3
+Small e Micro Caps,Tecnologia da Informação,,Grupo Toky,TOKY3
+Small e Micro Caps,Comunicações,,Desktop,DESK3
+Small e Micro Caps,Comunicações,,Unifique,FIQE3
+Small e Micro Caps,Comunicações,,Brisanet,BRIT3
+Small e Micro Caps,Comunicações,,Eletromidia,ELMD3
+Small e Micro Caps,Comunicações,,Oi,OIBR3 OIBR4
+Small e Micro Caps,Comunicações,,Algar Telecom,ALGT3
+Small e Micro Caps,Comunicações,,Telebras,TELB4 TELB3
+Small e Micro Caps,Comunicações,,Dtcom,DTCY3
+Small e Micro Caps,Outros,,Metalúrgica Riosulense,RSUL4 RSUL3
+Small e Micro Caps,Outros,,Cemepe Investimentos,MAPT4 MAPT3
+Small e Micro Caps,Outros,,Trevisa Investimentos,LUXM4 LUXM3
+Small e Micro Caps,Outros,,Contax,ATMP3
+Small e Micro Caps,Outros,,Revee,RVEE3
