@@ -41,8 +41,8 @@
 "profitMargins": 0.1769,
 "returnOnEquity": 0.17653,
 "sector": "Consumer Defensive",
-"trailingEps": 1.0,
-"trailingPE": 15.87
+"trailingEps": 1.01,
+"trailingPE": 15.712872
 },
 "AERI3": {
 "_em": "2026-11-16",
@@ -71,8 +71,8 @@
 "profitMargins": 0.56966,
 "returnOnEquity": 0.14657,
 "sector": "Utilities",
-"trailingEps": 0.59,
-"trailingPE": 11.881357
+"trailingEps": 0.58,
+"trailingPE": 12.086207
 },
 "AGRO3": {
 "_em": "2026-11-16",
@@ -266,8 +266,8 @@
 "profitMargins": 0.04871,
 "returnOnEquity": 0.11319,
 "sector": "Consumer Defensive",
-"trailingEps": 0.41,
-"trailingPE": 6.0487804
+"trailingEps": 0.42,
+"trailingPE": 5.9047623
 },
 "ARML3": {
 "_em": "2026-11-16",
@@ -371,8 +371,8 @@
 "profitMargins": 0.029949998,
 "returnOnEquity": 0.04067,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.62,
-"trailingPE": 9.962962
+"trailingEps": 1.64,
+"trailingPE": 9.841463
 },
 "B3SA3": {
 "_em": "2026-11-16",
@@ -476,8 +476,8 @@
 "profitMargins": 0.88225996,
 "returnOnEquity": 0.69745004,
 "sector": "Financial Services",
-"trailingEps": 4.74,
-"trailingPE": 7.8481016
+"trailingEps": 4.76,
+"trailingPE": 7.815126
 },
 "BDLL4": {
 "_em": "2026-11-16",
@@ -551,8 +551,8 @@
 "profitMargins": 0.10945,
 "returnOnEquity": 0.08427,
 "sector": "Healthcare",
-"trailingEps": 1.33,
-"trailingPE": 7.127819
+"trailingEps": 1.29,
+"trailingPE": 7.348837
 },
 "BMEB4": {
 "_em": "2026-11-16",
@@ -581,8 +581,8 @@
 "profitMargins": 0.28939,
 "returnOnEquity": 0.12946999,
 "sector": "Financial Services",
-"trailingEps": 1.0,
-"trailingPE": 5.16
+"trailingEps": 1.01,
+"trailingPE": 5.1089106
 },
 "BMKS3": {
 "_em": "2026-11-16",
@@ -636,13 +636,13 @@
 "enterpriseToEbitda": 2.494,
 "industry": "Household & Personal Products",
 "longName": "Bombril S.A.",
-"marketCap": 364713536,
+"marketCap": 364713408,
 "priceToBook": -0.23688664,
 "profitMargins": 0.039330002,
 "returnOnEquity": null,
 "sector": "Consumer Defensive",
-"trailingEps": 0.26,
-"trailingPE": 5.3846154
+"trailingEps": 0.25,
+"trailingPE": 5.6
 },
 "BPAC11": {
 "_em": "2026-11-16",
@@ -756,7 +756,7 @@
 "enterpriseToEbitda": 3.755,
 "industry": "Leisure",
 "longName": "Cambuci S.A.",
-"marketCap": 289948224,
+"marketCap": 289885856,
 "priceToBook": 0.9104046,
 "profitMargins": 0.15543,
 "returnOnEquity": 0.18351,
@@ -806,8 +806,8 @@
 "profitMargins": 0.1104,
 "returnOnEquity": 0.22636999,
 "sector": "Basic Materials",
-"trailingEps": 1.66,
-"trailingPE": 6.7771087
+"trailingEps": 1.65,
+"trailingPE": 6.818182
 },
 "CEAB3": {
 "_em": "2026-11-16",
@@ -821,8 +821,8 @@
 "profitMargins": 0.08229999,
 "returnOnEquity": 0.17737,
 "sector": "Consumer Cyclical",
-"trailingEps": 2.21,
-"trailingPE": 3.597285
+"trailingEps": 2.16,
+"trailingPE": 3.6805553
 },
 "CEBR3": {
 "_em": "2026-11-16",
@@ -866,8 +866,8 @@
 "profitMargins": 0.075440004,
 "returnOnEquity": 0.17076999,
 "sector": "Utilities",
-"trailingEps": 5.18,
-"trailingPE": 8.496139
+"trailingEps": 5.29,
+"trailingPE": 8.31947
 },
 "CGRA4": {
 "_em": "2026-11-16",
@@ -877,12 +877,12 @@
 "industry": "Department Stores",
 "longName": "Grazziotin S.A.",
 "marketCap": 547176640,
-"priceToBook": 0.5443865,
+"priceToBook": 0.57645386,
 "profitMargins": 0.09932,
 "returnOnEquity": 0.07567,
 "sector": "Consumer Cyclical",
-"trailingEps": 3.57,
-"trailingPE": 6.022409
+"trailingEps": 3.53,
+"trailingPE": 6.0906515
 },
 "CLSC4": {
 "_em": "2026-11-16",
@@ -896,8 +896,8 @@
 "profitMargins": 0.06989,
 "returnOnEquity": 0.21595,
 "sector": "Utilities",
-"trailingEps": 22.21,
-"trailingPE": 7.7726254
+"trailingEps": 23.67,
+"trailingPE": 7.293198
 },
 "CMIG4": {
 "_em": "2026-11-16",
@@ -971,8 +971,8 @@
 "profitMargins": 0.12217,
 "returnOnEquity": 0.13766,
 "sector": "Utilities",
-"trailingEps": 1.19,
-"trailingPE": 12.747899
+"trailingEps": 1.18,
+"trailingPE": 12.855933
 },
 "CSAN3": {
 "_em": "2026-11-16",
@@ -1102,12 +1102,12 @@
 "industry": "Travel Services",
 "longName": "CVC Brasil Operadora e Agência de Viagens S.A.",
 "marketCap": 411430912,
-"priceToBook": 1.2741935,
+"priceToBook": 0.85963005,
 "profitMargins": -0.13177,
 "returnOnEquity": -0.48185003,
 "sector": "Consumer Cyclical",
-"trailingEps": 0.03,
-"trailingPE": 26.333334
+"trailingEps": -0.39,
+"trailingPE": null
 },
 "CXSE3": {
 "_em": "2026-11-16",
@@ -1136,8 +1136,8 @@
 "profitMargins": 0.18847999,
 "returnOnEquity": 0.18754,
 "sector": "Consumer Cyclical",
-"trailingEps": 4.33,
-"trailingPE": 4.503464
+"trailingEps": 3.83,
+"trailingPE": 5.091384
 },
 "DASA3": {
 "_em": "2026-11-16",
@@ -1151,7 +1151,7 @@
 "profitMargins": -0.09042,
 "returnOnEquity": -0.10746,
 "sector": "Healthcare",
-"trailingEps": -0.65,
+"trailingEps": -0.67,
 "trailingPE": null
 },
 "DESK3": {
@@ -1256,7 +1256,7 @@
 "profitMargins": 0.0,
 "returnOnEquity": -0.53535,
 "sector": "Technology",
-"trailingEps": -2.32,
+"trailingEps": -2.3,
 "trailingPE": null
 },
 "ECOR3": {
@@ -1271,8 +1271,8 @@
 "profitMargins": 0.041739997,
 "returnOnEquity": 0.10741,
 "sector": "Industrials",
-"trailingEps": 0.82,
-"trailingPE": 6.97561
+"trailingEps": 0.79,
+"trailingPE": 7.2405057
 },
 "EGIE3": {
 "_em": "2026-11-16",
@@ -1301,8 +1301,8 @@
 "profitMargins": 0.07127,
 "returnOnEquity": 0.33602002,
 "sector": "Utilities",
-"trailingEps": 3.56,
-"trailingPE": 10.182585
+"trailingEps": 3.58,
+"trailingPE": 10.125698
 },
 "EMAE4": {
 "_em": "2026-11-16",
@@ -1357,7 +1357,7 @@
 "industry": "Utilities - Regulated Electric",
 "longName": "Energisa S.A.",
 "marketCap": 14790407168,
-"priceToBook": 0.9617415,
+"priceToBook": 0.9242636,
 "profitMargins": 0.048979998,
 "returnOnEquity": 0.10661,
 "sector": "Utilities",
@@ -1571,8 +1571,8 @@
 "profitMargins": 0.038599998,
 "returnOnEquity": 0.05017,
 "sector": "Basic Materials",
-"trailingEps": 1.4,
-"trailingPE": 17.571428
+"trailingEps": 1.39,
+"trailingPE": 17.697842
 },
 "GGPS3": {
 "_em": "2026-11-16",
@@ -1597,12 +1597,12 @@
 "industry": "Department Stores",
 "longName": "Grupo Mateus S.A.",
 "marketCap": 9485709312,
-"priceToBook": 0.85031915,
+"priceToBook": 0.89278,
 "profitMargins": 0.026800001,
 "returnOnEquity": 0.09187999,
 "sector": "Consumer Cyclical",
-"trailingEps": 0.73,
-"trailingPE": 5.657534
+"trailingEps": 0.49,
+"trailingPE": 8.428572
 },
 "GOAU4": {
 "_em": "2026-11-16",
@@ -1661,8 +1661,8 @@
 "profitMargins": 2.7944,
 "returnOnEquity": null,
 "sector": "Industrials",
-"trailingEps": 7.2,
-"trailingPE": 0.2541667
+"trailingEps": 7.28,
+"trailingPE": 0.25137362
 },
 "HAPV3": {
 "_em": "2026-11-16",
@@ -1811,8 +1811,8 @@
 "profitMargins": 0.28197,
 "returnOnEquity": 0.1319,
 "sector": "Utilities",
-"trailingEps": 4.42,
-"trailingPE": 5.9932127
+"trailingEps": 4.44,
+"trailingPE": 5.966216
 },
 "ITSA4": {
 "_em": "2026-11-16",
@@ -1886,7 +1886,7 @@
 "profitMargins": -1.6052499,
 "returnOnEquity": null,
 "sector": "Real Estate",
-"trailingEps": -14.57,
+"trailingEps": -17.68,
 "trailingPE": null
 },
 "JHSF3": {
@@ -1901,8 +1901,8 @@
 "profitMargins": 0.52592,
 "returnOnEquity": 0.29331,
 "sector": "Real Estate",
-"trailingEps": 3.1,
-"trailingPE": 3.2387097
+"trailingEps": 3.16,
+"trailingPE": 3.177215
 },
 "JOPA4": {
 "_em": "2026-11-16",
@@ -2036,7 +2036,7 @@
 "profitMargins": -0.06916,
 "returnOnEquity": -0.58386004,
 "sector": "Consumer Cyclical",
-"trailingEps": -0.96,
+"trailingEps": -1.08,
 "trailingPE": null
 },
 "LOGG3": {
@@ -2092,12 +2092,12 @@
 "industry": "Department Stores",
 "longName": "Lojas Renner S.A.",
 "marketCap": 9057433600,
-"priceToBook": 0.8998685,
+"priceToBook": 0.88687277,
 "profitMargins": 0.091709994,
 "returnOnEquity": 0.14354,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.49,
-"trailingPE": 6.42953
+"trailingEps": 1.51,
+"trailingPE": 6.344371
 },
 "LUPA3": {
 "_em": "2026-11-16",
@@ -2111,7 +2111,7 @@
 "profitMargins": 0.0,
 "returnOnEquity": -3.90328,
 "sector": "Energy",
-"trailingEps": -248.77,
+"trailingEps": -256.58,
 "trailingPE": null
 },
 "LUXM4": {
@@ -2257,7 +2257,7 @@
 "industry": "Specialty Retail",
 "longName": "Magazine Luiza S.A.",
 "marketCap": 5809955840,
-"priceToBook": 0.5144231,
+"priceToBook": 0.5200666,
 "profitMargins": -0.00017999999,
 "returnOnEquity": -0.00061,
 "sector": "Consumer Cyclical",
@@ -2271,7 +2271,7 @@
 "enterpriseToEbitda": 4.522,
 "industry": "Rental & Leasing Services",
 "longName": "Mills Locação, Serviços e Logística S.A.",
-"marketCap": 3728131840,
+"marketCap": 3727343616,
 "priceToBook": 1.8446274,
 "profitMargins": 0.26708,
 "returnOnEquity": 0.27678,
@@ -2336,8 +2336,8 @@
 "profitMargins": 0.034140002,
 "returnOnEquity": 0.14747,
 "sector": "Industrials",
-"trailingEps": 1.4,
-"trailingPE": 4.2000003
+"trailingEps": 1.46,
+"trailingPE": 4.027397
 },
 "MRVE3": {
 "_em": "2026-11-16",
@@ -2366,8 +2366,8 @@
 "profitMargins": 0.058870003,
 "returnOnEquity": 0.09355,
 "sector": "Real Estate",
-"trailingEps": 0.62,
-"trailingPE": 4.870968
+"trailingEps": 0.65,
+"trailingPE": 4.646154
 },
 "MTSA4": {
 "_em": "2026-11-16",
@@ -2396,8 +2396,8 @@
 "profitMargins": 0.45251998,
 "returnOnEquity": 0.23847,
 "sector": "Real Estate",
-"trailingEps": 3.13,
-"trailingPE": 8.619808
+"trailingEps": 3.17,
+"trailingPE": 8.511041
 },
 "MWET4": {
 "_em": "2026-11-16",
@@ -2411,7 +2411,7 @@
 "profitMargins": -0.22409001,
 "returnOnEquity": null,
 "sector": "Consumer Cyclical",
-"trailingEps": -8.58,
+"trailingEps": -7.62,
 "trailingPE": null
 },
 "MYPK3": {
@@ -2486,8 +2486,8 @@
 "profitMargins": 0.04395,
 "returnOnEquity": 0.16566,
 "sector": "Basic Materials",
-"trailingEps": 0.7,
-"trailingPE": 4.1428576
+"trailingEps": 0.67,
+"trailingPE": 4.328358
 },
 "ODER4": {
 "_em": "2026-11-16",
@@ -2516,8 +2516,8 @@
 "profitMargins": 0.17291,
 "returnOnEquity": 0.31807,
 "sector": "Healthcare",
-"trailingEps": 4.51,
-"trailingPE": 5.8558755
+"trailingEps": 4.39,
+"trailingPE": 6.0159454
 },
 "OIBR3": {
 "_em": "2026-11-16",
@@ -2591,7 +2591,7 @@
 "profitMargins": -0.16775998,
 "returnOnEquity": -1.92107,
 "sector": "Consumer Cyclical",
-"trailingEps": -4.66,
+"trailingEps": -4.59,
 "trailingPE": null
 },
 "PDGR3": {
@@ -2636,8 +2636,8 @@
 "profitMargins": 0.23803,
 "returnOnEquity": 0.30236998,
 "sector": "Energy",
-"trailingEps": 11.01,
-"trailingPE": 3.9981835
+"trailingEps": 11.33,
+"trailingPE": 3.8852603
 },
 "PGMN3": {
 "_em": "2026-11-16",
@@ -2696,8 +2696,8 @@
 "profitMargins": 0.08618,
 "returnOnEquity": 0.31768,
 "sector": "Real Estate",
-"trailingEps": 1.52,
-"trailingPE": 3.0
+"trailingEps": 1.58,
+"trailingPE": 2.8860757
 },
 "PMAM3": {
 "_em": "2026-11-16",
@@ -2771,8 +2771,8 @@
 "profitMargins": 0.24114001,
 "returnOnEquity": 0.2182,
 "sector": "Energy",
-"trailingEps": 7.63,
-"trailingPE": 8.208388
+"trailingEps": 7.71,
+"trailingPE": 8.123217
 },
 "PRNR3": {
 "_em": "2026-11-16",
@@ -2876,8 +2876,8 @@
 "profitMargins": 0.0845,
 "returnOnEquity": 0.10029,
 "sector": "Consumer Cyclical",
-"trailingEps": 0.57,
-"trailingPE": 14.368421
+"trailingEps": 0.63,
+"trailingPE": 12.999999
 },
 "RAPT4": {
 "_em": "2026-11-16",
@@ -2917,12 +2917,12 @@
 "industry": "Medical Care Facilities",
 "longName": "Rede D'Or São Luiz S.A.",
 "marketCap": 76372303872,
-"priceToBook": 4.017786,
+"priceToBook": 3.5867686,
 "profitMargins": 0.0789,
 "returnOnEquity": 0.18509,
 "sector": "Healthcare",
-"trailingEps": 2.12,
-"trailingPE": 16.622643
+"trailingEps": 2.11,
+"trailingPE": 16.701424
 },
 "RECV3": {
 "_em": "2026-11-16",
@@ -2931,7 +2931,7 @@
 "enterpriseToEbitda": 3.434,
 "industry": "Oil & Gas E&P",
 "longName": "Petroreconcavo S.A.",
-"marketCap": 3041434112,
+"marketCap": 3046344448,
 "priceToBook": 0.68860286,
 "profitMargins": 0.20561,
 "returnOnEquity": 0.13648,
@@ -2951,8 +2951,8 @@
 "profitMargins": 0.08957,
 "returnOnEquity": 0.16275999,
 "sector": "Industrials",
-"trailingEps": 3.93,
-"trailingPE": 7.458015
+"trailingEps": 4.03,
+"trailingPE": 7.2729526
 },
 "RIAA3": {
 "_em": "2026-11-16",
@@ -2981,8 +2981,8 @@
 "profitMargins": 0.07527,
 "returnOnEquity": 0.07312,
 "sector": "Industrials",
-"trailingEps": 0.97,
-"trailingPE": 5.8762884
+"trailingEps": 0.99,
+"trailingPE": 5.7575755
 },
 "RPMG3": {
 "_em": "2026-11-16",
@@ -3022,12 +3022,12 @@
 "industry": "Auto Parts",
 "longName": "Metalúrgica Riosulense S.A.",
 "marketCap": 249139408,
-"priceToBook": 0.8279856,
+"priceToBook": 0.90925205,
 "profitMargins": 0.14291,
 "returnOnEquity": 0.2023,
 "sector": "Consumer Cyclical",
-"trailingEps": 10.07,
-"trailingPE": 4.0744786
+"trailingEps": 10.47,
+"trailingPE": 3.9188154
 },
 "RVEE3": {
 "_em": "2026-11-16",
@@ -3086,8 +3086,8 @@
 "profitMargins": 0.09139,
 "returnOnEquity": 0.19976,
 "sector": "Healthcare",
-"trailingEps": 1.42,
-"trailingPE": 11.619719
+"trailingEps": 1.41,
+"trailingPE": 11.702128
 },
 "SBSP3": {
 "_em": "2026-11-16",
@@ -3161,8 +3161,8 @@
 "profitMargins": 0.13908,
 "returnOnEquity": 0.16851999,
 "sector": "Consumer Cyclical",
-"trailingEps": 0.73,
-"trailingPE": 5.6712327
+"trailingEps": 0.75,
+"trailingPE": 5.52
 },
 "SIMH3": {
 "_em": "2026-11-16",
@@ -3176,8 +3176,8 @@
 "profitMargins": 0.00427,
 "returnOnEquity": 0.04665,
 "sector": "Industrials",
-"trailingEps": 0.22,
-"trailingPE": 25.227274
+"trailingEps": 0.23,
+"trailingPE": 24.130436
 },
 "SLCE3": {
 "_em": "2026-11-16",
@@ -3221,8 +3221,8 @@
 "profitMargins": 0.094799995,
 "returnOnEquity": 0.09571,
 "sector": "Basic Materials",
-"trailingEps": 2.12,
-"trailingPE": 8.514151
+"trailingEps": 2.08,
+"trailingPE": 8.677884
 },
 "SOJA3": {
 "_em": "2026-11-16",
@@ -3232,7 +3232,7 @@
 "industry": "Agricultural Inputs",
 "longName": "Boa Safra Sementes S.A.",
 "marketCap": 749038720,
-"priceToBook": 0.5587121,
+"priceToBook": 0.5626788,
 "profitMargins": 0.00621,
 "returnOnEquity": 0.038110003,
 "sector": "Basic Materials",
@@ -3296,8 +3296,8 @@
 "profitMargins": 0.01869,
 "returnOnEquity": 0.02085,
 "sector": "Industrials",
-"trailingEps": 0.17,
-"trailingPE": 27.470589
+"trailingEps": 0.18,
+"trailingPE": 25.944445
 },
 "TCSA3": {
 "_em": "2026-11-16",
@@ -3326,8 +3326,8 @@
 "profitMargins": 0.24879,
 "returnOnEquity": 0.26499,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.85,
-"trailingPE": 4.275676
+"trailingEps": 1.96,
+"trailingPE": 4.035714
 },
 "TELB4": {
 "_em": "2026-11-16",
@@ -3356,8 +3356,8 @@
 "profitMargins": 0.106809996,
 "returnOnEquity": 0.36356997,
 "sector": "Real Estate",
-"trailingEps": 4.27,
-"trailingPE": 3.824356
+"trailingEps": 4.5,
+"trailingPE": 3.6288888
 },
 "TFCO4": {
 "_em": "2026-11-16",
@@ -3371,8 +3371,8 @@
 "profitMargins": 0.13096,
 "returnOnEquity": 0.25722,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.09,
-"trailingPE": 8.899082
+"trailingEps": 1.08,
+"trailingPE": 8.981481
 },
 "TGMA3": {
 "_em": "2026-11-16",
@@ -3416,7 +3416,7 @@
 "profitMargins": -0.30586,
 "returnOnEquity": null,
 "sector": "Consumer Cyclical",
-"trailingEps": -93.29,
+"trailingEps": -95.65,
 "trailingPE": null
 },
 "TOTS3": {
@@ -3431,8 +3431,8 @@
 "profitMargins": 0.19993,
 "returnOnEquity": 0.16659,
 "sector": "Technology",
-"trailingEps": 1.45,
-"trailingPE": 21.531033
+"trailingEps": 1.47,
+"trailingPE": 21.238094
 },
 "TPIS3": {
 "_em": "2026-11-16",
@@ -3446,7 +3446,7 @@
 "profitMargins": -0.39303002,
 "returnOnEquity": -0.66175,
 "sector": "Industrials",
-"trailingEps": -10.18,
+"trailingEps": -10.83,
 "trailingPE": null
 },
 "TRIS3": {
@@ -3472,12 +3472,12 @@
 "industry": "Agricultural Inputs",
 "longName": "Três Tentos Agroindustrial S/A",
 "marketCap": 5572455936,
-"priceToBook": 1.114892,
+"priceToBook": 1.1852325,
 "profitMargins": 0.03083,
 "returnOnEquity": 0.11725,
 "sector": "Basic Materials",
-"trailingEps": 1.18,
-"trailingPE": 9.440679
+"trailingEps": 1.23,
+"trailingPE": 9.0569105
 },
 "TUPY3": {
 "_em": "2026-11-16",
@@ -3551,8 +3551,8 @@
 "profitMargins": 0.05942,
 "returnOnEquity": 0.07127,
 "sector": "Basic Materials",
-"trailingEps": 1.11,
-"trailingPE": 4.369369
+"trailingEps": 1.13,
+"trailingPE": 4.292035
 },
 "VALE3": {
 "_em": "2026-11-16",
@@ -3576,7 +3576,7 @@
 "enterpriseToEbitda": 3.897,
 "industry": "Rental & Leasing Services",
 "longName": "Vamos Locação de Caminhões, Máquinas e Equipamentos S.A.",
-"marketCap": 3201186048,
+"marketCap": 3200960000,
 "priceToBook": 0.9271054,
 "profitMargins": 0.066479996,
 "returnOnEquity": 0.13686,
@@ -3606,13 +3606,13 @@
 "enterpriseToEbitda": 6.233,
 "industry": "Agricultural Inputs",
 "longName": "Vittia S.A.",
-"marketCap": 395622528,
+"marketCap": 394262176,
 "priceToBook": 0.6336088,
 "profitMargins": 0.07969,
 "returnOnEquity": 0.10762999,
 "sector": "Basic Materials",
-"trailingEps": 0.41,
-"trailingPE": 6.1707315
+"trailingEps": 0.39,
+"trailingPE": 6.4871798
 },
 "VIVA3": {
 "_em": "2026-11-16",
@@ -3626,8 +3626,8 @@
 "profitMargins": 0.16213,
 "returnOnEquity": 0.16598,
 "sector": "Consumer Cyclical",
-"trailingEps": 2.26,
-"trailingPE": 7.2743363
+"trailingEps": 2.2,
+"trailingPE": 7.4727273
 },
 "VIVR3": {
 "_em": "2026-11-16",
@@ -3656,8 +3656,8 @@
 "profitMargins": 0.11404,
 "returnOnEquity": 0.10606,
 "sector": "Communication Services",
-"trailingEps": 2.03,
-"trailingPE": 17.009851
+"trailingEps": 2.06,
+"trailingPE": 16.762136
 },
 "VLID3": {
 "_em": "2026-11-16",
@@ -3746,8 +3746,8 @@
 "profitMargins": 0.15395,
 "returnOnEquity": 0.29878,
 "sector": "Industrials",
-"trailingEps": 1.49,
-"trailingPE": 33.825504
+"trailingEps": 1.52,
+"trailingPE": 33.157898
 },
 "WEST3": {
 "_em": "2026-11-16",
