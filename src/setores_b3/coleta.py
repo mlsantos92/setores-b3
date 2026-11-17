@@ -98,3 +98,64 @@ def cdi_diario(inicio: date, fim: date, timeout: int = 30) -> pd.Series:
     d = pd.DataFrame(r.json())
     d["data"] = pd.to_datetime(d["data"], dayfirst=True)
     return d.set_index("data")["valor"].astype(float)
+
+
+URL_B3 = "https://sistemaswebb3-listados.b3.com.br/listedCompaniesProxy/CompanyCall/GetListedSupplementCompany/{q}"
+# sufixo do código -> trecho do ISIN da classe (ON, PN, PNA, PNB..., unit)
+CLASSE_ISIN = {"3": ("ACNOR",), "4": ("ACNPR", "ACNPA"), "5": ("ACNPA", "ACNPB"), "6": ("ACNPB", "ACNPC"),
+               "7": ("ACNPC", "ACNPD"), "8": ("ACNPD",), "11": ("CDAM",)}
+
+
+def _b3_emissor(emissor: str, timeout: int = 30) -> list[dict] | None:
+    import base64
+    import json
+
+    q = base64.b64encode(json.dumps({"issuingCompany": emissor, "language": "pt-br"}).encode()).decode()
+    r = requests.get(URL_B3.format(q=q), headers={"User-Agent": "Mozilla/5.0"}, timeout=timeout)
+    r.raise_for_status()
+    d = r.json()
+    d = d[0] if isinstance(d, list) and d else d
+    return (d or {}).get("cashDividends") if isinstance(d, dict) else None
+
+
+def proventos_b3(tickers: list[str], pausa: float = 0.3) -> dict[str, list[tuple[str, float]]]:
+    """Proventos em dinheiro informados à B3: código -> [(data com, valor por ação)].
+
+    Cada linha distinta da B3 conta uma vez (dividendo pago em parcelas aparece uma vez por parcela;
+    linhas repetidas idênticas são descartadas). Código cuja empresa a B3 não respondeu fica de fora,
+    e o estudo usa o Yahoo para ele.
+    """
+    out: dict[str, list] = {}
+    por_emissor: dict[str, list[str]] = {}
+    for t in tickers:
+        sufixo = t[4:]
+        if sufixo in CLASSE_ISIN:
+            por_emissor.setdefault(t[:4], []).append(t)
+    for emissor, codigos in por_emissor.items():
+        try:
+            linhas = _b3_emissor(emissor)
+        except Exception as erro:
+            print(f"B3 {emissor}: {type(erro).__name__}")
+            time.sleep(2)
+            continue
+        if linhas is None:
+            continue
+        for t in codigos:
+            vistos, lista = set(), []
+            for p in linhas:
+                isin = str(p.get("isinCode") or p.get("assetIssued") or "")
+                if not any(c in isin for c in CLASSE_ISIN[t[4:]]):
+                    continue
+                chave = (isin, p.get("lastDatePrior"), p.get("paymentDate"), p.get("rate"), p.get("label"))
+                if chave in vistos:
+                    continue
+                vistos.add(chave)
+                try:
+                    dia, mes, ano = str(p["lastDatePrior"]).split("/")
+                    valor = float(str(p["rate"]).replace(".", "").replace(",", "."))
+                except (KeyError, ValueError):
+                    continue
+                lista.append((f"{ano}-{mes}-{dia}", valor))
+            out[t] = lista
+        time.sleep(pausa)
+    return out

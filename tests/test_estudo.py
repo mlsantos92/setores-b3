@@ -207,3 +207,17 @@ def test_historico_completo_gera_o_conjunto_de_indicadores():
     assert beta["roic"] is None and beta["pl"] == pytest.approx(12.0)      # sem histórico: fica o que havia
     fin = next(s for s in d["setores"] if s["setor"] == "Financeiro" and s["lista"] == "Todas")
     assert "m_bruta_mediana" in fin
+
+
+def test_dividend_yield_da_b3_vale_sobre_o_yahoo():
+    u, fech, vol, fund, fim = _base()
+    bruto = fech * 0 + 50.0
+    prov = fech * 0
+    prov.loc[prov.index[-10], "AAAA4"] = 9.0
+    b3 = {"AAAA4": [((fim - pd.Timedelta(days=30)).date().isoformat(), 1.0), ((fim - pd.Timedelta(days=200)).date().isoformat(), 1.5),
+                    ((fim - pd.Timedelta(days=500)).date().isoformat(), 7.0)]}
+    d = estudo.montar(u, fech, vol, fund, 0.10, fim, bruto=bruto, proventos=prov, proventos_b3=b3)
+    alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
+    beta = next(e for e in d["empresas"] if e["empresa"] == "Beta")
+    assert alfa["dy"] == pytest.approx(2.5 / 50) and alfa["dy_fonte"] == "B3"
+    assert beta["dy_fonte"] == "Yahoo"

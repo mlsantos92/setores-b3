@@ -39,20 +39,22 @@ def test_indicadores_principais():
     assert r["dl_pl"] == pytest.approx(0.5)
     assert r["liq_corrente"] == pytest.approx(1.4)
     assert r["p_capgiro"] == pytest.approx(8.0)          # 800 ÷ (350 − 250)
-    assert r["p_acl"] == pytest.approx(800 / (350 - 600))   # negativo, como nos sites de referência
+    assert r["p_acl"] == pytest.approx(800 / (350 - 1000))  # ativo circ. − passivo total: negativo, como nos sites de referência
     assert r["passivos_ativos"] == pytest.approx(0.6) and r["pl_ativos"] == pytest.approx(0.4)
     assert r["m_bruta"] == pytest.approx(0.4) and r["m_ebitda"] == pytest.approx(0.3) and r["m_liquida"] == pytest.approx(0.1)
     assert r["roe"] == pytest.approx(luc / 400) and r["roa"] == pytest.approx(luc / 1000)
     assert r["roic"] == pytest.approx(ebit * 0.66 / (400 + 200))
+    h["2026T3"]["caixa"] = 500.0                             # caixa líquido: capital investido = só o patrimônio
+    assert ind.calcular(h, 800.0, 8.0)["roic"] == pytest.approx(ebit * 0.66 / 400)
     assert r["giro_ativos"] == pytest.approx(rec / 1000)
-    assert r["cagr_receita"] == pytest.approx(0.10, abs=1e-9) and r["cagr_lucro"] == pytest.approx(0.10, abs=1e-9)
+    assert r["cagr_receita"] == pytest.approx(0.10, abs=1e-9) and r["cagr_lucro"] == pytest.approx(0.10, abs=1e-9)  # 2025 contra 2020
     assert r["peg"] == pytest.approx(r["pl"] / 10)
     assert r["dy"] == pytest.approx(0.05)
 
 
 def test_prejuizo_tira_pl_e_cagr_mas_mantem_o_resto():
     h = _hist()
-    for q in ("2025T4", "2026T1", "2026T2", "2026T3"):
+    for q in ("2025T1", "2025T2", "2025T3", "2025T4", "2026T1", "2026T2", "2026T3"):
         h[q]["lucro"] = -5.0
     r = ind.calcular(h, 800.0, 8.0)
     assert r["pl"] is None and r["cagr_lucro"] is None and r["peg"] is None

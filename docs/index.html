@@ -74,6 +74,20 @@ svg text{fill:var(--text2);font-size:12px}
 svg .tit{fill:var(--mut);font-size:11.5px}
 .tip{position:fixed;pointer-events:none;background:var(--text);color:var(--surface);font-size:12.5px;line-height:1.4;padding:7px 10px;border-radius:7px;max-width:260px;z-index:9;opacity:0;transition:opacity .08s}
 .tip b{display:block}
+.fic{margin-top:14px}
+.fic h3{font-size:1rem;margin:0 0 2px}
+.fic h4{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--s2);margin:14px 0 4px}
+.fic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));border-top:1px solid var(--line)}
+.fic-c{padding:8px 10px 9px;border-bottom:1px solid var(--line)}
+.fic-c span{display:block;font-size:11.5px;color:var(--text2);text-transform:uppercase;letter-spacing:.02em}
+.fic-c b{display:block;font-size:1.25rem;line-height:1.3;font-variant-numeric:tabular-nums}
+.fic-c small{display:block;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums}
+.fil-row{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;margin:0 0 6px}
+.btn{font:inherit;font-size:13px;padding:5px 11px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--text2);cursor:pointer}
+.btn:hover{color:var(--text)}
+.btn.x{padding:3px 9px}
+#tInd tbody tr{cursor:pointer}
+#tInd tbody tr.sel td{background:var(--bg)}
 details{margin-top:8px} summary{cursor:pointer;color:var(--text2);font-size:14px}
 ul{margin:6px 0 0;padding-left:20px} li{margin:2px 0}
 a{color:var(--s1)}
@@ -179,6 +193,40 @@ a{color:var(--s1)}
     <h3 style="font-size:.98rem;margin:16px 0 4px" id="hGrTit">Histórico da empresa</h3>
     <p class="mut">Clique em uma empresa da tabela para ver a métrica em todos os períodos da visão escolhida.</p>
     <div id="hGraf" class="gr"></div>
+  </section>
+
+  <section class="card" id="secInd">
+    <h2>Indicadores das empresas</h2>
+    <p class="mut" id="iTxt">Valuation, endividamento, eficiência, rentabilidade e crescimento de cada empresa, calculados das demonstrações protocoladas na CVM (últimos 12 meses e balanço do trimestre mais recente) com o preço atual. Filtre por qualquer indicador e clique em uma empresa para ver a ficha completa ao lado da mediana do setor.</p>
+    <div class="ctl">
+      <div class="seg" id="iGrupo" role="group" aria-label="Grupo de indicadores">
+        <button data-v="principais" aria-pressed="true">Principais</button>
+        <button data-v="valuation" aria-pressed="false">Valuation</button>
+        <button data-v="endividamento" aria-pressed="false">Endividamento</button>
+        <button data-v="eficiencia" aria-pressed="false">Eficiência</button>
+        <button data-v="rentabilidade" aria-pressed="false">Rentabilidade</button>
+        <button data-v="crescimento" aria-pressed="false">Crescimento</button>
+      </div>
+      <div class="seg" id="iModo" role="group" aria-label="Modo">
+        <button data-v="emp" aria-pressed="true">Empresa</button>
+        <button data-v="set" aria-pressed="false">Contra os pares do setor</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <select id="iLista" aria-label="Lista"><option value="">Todas as listas</option><option>Large e Mid Caps</option><option>Small e Micro Caps</option></select>
+      <select id="iSetor" aria-label="Setor"><option value="">Todos os setores</option></select>
+      <label><input type="checkbox" id="iEleg" checked> Só elegíveis</label>
+      <input type="search" id="iBusca" placeholder="Empresa ou código" aria-label="Buscar empresa ou código">
+    </div>
+    <div class="ctl" id="iAtalhos"><span class="mut">Atalhos:</span></div>
+    <div id="iFiltros"></div>
+    <div class="ctl">
+      <button class="btn" id="iAdd" type="button">+ Adicionar filtro</button>
+      <button class="btn" id="iLimpa" type="button">Limpar filtros</button>
+      <span class="mut" id="iCont"></span>
+    </div>
+    <div class="tw" style="max-height:560px;overflow-y:auto"><table id="tInd"></table></div>
+    <div class="fic" id="iFicha"></div>
   </section>
 
   <section class="card" id="secFil">
@@ -354,7 +402,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
       const c=cols.find(c=>c.k===st.k),dir=st.d;
       const rows=linhas().slice().sort((a,b)=>{const x=a[st.k],y=b[st.k];if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (typeof x==="string"?x.localeCompare(y,"pt-BR"):x-y)*dir});
       t.innerHTML="<thead><tr>"+cols.map(c=>'<th data-k="'+c.k+'"'+(c.txt?' class="txt"':'')+(c.h?' title="'+esc(c.h)+'"':'')+">"+c.t+(c.k===st.k?(dir>0?" ↑":" ↓"):"")+"</th>").join("")+"</tr></thead><tbody>"+
-        (rows.map(r=>"<tr>"+cols.map(c=>"<td"+(c.txt?' class="txt"':c.cor?' class="'+cls(r[c.k])+'"':"")+">"+(c.f?c.f(r[c.k],r):esc(r[c.k]))+"</td>").join("")+"</tr>").join("")||'<tr><td class="txt" colspan="'+cols.length+'">Nenhuma linha com esses filtros.</td></tr>')+"</tbody>";
+        (rows.map(r=>"<tr>"+cols.map(c=>"<td"+(c.txt?' class="txt"':c.cl?' class="'+c.cl(r[c.k],r)+'"':c.cor?' class="'+cls(r[c.k])+'"':"")+">"+(c.f?c.f(r[c.k],r):esc(r[c.k]))+"</td>").join("")+"</tr>").join("")||'<tr><td class="txt" colspan="'+cols.length+'">Nenhuma linha com esses filtros.</td></tr>')+"</tbody>";
       return rows.length;
     }
     t.addEventListener("click",e=>{const th=e.target.closest("th");if(!th)return;const k=th.dataset.k;st={k,d:st.k===k?-st.d:(cols.find(c=>c.k===k).txt?1:-1)};desenha()});
@@ -536,6 +584,120 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     montaF();
   }).catch(()=>{$("secHist").style.display="none";$("secFil").style.display="none"});
 
+  // ---------- indicadores das empresas
+  (function(){
+    const IND={
+      dy:{t:"D.Y",l:"Dividend yield",tp:"pct",h:"Proventos pagos em 12 meses ÷ preço atual"},
+      pl:{t:"P/L",tp:"mult",menor:1,h:"Valor de mercado ÷ lucro dos últimos 12 meses"},
+      peg:{t:"PEG Ratio",tp:"mult",menor:1,h:"P/L ÷ crescimento anual do lucro em 5 anos (em pontos)"},
+      pvp:{t:"P/VP",tp:"mult",menor:1,h:"Valor de mercado ÷ patrimônio líquido"},
+      ev_ebitda:{t:"EV/EBITDA",tp:"mult",menor:1,h:"(Valor de mercado + dívida líquida) ÷ EBITDA de 12 meses"},
+      ev_ebit:{t:"EV/EBIT",tp:"mult",menor:1,h:"(Valor de mercado + dívida líquida) ÷ EBIT de 12 meses"},
+      p_ebitda:{t:"P/EBITDA",tp:"mult",menor:1,h:"Valor de mercado ÷ EBITDA de 12 meses"},
+      p_ebit:{t:"P/EBIT",tp:"mult",menor:1,h:"Valor de mercado ÷ EBIT de 12 meses"},
+      vpa:{t:"VPA",tp:"rs",h:"Patrimônio líquido por ação (na base do código)"},
+      p_ativo:{t:"P/Ativo",tp:"mult",menor:1,h:"Valor de mercado ÷ ativo total"},
+      lpa:{t:"LPA",tp:"rs",h:"Lucro de 12 meses por ação (na base do código)"},
+      psr:{t:"P/SR",tp:"mult",menor:1,h:"Valor de mercado ÷ receita de 12 meses"},
+      p_capgiro:{t:"P/Cap. giro",tp:"mult",h:"Valor de mercado ÷ (ativo circulante − passivo circulante)"},
+      p_acl:{t:"P/Ativo circ. líq.",tp:"mult",h:"Valor de mercado ÷ (ativo circulante − passivo total)"},
+      dl_pl:{t:"Dív. líq./PL",tp:"mult",menor:1,h:"Dívida líquida ÷ patrimônio líquido"},
+      dl_ebitda:{t:"Dív. líq./EBITDA",tp:"mult",menor:1,h:"Dívida líquida ÷ EBITDA de 12 meses"},
+      dl_ebit:{t:"Dív. líq./EBIT",tp:"mult",menor:1,h:"Dívida líquida ÷ EBIT de 12 meses"},
+      pl_ativos:{t:"PL/Ativos",tp:"mult",h:"Patrimônio líquido ÷ ativo total"},
+      passivos_ativos:{t:"Passivos/Ativos",tp:"mult",menor:1,h:"Passivo exigível ÷ ativo total"},
+      liq_corrente:{t:"Liq. corrente",tp:"mult",h:"Ativo circulante ÷ passivo circulante"},
+      m_bruta:{t:"M. bruta",tp:"pct",h:"Lucro bruto ÷ receita, 12 meses"},
+      m_ebitda:{t:"M. EBITDA",tp:"pct",h:"EBITDA ÷ receita, 12 meses"},
+      m_ebit:{t:"M. EBIT",tp:"pct",h:"EBIT ÷ receita, 12 meses"},
+      m_liquida:{t:"M. líquida",tp:"pct",h:"Lucro ÷ receita, 12 meses"},
+      roe:{t:"ROE",tp:"pct",h:"Lucro de 12 meses ÷ patrimônio líquido"},
+      roa:{t:"ROA",tp:"pct",h:"Lucro de 12 meses ÷ ativo total"},
+      roic:{t:"ROIC",tp:"pct",h:"EBIT × (1 − 34%) ÷ (patrimônio + dívida líquida)"},
+      giro_ativos:{t:"Giro ativos",tp:"mult",h:"Receita de 12 meses ÷ ativo total"},
+      cagr_receita:{t:"CAGR receitas 5 anos",tp:"pct",h:"Crescimento anual composto da receita de 12 meses em 5 anos"},
+      cagr_lucro:{t:"CAGR lucros 5 anos",tp:"pct",h:"Crescimento anual composto do lucro de 12 meses em 5 anos"}
+    };
+    const GR={principais:["dy","pl","pvp","ev_ebitda","dl_ebitda","m_liquida","roe","roic","cagr_receita"],
+      valuation:["dy","pl","peg","pvp","ev_ebitda","ev_ebit","p_ebitda","p_ebit","vpa","p_ativo","lpa","psr","p_capgiro","p_acl"],
+      endividamento:["dl_pl","dl_ebitda","dl_ebit","pl_ativos","passivos_ativos","liq_corrente"],
+      eficiencia:["m_bruta","m_ebitda","m_ebit","m_liquida"],rentabilidade:["roe","roa","roic","giro_ativos"],crescimento:["cagr_receita","cagr_lucro"]};
+    const NOMEGR={valuation:"Indicadores de valuation",endividamento:"Indicadores de endividamento",eficiencia:"Indicadores de eficiência",rentabilidade:"Indicadores de rentabilidade",crescimento:"Indicadores de crescimento"};
+    const fI=(k,v)=>v==null?"–":IND[k].tp==="pct"?fP(v,2):IND[k].tp==="rs"?"R$ "+fN(v,2):fN(v,2);
+    const med=v=>{const a=v.filter(x=>x!=null).sort((x,y)=>x-y);if(!a.length)return null;const m=a.length>>1;return a.length%2?a[m]:(a[m-1]+a[m])/2};
+    const dif=(k,v,m)=>v==null||m==null?null:IND[k].tp==="pct"?v-m:(m>0?v/m-1:null);
+    const fD_=(k,v)=>v==null?"–":IND[k].tp==="pct"?(Math.abs(v)<.0005?"0,0":(v>0?"+":"")+fN(v*100,1))+" p.p.":fS(v,0);
+    const melhor=(k,d)=>d==null||Math.abs(d)<1e-9||!(IND[k].menor||["dy","m_bruta","m_ebitda","m_ebit","m_liquida","roe","roa","roic","giro_ativos","cagr_receita","cagr_lucro","liq_corrente","pl_ativos"].includes(k))?"":((IND[k].menor?d<0:d>0)?"pos":"neg");
+    let grupo="principais",modo="emp",sel=null,filtros=[],base=[],medSet={};
+    const tem=E.filter(e=>e.ticker&&e.ind_ate);
+    if(!tem.length){$("secInd").style.display="none";return}
+    [...new Set(tem.map(e=>e.setor))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(n=>$("iSetor").add(new Option(n,n)));
+    const opcoes=()=>Object.entries(GR).filter(([g])=>g!=="principais").map(([g,ks])=>'<optgroup label="'+NOMEGR[g]+'">'+ks.map(k=>'<option value="'+k+'">'+IND[k].t+'</option>').join("")+"</optgroup>").join("");
+    function desenhaFiltros(){
+      $("iFiltros").innerHTML=filtros.map((f,i)=>'<div class="fil-row" data-i="'+i+'"><select class="fk" aria-label="Indicador">'+opcoes()+'</select>'+
+        '<label>mín. <input type="number" class="fmn" step="any" style="width:84px"'+(f.mn!=null?' value="'+f.mn+'"':'')+'></label>'+
+        '<label>máx. <input type="number" class="fmx" step="any" style="width:84px"'+(f.mx!=null?' value="'+f.mx+'"':'')+'></label>'+
+        '<span class="mut un">'+(IND[f.k].tp==="pct"?"em %":"")+'</span><button class="btn x" type="button" aria-label="Remover filtro">×</button></div>').join("");
+      $("iFiltros").querySelectorAll(".fil-row").forEach(r=>{const f=filtros[+r.dataset.i];r.querySelector(".fk").value=f.k});
+    }
+    $("iFiltros").addEventListener("input",e=>{const r=e.target.closest(".fil-row");if(!r)return;const f=filtros[+r.dataset.i];
+      if(e.target.classList.contains("fk")){f.k=e.target.value;r.querySelector(".un").textContent=IND[f.k].tp==="pct"?"em %":""}
+      const n=x=>x.value.trim()===""?null:+x.value;f.mn=n(r.querySelector(".fmn"));f.mx=n(r.querySelector(".fmx"));desenha()});
+    $("iFiltros").addEventListener("click",e=>{if(!e.target.classList.contains("x"))return;filtros.splice(+e.target.closest(".fil-row").dataset.i,1);desenhaFiltros();desenha()});
+    $("iAdd").addEventListener("click",()=>{filtros.push({k:"pl",mn:null,mx:null});desenhaFiltros();desenha()});
+    $("iLimpa").addEventListener("click",()=>{filtros=[];desenhaFiltros();desenha()});
+    const ATALHOS=[["Barata e rentável",[["pl",0,10],["roe",15,null]],"principais"],["Pouca dívida",[["dl_ebitda",null,1]],"endividamento"],
+      ["Boas pagadoras",[["dy",6,null]],"valuation"],["Crescimento",[["cagr_receita",10,null],["cagr_lucro",10,null]],"crescimento"],
+      ["Margens altas",[["m_ebitda",30,null],["m_liquida",15,null]],"eficiencia"],["Abaixo do patrimônio",[["pvp",0,1]],"valuation"]];
+    ATALHOS.forEach(([nome,fs,g])=>{const b=document.createElement("button");b.className="btn";b.type="button";b.textContent=nome;
+      b.title=fs.map(([k,mn,mx])=>IND[k].t+(mn!=null?" ≥ "+mn+(IND[k].tp==="pct"?"%":""):"")+(mx!=null?" ≤ "+mx+(IND[k].tp==="pct"?"%":""):"")).join(" e ");
+      b.addEventListener("click",()=>{filtros=fs.map(([k,mn,mx])=>({k,mn,mx}));desenhaFiltros();grupo=g;$("iGrupo").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===g));monta()});
+      $("iAtalhos").append(b)});
+    function calcula(){
+      const l=$("iLista").value,eg=$("iEleg").checked;
+      base=tem.filter(e=>(!eg||e.elegivel)&&(!l||e.lista===l));
+      medSet={};for(const st of new Set(base.map(e=>e.setor))){const g=base.filter(e=>e.setor===st),o={n:g.length};Object.keys(IND).forEach(k=>o[k]=med(g.map(e=>e[k])));medSet[st]=o}
+    }
+    function linhas(){
+      const st=$("iSetor").value,q=$("iBusca").value.trim().toUpperCase();
+      return base.filter(e=>(!st||e.setor===st)&&(!q||e.empresa.toUpperCase().includes(q)||e.ticker.includes(q))
+        &&filtros.every(f=>{const v=e[f.k],k=IND[f.k].tp==="pct"?100:1;if(f.mn==null&&f.mx==null)return true;return v!=null&&(f.mn==null||v*k>=f.mn)&&(f.mx==null||v*k<=f.mx)}))
+        .map(e=>{const r={...e};Object.keys(IND).forEach(k=>r["d_"+k]=dif(k,e[k],medSet[e.setor]&&medSet[e.setor][k]));return r});
+    }
+    let dTab;
+    function monta(){
+      calcula();
+      const ks=[...new Set(GR[grupo].concat(filtros.map(f=>f.k)))];
+      const cols=[{k:"empresa",t:"Empresa",txt:1,f:(v,r)=>esc(v)+(r.prejuizo?'<span class="tag" title="Prejuízo nos últimos 12 meses">prejuízo</span>':"")},{k:"ticker",t:"Código",txt:1,f:v=>esc(v)},{k:"setor",t:"Setor",txt:1,f:v=>esc(curto(v))}]
+        .concat(ks.map(k=>modo==="set"?{k:"d_"+k,t:IND[k].t,h:IND[k].h+". Diferença para a mediana do setor"+(IND[k].tp==="pct"?", em pontos percentuais":", em %"),f:v=>fD_(k,v),cl:v=>melhor(k,v)}
+          :{k,t:IND[k].t,h:IND[k].h,f:v=>fI(k,v)}))
+        .concat([{k:"ind_ate",t:"Dados até",f:v=>v?v.replace("T"," T"):"–",h:"Trimestre mais recente usado (12 meses e balanço)"}]);
+      dTab=tabela("tInd",cols,linhas,{k:modo==="set"?"d_"+ks[0]:ks[0],d:IND[ks[0]].menor?1:-1});
+      desenha();
+    }
+    function desenha(){
+      $("iCont").textContent=dTab()+" de "+base.length+" empresas";
+      const vis=[...$("tInd").querySelectorAll("tbody tr")].map(tr=>tr.cells[1]&&tr.cells[1].textContent.trim());
+      if(!sel||!base.some(e=>e.ticker===sel))sel=vis[0]||null;
+      $("tInd").querySelectorAll("tbody tr").forEach(tr=>tr.classList.toggle("sel",!!tr.cells[1]&&tr.cells[1].textContent.trim()===sel));
+      ficha();
+    }
+    function ficha(){
+      const e=base.find(x=>x.ticker===sel);if(!e){$("iFicha").innerHTML="";return}
+      const m=medSet[e.setor]||{};
+      $("iFicha").innerHTML='<h3>'+(e.site?'<a href="'+esc(e.site)+'" target="_blank" rel="noopener">'+esc(e.empresa)+'</a>':esc(e.empresa))+' ('+esc(e.ticker)+')</h3>'+
+        '<p class="mut">'+esc(e.setor)+(e.subsetor?" · "+esc(e.subsetor):"")+' · 12 meses até '+e.ind_ate.replace("T"," T")+' · preço de '+fD(M.pregao)+' · abaixo de cada número, a mediana do setor ('+(m.n||0)+' empresas)</p>'+
+        Object.keys(NOMEGR).map(g=>'<h4>'+NOMEGR[g]+'</h4><div class="fic-grid">'+GR[g].map(k=>{const d=dif(k,e[k],m[k]),c=melhor(k,d);
+          return '<div class="fic-c" title="'+esc(IND[k].h)+'"><span>'+IND[k].t+'</span><b class="'+c+'">'+fI(k,e[k])+'</b><small>setor '+fI(k,m[k])+'</small></div>'}).join("")+'</div>').join("");
+    }
+    $("tInd").addEventListener("click",ev=>{const tr=ev.target.closest("tbody tr");if(!tr||!tr.cells[1]||ev.target.closest("th"))return;sel=tr.cells[1].textContent.trim();
+      $("tInd").querySelectorAll("tbody tr").forEach(x=>x.classList.toggle("sel",x===tr));ficha()});
+    $("tInd").addEventListener("click",ev=>{if(ev.target.closest("th"))setTimeout(desenha,0)});
+    seg("iGrupo",v=>{grupo=v;monta()});seg("iModo",v=>{modo=v;monta()});
+    ["iLista","iEleg"].forEach(i=>$(i).addEventListener("input",monta));["iSetor","iBusca"].forEach(i=>$(i).addEventListener("input",desenha));
+    sel=(tem.find(e=>e.ticker==="WEGE3")||tem[0]).ticker;monta();
+  })();
+
   // ---------- método
   const cr=M.criterio;
   $("metodo").innerHTML=[
@@ -549,6 +711,7 @@ fetch("dados.json").then(r=>r.json()).then(D=>{
     "<b>Só as métricas.</b> O estudo usa os números das demonstrações; o parecer do auditor não entra na avaliação. A coluna “Auditor” traz apenas o nome informado à CVM.",
     "<b>Conferência com o Yahoo:</b> quando a CVM não tem o dado (BDRs, por exemplo), o múltiplo vem do Yahoo Finance e a coluna “Base dos múltiplos” avisa. Quando as duas fontes diferem mais de 25%, a empresa ganha a marca “≠ Yahoo” e vale o número da CVM. O valor de mercado é o número de ações informado à CVM, fora a tesouraria, vezes o preço de cada classe (em units, o preço é dividido pelas ações que a unit representa). Como a CVM não informa se a quantidade está em unidades ou em milhares, o valor de mercado do Yahoo serve de referência para a escala. O EV/EBITDA vem do Yahoo.",
     "<b>Histórico por período:</b> cada documento da CVM traz o acumulado do exercício; o trimestre isolado é a diferença entre dois acumulados seguidos, e o 4º trimestre é o ano (DFP) menos os nove meses. Semestre, acumulado e ano são somas de trimestres civis, então empresas com exercício fora do ano civil ficam comparáveis. Os valores são os do documento original de cada período.",
+    "<b>Indicadores das empresas:</b> resultados de fluxo (receita, lucro bruto, EBIT, EBITDA, lucro) somam os 4 trimestres mais recentes; contas do balanço são as do fim do último trimestre. Dívida líquida = empréstimos e financiamentos − caixa e aplicações financeiras de curto prazo; EV = valor de mercado + dívida líquida. VPA e LPA ficam na base do código mostrado (inclusive units). ROIC = EBIT × (1 − 34%) ÷ (patrimônio + dívida líquida). CAGR compara os 12 meses atuais com os de 5 anos antes. Divisão por número negativo fica em branco, exceto em P/Cap. giro, P/Ativo circ. líq. e PEG, onde o sinal tem leitura própria. Em “Contra os pares”, verde é melhor que a mediana do setor e vermelho é pior.",
     "<b>Filtros e pares:</b> T/T compara o trimestre com o anterior; A/A, com o mesmo trimestre do ano anterior. Crescimento sobre base negativa ou zero não é calculado. EBITDA é o resultado operacional mais a depreciação e amortização informada na demonstração do valor adicionado; bancos e seguradoras não têm EBITDA nem dívida bruta nesse formato. Passivo/PL usa o passivo exigível, que em bancos inclui os depósitos e por isso é naturalmente alto. “Contra os pares” mostra a diferença para a mediana do setor: em pontos percentuais para crescimento e margem, em % para os múltiplos.",
     "<b>Referência cruzada:</b> quando falta o documento de um período, o valor é buscado no documento do trimestre seguinte (acumulado menos o trimestre isolado) ou no do mesmo período do ano seguinte, que repete os números do exercício anterior. Esses períodos levam a marca “ref. cruzada” e aparecem mais claros no gráfico. Sem nenhuma referência, o período fica vazio.",
     "<b>Resultado atrasado:</b> empresa que não protocola resultado há mais de 9 meses fica sem P/L, P/VP e ROE.",

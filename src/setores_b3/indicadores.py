@@ -13,7 +13,9 @@ Convenções:
 - Divisão por denominador nulo ou negativo dá None (P/L de empresa com prejuízo, por exemplo).
   Exceções, como nos sites de referência: P/Capital de giro, P/Ativo circulante líquido e PEG
   aceitam denominador negativo, porque o sinal tem leitura própria.
-- ROIC = EBIT × (1 − 34%) ÷ (patrimônio + dívida líquida). A alíquota é a nominal de IR e CSLL.
+- ROIC = EBIT × (1 − 34%) ÷ (patrimônio + dívida líquida, se positiva). A alíquota é a nominal de IR e CSLL.
+- P/Ativo circulante líquido = valor de mercado ÷ (ativo circulante − passivo total, incluindo o patrimônio).
+- CAGR de 5 anos: receita e lucro do último ano civil completo contra os de 5 anos antes.
 """
 from __future__ import annotations
 
@@ -92,12 +94,15 @@ def calcular(hist: dict[str, dict], valor_mercado, preco, dy=None) -> dict:
     ev = None if vm is None or dl is None else vm + dl
     acoes = razao(vm, preco)
     capgiro = None if b["ativo_circ"] is None or b["passivo_circ"] is None else b["ativo_circ"] - b["passivo_circ"]
-    acl = None if b["ativo_circ"] is None or b["passivo"] is None else b["ativo_circ"] - b["passivo"]
-    capital = None if b["pl"] is None or dl is None else b["pl"] + dl
+    # como nos sites de referência: ativo circulante − passivo total (que inclui o patrimônio)
+    acl = None if b["ativo_circ"] is None or b["ativo"] is None else b["ativo_circ"] - b["ativo"]
+    # capital investido: patrimônio + dívida líquida; caixa líquido não reduz o capital
+    capital = None if b["pl"] is None else b["pl"] + max(dl or 0.0, 0.0)
     nopat = None if f["ebit"] is None else f["ebit"] * (1 - ALIQUOTA)
-    antes = _rot(_idx(fim) - 20)
-    cg_rec = cagr(f["receita"], doze_meses(hist, antes, "receita"))
-    cg_luc = cagr(f["lucro"], doze_meses(hist, antes, "lucro"))
+    # CAGR: último ano civil completo contra o de 5 anos antes
+    ano = int(fim[:4]) if fim.endswith("T4") else int(fim[:4]) - 1
+    cg_rec = cagr(doze_meses(hist, f"{ano}T4", "receita"), doze_meses(hist, f"{ano - 5}T4", "receita"))
+    cg_luc = cagr(doze_meses(hist, f"{ano}T4", "lucro"), doze_meses(hist, f"{ano - 5}T4", "lucro"))
     p_l = razao(vm, f["lucro"])
     out = {
         "ind_ate": fim,

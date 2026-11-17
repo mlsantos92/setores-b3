@@ -140,7 +140,7 @@ def _agregado(nome: dict, emp: pd.DataFrame, fech: pd.DataFrame, fim: pd.Timesta
 def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundamentos: dict,
            cdi_aa: float, fim: pd.Timestamp, bruto: pd.DataFrame | None = None,
            proventos: pd.DataFrame | None = None, oficiais: dict | None = None,
-           historico: dict | None = None) -> dict:
+           historico: dict | None = None, proventos_b3: dict | None = None) -> dict:
     """Devolve {"empresas": [...], "setores": [...], "listas": [...], "series": {...}}.
 
     ``fech`` é o preço ajustado por proventos. ``bruto`` (preço negociado) e ``proventos``
@@ -152,6 +152,7 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
     """
     oficiais = oficiais or {}
     historico = historico or {}
+    proventos_b3 = proventos_b3 or {}
     fech = fech[fech.index <= fim]
     vol = vol[vol.index <= fim]
     bruto = fech if bruto is None else bruto[bruto.index <= fim]
@@ -177,8 +178,14 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
         if vm:
             m["valor_mercado"], m["valor_mercado_fonte"] = vm, "CVM"
         m.update(_base_oficial(m, of, fim))
-        m["dy"] = None
-        if proventos is not None and e.ticker in proventos.columns:
+        m["dy"], m["dy_fonte"] = None, None
+        preco_atual = float(bruto[e.ticker].dropna().iloc[-1])
+        if e.ticker in proventos_b3:
+            ini_12m = (fim - pd.DateOffset(years=1)).date().isoformat()
+            pago = sum(v for d, v in proventos_b3[e.ticker] if ini_12m < d <= fim.date().isoformat())
+            m["dy"], m["dy_fonte"] = multiplos.dividend_yield(pago, preco_atual), "B3"
+        elif proventos is not None and e.ticker in proventos.columns:
+            m["dy_fonte"] = "Yahoo"
             pago = proventos[e.ticker]
             pago = pago[(pago.index > fim - pd.DateOffset(years=1)) & (pago.index <= fim)].sum()
             m["dy"] = multiplos.dividend_yield(float(pago), float(bruto[e.ticker].dropna().iloc[-1]))

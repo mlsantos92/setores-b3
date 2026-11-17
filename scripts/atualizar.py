@@ -98,9 +98,15 @@ try:
 except Exception as erro:
     print("CDI indisponível:", type(erro).__name__, erro)
 
+prov_b3 = {}
+try:
+    prov_b3 = coleta.proventos_b3(escolhidos)
+    print(f"Proventos B3: {len(prov_b3)} de {len(escolhidos)} códigos")
+except Exception as erro:
+    print("B3 indisponível; dividend yield fica com o Yahoo:", type(erro).__name__, erro)
 hist_tk = {t: historico[c] for t, c in cnpjs.items() if c in historico}
-dados = estudo.montar(u, fech, vol, guardado, cdi_aa, fim, bruto=bruto, proventos=prov, oficiais=oficiais, historico=hist_tk)
-amostra = {e["ticker"]: {k: e.get(k) for k in ("ind_ate", "pl", "pvp", "ev_ebitda", "dl_ebitda", "roe", "roic", "m_bruta", "liq_corrente", "cagr_receita")}
+dados = estudo.montar(u, fech, vol, guardado, cdi_aa, fim, bruto=bruto, proventos=prov, oficiais=oficiais, historico=hist_tk, proventos_b3=prov_b3)
+amostra = {e["ticker"]: {k: e.get(k) for k in ("ind_ate", "dy", "dy_fonte", "pl", "pvp", "ev_ebitda", "p_acl", "roic", "cagr_receita", "cagr_lucro")}
            for e in dados["empresas"] if e["ticker"] in ("WEGE3", "PETR4", "ITUB4", "MGLU3")}
 print("Indicadores amostra:", json.dumps(amostra, default=lambda x: round(x, 3)))
 print("Indicadores completos:", sum(1 for e in dados["empresas"] if e["elegivel"] and e.get("ind_ate")), "elegíveis")
@@ -138,7 +144,7 @@ dados["meta"] = {
     },
     "fora_da_bolsa": ajustes["fora"],
     "criterio": {"liq_minima": estudo.LIQ_MINIMA, "presenca_minima": estudo.PRESENCA_MINIMA},
-    "fonte": "CVM, dados abertos (DFP, ITR e FCA: resultados, capital e cadastro); Yahoo Finance (preços, valor de mercado, EV/EBITDA e conferência); Banco Central, SGS 12 (CDI)",
+    "fonte": "CVM, dados abertos (DFP, ITR e FCA: resultados, capital e cadastro); B3 (proventos); Yahoo Finance (preços, valor de mercado, EV/EBITDA e conferência); Banco Central, SGS 12 (CDI)",
 }
 
 (RAIZ / "docs").mkdir(exist_ok=True)
