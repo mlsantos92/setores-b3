@@ -41,8 +41,8 @@
 "profitMargins": 0.1769,
 "returnOnEquity": 0.17653,
 "sector": "Consumer Defensive",
-"trailingEps": 1.01,
-"trailingPE": 15.712872
+"trailingEps": 1.0,
+"trailingPE": 15.87
 },
 "AERI3": {
 "_em": "2026-11-16",
@@ -56,7 +56,7 @@
 "profitMargins": -1.4628999,
 "returnOnEquity": null,
 "sector": "Industrials",
-"trailingEps": -15.11,
+"trailingEps": -15.02,
 "trailingPE": null
 },
 "AFLT3": {
@@ -71,8 +71,8 @@
 "profitMargins": 0.56966,
 "returnOnEquity": 0.14657,
 "sector": "Utilities",
-"trailingEps": 0.58,
-"trailingPE": 12.086207
+"trailingEps": 0.59,
+"trailingPE": 11.881357
 },
 "AGRO3": {
 "_em": "2026-11-16",
@@ -101,7 +101,7 @@
 "profitMargins": 0.70057,
 "returnOnEquity": null,
 "sector": "Basic Materials",
-"trailingEps": -3.95,
+"trailingEps": -3.75,
 "trailingPE": null
 },
 "AHEB3": {
@@ -161,8 +161,8 @@
 "profitMargins": 0.14245,
 "returnOnEquity": 0.17381,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.03,
-"trailingPE": 12.805825
+"trailingEps": 1.02,
+"trailingPE": 12.931373
 },
 "ALPK3": {
 "_em": "2026-11-16",
@@ -197,14 +197,14 @@
 "AMAR3": {
 "_em": "2026-11-16",
 "currentPrice": 0.71,
-"debtToEquity": 1538.817,
-"enterpriseToEbitda": 7.714,
+"debtToEquity": 38111.234,
+"enterpriseToEbitda": 11.515,
 "industry": "Apparel Retail",
 "longName": "Marisa Lojas S.A.",
 "marketCap": 364576992,
-"priceToBook": 1.6284404,
-"profitMargins": -0.15623,
-"returnOnEquity": -1.30554,
+"priceToBook": 177.49998,
+"profitMargins": -0.1973,
+"returnOnEquity": -1.93071,
 "sector": "Consumer Cyclical",
 "trailingEps": -0.45,
 "trailingPE": null
@@ -243,7 +243,7 @@
 "_em": "2026-11-16",
 "currentPrice": 9.97,
 "debtToEquity": 232.941,
-"enterpriseToEbitda": 9.707,
+"enterpriseToEbitda": 9.709,
 "industry": "Auto & Truck Dealerships",
 "longName": "Automob Participações S.A.",
 "marketCap": 377724000,
@@ -251,7 +251,7 @@
 "profitMargins": -0.01972,
 "returnOnEquity": null,
 "sector": "Consumer Cyclical",
-"trailingEps": -7.36,
+"trailingEps": -6.96,
 "trailingPE": null
 },
 "ANIM3": {
@@ -273,12 +273,12 @@
 "_em": "2026-11-16",
 "currentPrice": 3.94,
 "debtToEquity": 194.02,
-"enterpriseToEbitda": 5.155,
+"enterpriseToEbitda": 4.838,
 "industry": "Rental & Leasing Services",
 "longName": "Armac Locação, Logística e Serviços S.A.",
 "marketCap": 1363373824,
 "priceToBook": 0.9214219,
-"profitMargins": 0.03399,
+"profitMargins": 0.030480001,
 "returnOnEquity": 0.0642,
 "sector": "Industrials",
 "trailingEps": 0.17,
@@ -296,8 +296,8 @@
 "profitMargins": 0.015420001,
 "returnOnEquity": 0.19313,
 "sector": "Consumer Defensive",
-"trailingEps": 0.89,
-"trailingPE": 10.550562
+"trailingEps": 0.92,
+"trailingPE": 10.206522
 },
 "AUAU3": {
 "_em": "2026-11-16",
@@ -318,7 +318,7 @@
 "_em": "2026-11-16",
 "currentPrice": 11.72,
 "debtToEquity": 182.545,
-"enterpriseToEbitda": 10.377,
+"enterpriseToEbitda": 9.299,
 "industry": "Utilities - Renewable",
 "longName": "Auren Energia S.A.",
 "marketCap": 12231695360,
@@ -326,7 +326,7 @@
 "profitMargins": -0.04933,
 "returnOnEquity": -0.03599,
 "sector": "Utilities",
-"trailingEps": -0.64,
+"trailingEps": -0.63,
 "trailingPE": null
 },
 "AXIA3": {
@@ -356,8 +356,8 @@
 "profitMargins": 0.11322,
 "returnOnEquity": null,
 "sector": "Industrials",
-"trailingEps": 1454133.6,
-"trailingPE": 7.874104e-06
+"trailingEps": 1585455.8,
+"trailingPE": 7.221898e-06
 },
 "AZZA3": {
 "_em": "2026-11-16",
@@ -371,8 +371,8 @@
 "profitMargins": 0.029949998,
 "returnOnEquity": 0.04067,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.64,
-"trailingPE": 9.841463
+"trailingEps": 1.62,
+"trailingPE": 9.962962
 },
 "B3SA3": {
 "_em": "2026-11-16",
@@ -386,8 +386,8 @@
 "profitMargins": 0.51667,
 "returnOnEquity": 0.29518,
 "sector": "Financial Services",
-"trailingEps": 1.08,
-"trailingPE": 13.712963
+"trailingEps": 1.09,
+"trailingPE": 13.587156
 },
 "BALM4": {
 "_em": "2026-11-16",
@@ -401,8 +401,8 @@
 "profitMargins": 0.11011,
 "returnOnEquity": 0.14828,
 "sector": "Healthcare",
-"trailingEps": 2.06,
-"trailingPE": 7.548544
+"trailingEps": 2.18,
+"trailingPE": 7.1330276
 },
 "BAUH4": {
 "_em": "2026-11-16",
@@ -431,8 +431,8 @@
 "profitMargins": 0.26887,
 "returnOnEquity": 0.12352,
 "sector": "Financial Services",
-"trailingEps": 15.77,
-"trailingPE": 4.043754
+"trailingEps": 16.16,
+"trailingPE": 3.9461634
 },
 "BBAS3": {
 "_em": "2026-11-16",
@@ -551,8 +551,8 @@
 "profitMargins": 0.10945,
 "returnOnEquity": 0.08427,
 "sector": "Healthcare",
-"trailingEps": 1.29,
-"trailingPE": 7.348837
+"trailingEps": 1.33,
+"trailingPE": 7.127819
 },
 "BMEB4": {
 "_em": "2026-11-16",
@@ -566,8 +566,8 @@
 "profitMargins": 0.14701,
 "returnOnEquity": 0.30647,
 "sector": "Financial Services",
-"trailingEps": 8.17,
-"trailingPE": 7.0820074
+"trailingEps": 8.06,
+"trailingPE": 7.17866
 },
 "BMGB4": {
 "_em": "2026-11-16",
@@ -602,14 +602,14 @@
 "BMOB3": {
 "_em": "2026-11-16",
 "currentPrice": 24.79,
-"debtToEquity": 4.697,
-"enterpriseToEbitda": 12.811,
+"debtToEquity": 4.503,
+"enterpriseToEbitda": 9.046,
 "industry": "Entertainment",
 "longName": "Bemobi Mobile Tech S.A.",
 "marketCap": 2068171648,
 "priceToBook": 2.191478,
-"profitMargins": 0.08492,
-"returnOnEquity": 0.16359,
+"profitMargins": 0.08206,
+"returnOnEquity": 0.16464001,
 "sector": "Communication Services",
 "trailingEps": 1.87,
 "trailingPE": 13.256685
@@ -636,13 +636,13 @@
 "enterpriseToEbitda": 2.494,
 "industry": "Household & Personal Products",
 "longName": "Bombril S.A.",
-"marketCap": 364713408,
+"marketCap": 364713536,
 "priceToBook": -0.23688664,
 "profitMargins": 0.039330002,
 "returnOnEquity": null,
 "sector": "Consumer Defensive",
-"trailingEps": 0.25,
-"trailingPE": 5.6
+"trailingEps": 0.26,
+"trailingPE": 5.3846154
 },
 "BPAC11": {
 "_em": "2026-11-16",
@@ -716,7 +716,7 @@
 "profitMargins": -0.090299994,
 "returnOnEquity": null,
 "sector": "Basic Materials",
-"trailingEps": -7.31,
+"trailingEps": -6.87,
 "trailingPE": null
 },
 "BRSR6": {
@@ -731,35 +731,35 @@
 "profitMargins": 0.22384001,
 "returnOnEquity": 0.14481,
 "sector": "Financial Services",
-"trailingEps": 4.01,
-"trailingPE": 3.144638
+"trailingEps": 3.48,
+"trailingPE": 3.623563
 },
 "BRST3": {
 "_em": "2026-11-16",
 "currentPrice": 2.52,
-"debtToEquity": 156.006,
-"enterpriseToEbitda": 3.988,
+"debtToEquity": 153.435,
+"enterpriseToEbitda": 4.042,
 "industry": "Telecom Services",
 "longName": "Brisanet Serviços de Telecomunicações S.A.",
 "marketCap": 1103779072,
 "priceToBook": 0.7148936,
-"profitMargins": 0.03295,
-"returnOnEquity": 0.03788,
+"profitMargins": 0.034590002,
+"returnOnEquity": 0.04004,
 "sector": "Communication Services",
-"trailingEps": 0.13,
-"trailingPE": 19.384617
+"trailingEps": 0.14,
+"trailingPE": 18.0
 },
 "CAMB3": {
 "_em": "2026-11-16",
 "currentPrice": 6.93,
-"debtToEquity": 1.284,
-"enterpriseToEbitda": 3.605,
+"debtToEquity": 0.312,
+"enterpriseToEbitda": 3.755,
 "industry": "Leisure",
 "longName": "Cambuci S.A.",
-"marketCap": 289885856,
-"priceToBook": 0.9489251,
-"profitMargins": 0.16115,
-"returnOnEquity": 0.19541,
+"marketCap": 289948224,
+"priceToBook": 0.9104046,
+"profitMargins": 0.15543,
+"returnOnEquity": 0.18351,
 "sector": "Consumer Cyclical",
 "trailingEps": 1.46,
 "trailingPE": 4.746575
@@ -806,8 +806,8 @@
 "profitMargins": 0.1104,
 "returnOnEquity": 0.22636999,
 "sector": "Basic Materials",
-"trailingEps": 1.65,
-"trailingPE": 6.818182
+"trailingEps": 1.66,
+"trailingPE": 6.7771087
 },
 "CEAB3": {
 "_em": "2026-11-16",
@@ -821,8 +821,8 @@
 "profitMargins": 0.08229999,
 "returnOnEquity": 0.17737,
 "sector": "Consumer Cyclical",
-"trailingEps": 2.16,
-"trailingPE": 3.6805553
+"trailingEps": 2.21,
+"trailingPE": 3.597285
 },
 "CEBR3": {
 "_em": "2026-11-16",
@@ -851,14 +851,14 @@
 "profitMargins": -0.06306,
 "returnOnEquity": -0.17413001,
 "sector": "Consumer Cyclical",
-"trailingEps": -4.89,
+"trailingEps": -4.9,
 "trailingPE": null
 },
 "CEEB3": {
 "_em": "2026-11-16",
 "currentPrice": 44.01,
 "debtToEquity": 302.115,
-"enterpriseToEbitda": 5.896,
+"enterpriseToEbitda": 5.853,
 "industry": "Utilities - Regulated Electric",
 "longName": "Companhia de Eletricidade do Estado da Bahia - COELBA",
 "marketCap": 11534848000,
@@ -872,14 +872,14 @@
 "CGRA4": {
 "_em": "2026-11-16",
 "currentPrice": 21.5,
-"debtToEquity": 15.47,
-"enterpriseToEbitda": 5.688,
+"debtToEquity": 15.444,
+"enterpriseToEbitda": 5.259,
 "industry": "Department Stores",
 "longName": "Grazziotin S.A.",
 "marketCap": 547176640,
-"priceToBook": 0.57645386,
-"profitMargins": 0.09861,
-"returnOnEquity": 0.07728,
+"priceToBook": 0.5443865,
+"profitMargins": 0.09932,
+"returnOnEquity": 0.07567,
 "sector": "Consumer Cyclical",
 "trailingEps": 3.57,
 "trailingPE": 6.022409
@@ -903,7 +903,7 @@
 "_em": "2026-11-16",
 "currentPrice": 10.95,
 "debtToEquity": 82.822,
-"enterpriseToEbitda": 5.612,
+"enterpriseToEbitda": 5.718,
 "industry": "Utilities - Regulated Electric",
 "longName": "Companhia Energética de Minas Gerais - CEMIG",
 "marketCap": 31324467200,
@@ -911,8 +911,8 @@
 "profitMargins": 0.12455,
 "returnOnEquity": 0.18559,
 "sector": "Utilities",
-"trailingEps": 1.62,
-"trailingPE": 6.759259
+"trailingEps": 1.63,
+"trailingPE": 6.717791
 },
 "CMIN3": {
 "_em": "2026-11-16",
@@ -926,23 +926,23 @@
 "profitMargins": 0.082279995,
 "returnOnEquity": 0.15278,
 "sector": "Basic Materials",
-"trailingEps": 0.39,
-"trailingPE": 12.128205
+"trailingEps": 0.23,
+"trailingPE": 20.565218
 },
 "COGN3": {
 "_em": "2026-11-16",
 "currentPrice": 1.58,
-"debtToEquity": 49.599,
-"enterpriseToEbitda": 4.603,
+"debtToEquity": 49.041,
+"enterpriseToEbitda": 3.998,
 "industry": "Education & Training Services",
 "longName": "Cogna Educação S.A.",
 "marketCap": 3168670208,
 "priceToBook": 0.23435183,
-"profitMargins": 0.08963,
-"returnOnEquity": 0.04926,
+"profitMargins": 0.06102,
+"returnOnEquity": 0.03343,
 "sector": "Consumer Defensive",
-"trailingEps": 0.25,
-"trailingPE": 6.32
+"trailingEps": 0.24,
+"trailingPE": 6.5833335
 },
 "CPFE3": {
 "_em": "2026-11-16",
@@ -956,8 +956,8 @@
 "profitMargins": 0.13079001,
 "returnOnEquity": 0.25506002,
 "sector": "Utilities",
-"trailingEps": 5.12,
-"trailingPE": 8.720704
+"trailingEps": 5.04,
+"trailingPE": 8.859127
 },
 "CPLE3": {
 "_em": "2026-11-16",
@@ -971,8 +971,8 @@
 "profitMargins": 0.12217,
 "returnOnEquity": 0.13766,
 "sector": "Utilities",
-"trailingEps": 1.07,
-"trailingPE": 14.177569
+"trailingEps": 1.19,
+"trailingPE": 12.747899
 },
 "CSAN3": {
 "_em": "2026-11-16",
@@ -986,7 +986,7 @@
 "profitMargins": -0.18466999,
 "returnOnEquity": -0.22266,
 "sector": "Energy",
-"trailingEps": -2.9,
+"trailingEps": -2.22,
 "trailingPE": null
 },
 "CSED3": {
@@ -1022,16 +1022,16 @@
 "CSNA3": {
 "_em": "2026-11-16",
 "currentPrice": 3.68,
-"debtToEquity": 356.987,
-"enterpriseToEbitda": 6.635,
+"debtToEquity": 392.213,
+"enterpriseToEbitda": 8.733,
 "industry": "Steel",
 "longName": "Companhia Siderúrgica Nacional",
 "marketCap": 4880025600,
-"priceToBook": 0.37899074,
-"profitMargins": -0.05824,
-"returnOnEquity": -0.12294,
+"priceToBook": 0.4525889,
+"profitMargins": -0.082399994,
+"returnOnEquity": -0.21279,
 "sector": "Basic Materials",
-"trailingEps": -2.85,
+"trailingEps": -2.82,
 "trailingPE": null
 },
 "CTKA4": {
@@ -1046,8 +1046,8 @@
 "profitMargins": 0.07721,
 "returnOnEquity": 0.91476,
 "sector": "Consumer Cyclical",
-"trailingEps": 9.64,
-"trailingPE": 2.9875517
+"trailingEps": 9.04,
+"trailingPE": 3.1858406
 },
 "CTNM4": {
 "_em": "2026-11-16",
@@ -1091,20 +1091,20 @@
 "profitMargins": 0.1865,
 "returnOnEquity": 0.69492996,
 "sector": "Real Estate",
-"trailingEps": 3.99,
-"trailingPE": 6.879699
+"trailingEps": 3.8,
+"trailingPE": 7.2236843
 },
 "CVCB3": {
 "_em": "2026-11-16",
 "currentPrice": 0.79,
-"debtToEquity": 167.471,
-"enterpriseToEbitda": 2.914,
+"debtToEquity": 181.582,
+"enterpriseToEbitda": 3.08,
 "industry": "Travel Services",
 "longName": "CVC Brasil Operadora e Agência de Viagens S.A.",
 "marketCap": 411430912,
-"priceToBook": 0.85963005,
-"profitMargins": -0.08944,
-"returnOnEquity": -0.33345002,
+"priceToBook": 1.2741935,
+"profitMargins": -0.13177,
+"returnOnEquity": -0.48185003,
 "sector": "Consumer Cyclical",
 "trailingEps": 0.03,
 "trailingPE": 26.333334
@@ -1203,12 +1203,12 @@
 "_em": "2026-11-16",
 "currentPrice": 6.96,
 "debtToEquity": null,
-"enterpriseToEbitda": 4.986,
+"enterpriseToEbitda": 1.812,
 "industry": "Advertising Agencies",
 "longName": "Dotz S.A.",
 "marketCap": 92178624,
 "priceToBook": -0.3733505,
-"profitMargins": 0.07771,
+"profitMargins": 0.04682,
 "returnOnEquity": null,
 "sector": "Communication Services",
 "trailingEps": 2.16,
@@ -1256,14 +1256,14 @@
 "profitMargins": 0.0,
 "returnOnEquity": -0.53535,
 "sector": "Technology",
-"trailingEps": -2.3,
+"trailingEps": -2.32,
 "trailingPE": null
 },
 "ECOR3": {
 "_em": "2026-11-16",
 "currentPrice": 5.72,
 "debtToEquity": 648.17,
-"enterpriseToEbitda": 5.502,
+"enterpriseToEbitda": 5.704,
 "industry": "Infrastructure Operations",
 "longName": "EcoRodovias Infraestrutura e Logística S.A.",
 "marketCap": 3978953472,
@@ -1271,8 +1271,8 @@
 "profitMargins": 0.041739997,
 "returnOnEquity": 0.10741,
 "sector": "Industrials",
-"trailingEps": 0.79,
-"trailingPE": 7.2405057
+"trailingEps": 0.82,
+"trailingPE": 6.97561
 },
 "EGIE3": {
 "_em": "2026-11-16",
@@ -1301,8 +1301,8 @@
 "profitMargins": 0.07127,
 "returnOnEquity": 0.33602002,
 "sector": "Utilities",
-"trailingEps": 3.58,
-"trailingPE": 10.125698
+"trailingEps": 3.56,
+"trailingPE": 10.182585
 },
 "EMAE4": {
 "_em": "2026-11-16",
@@ -1331,8 +1331,8 @@
 "profitMargins": 0.05278,
 "returnOnEquity": 0.12189999,
 "sector": "Industrials",
-"trailingEps": 3.0,
-"trailingPE": 36.20667
+"trailingEps": 2.91,
+"trailingPE": 37.32646
 },
 "ENEV3": {
 "_em": "2026-11-16",
@@ -1353,7 +1353,7 @@
 "_em": "2026-11-16",
 "currentPrice": 48.29,
 "debtToEquity": 187.656,
-"enterpriseToEbitda": 6.138,
+"enterpriseToEbitda": 6.552,
 "industry": "Utilities - Regulated Electric",
 "longName": "Energisa S.A.",
 "marketCap": 14790407168,
@@ -1376,14 +1376,14 @@
 "profitMargins": -0.20105,
 "returnOnEquity": -0.16861,
 "sector": "Consumer Cyclical",
-"trailingEps": -1.88,
+"trailingEps": -1.67,
 "trailingPE": null
 },
 "EQMA3B": {
 "_em": "2026-11-16",
 "currentPrice": 29.49,
 "debtToEquity": 91.307,
-"enterpriseToEbitda": 4.117,
+"enterpriseToEbitda": 4.156,
 "industry": "Utilities - Regulated Electric",
 "longName": "Equatorial Maranhão Distribuidora de Energia S.A.",
 "marketCap": 4841783296,
@@ -1391,8 +1391,8 @@
 "profitMargins": 0.13159999,
 "returnOnEquity": 0.21224001,
 "sector": "Utilities",
-"trailingEps": 5.22,
-"trailingPE": 5.6494255
+"trailingEps": 6.15,
+"trailingPE": 4.7951217
 },
 "EQTL3": {
 "_em": "2026-11-16",
@@ -1406,8 +1406,8 @@
 "profitMargins": 0.02286,
 "returnOnEquity": 0.06485,
 "sector": "Utilities",
-"trailingEps": 0.62,
-"trailingPE": 54.483868
+"trailingEps": 0.61,
+"trailingPE": 55.377045
 },
 "ESPA3": {
 "_em": "2026-11-16",
@@ -1457,14 +1457,14 @@
 "EVEN3": {
 "_em": "2026-11-16",
 "currentPrice": 3.65,
-"debtToEquity": 64.461,
-"enterpriseToEbitda": 7.339,
+"debtToEquity": 63.407,
+"enterpriseToEbitda": 13.673,
 "industry": "Real Estate - Development",
 "longName": "Even Construtora e Incorporadora S.A.",
 "marketCap": 724176896,
-"priceToBook": 0.38048577,
-"profitMargins": 0.12827,
-"returnOnEquity": 0.1113,
+"priceToBook": 0.37898457,
+"profitMargins": 0.102139995,
+"returnOnEquity": 0.07751,
 "sector": "Real Estate",
 "trailingEps": 1.01,
 "trailingPE": 3.6138616
@@ -1526,8 +1526,8 @@
 "profitMargins": 0.08011,
 "returnOnEquity": 0.12618,
 "sector": "Healthcare",
-"trailingEps": 1.46,
-"trailingPE": 14.219178
+"trailingEps": 1.43,
+"trailingPE": 14.517483
 },
 "FRAS3": {
 "_em": "2026-11-16",
@@ -1541,8 +1541,8 @@
 "profitMargins": 0.05391,
 "returnOnEquity": 0.124060005,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.01,
-"trailingPE": 20.742575
+"trailingEps": 1.03,
+"trailingPE": 20.339808
 },
 "GFSA3": {
 "_em": "2026-11-16",
@@ -1571,8 +1571,8 @@
 "profitMargins": 0.038599998,
 "returnOnEquity": 0.05017,
 "sector": "Basic Materials",
-"trailingEps": 1.39,
-"trailingPE": 17.697842
+"trailingEps": 1.4,
+"trailingPE": 17.571428
 },
 "GGPS3": {
 "_em": "2026-11-16",
@@ -1586,20 +1586,20 @@
 "profitMargins": 0.050619997,
 "returnOnEquity": 0.21648,
 "sector": "Industrials",
-"trailingEps": 1.34,
-"trailingPE": 7.895522
+"trailingEps": 1.32,
+"trailingPE": 8.015151
 },
 "GMAT3": {
 "_em": "2026-11-16",
 "currentPrice": 4.13,
-"debtToEquity": 55.761,
-"enterpriseToEbitda": 6.813,
+"debtToEquity": 54.226,
+"enterpriseToEbitda": 6.749,
 "industry": "Department Stores",
 "longName": "Grupo Mateus S.A.",
 "marketCap": 9485709312,
-"priceToBook": 0.89278,
-"profitMargins": 0.03994,
-"returnOnEquity": 0.14265999,
+"priceToBook": 0.85031915,
+"profitMargins": 0.026800001,
+"returnOnEquity": 0.09187999,
 "sector": "Consumer Cyclical",
 "trailingEps": 0.73,
 "trailingPE": 5.657534
@@ -1638,12 +1638,12 @@
 "_em": "2026-11-16",
 "currentPrice": 3.79,
 "debtToEquity": null,
-"enterpriseToEbitda": -1881.626,
+"enterpriseToEbitda": -5.216,
 "industry": "Real Estate - Diversified",
 "longName": "General Shopping e Outlets do Brasil S.A.",
 "marketCap": 7107531,
 "priceToBook": -0.004701539,
-"profitMargins": -2.09373,
+"profitMargins": -2.52978,
 "returnOnEquity": null,
 "sector": "Real Estate",
 "trailingEps": -214.91,
@@ -1652,17 +1652,17 @@
 "HAGA4": {
 "_em": "2026-11-16",
 "currentPrice": 1.83,
-"debtToEquity": 58.483,
-"enterpriseToEbitda": -0.116,
+"debtToEquity": 51.46,
+"enterpriseToEbitda": -0.131,
 "industry": "Building Products & Equipment",
 "longName": "HAGA S/A Indústria e Comércio",
 "marketCap": 21777000,
 "priceToBook": -0.4428848,
-"profitMargins": 2.6345901,
+"profitMargins": 2.7944,
 "returnOnEquity": null,
 "sector": "Industrials",
-"trailingEps": 7.28,
-"trailingPE": 0.25137362
+"trailingEps": 7.2,
+"trailingPE": 0.2541667
 },
 "HAPV3": {
 "_em": "2026-11-16",
@@ -1721,8 +1721,8 @@
 "profitMargins": 0.12388,
 "returnOnEquity": null,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.42,
-"trailingPE": 5.7394366
+"trailingEps": 1.35,
+"trailingPE": 6.0370364
 },
 "HYPE3": {
 "_em": "2026-11-16",
@@ -1788,16 +1788,16 @@
 "_em": "2026-11-16",
 "currentPrice": 60.25,
 "debtToEquity": 5.38,
-"enterpriseToEbitda": 1.34,
+"enterpriseToEbitda": null,
 "industry": "Insurance - Reinsurance",
 "longName": "IRB-Brasil Resseguros S.A.",
 "marketCap": 4890420224,
 "priceToBook": 0.9309189,
-"profitMargins": 0.04892,
-"returnOnEquity": 0.04567,
+"profitMargins": -0.076079994,
+"returnOnEquity": null,
 "sector": "Financial Services",
-"trailingEps": 3.25,
-"trailingPE": 18.538462
+"trailingEps": -3.35,
+"trailingPE": null
 },
 "ISAE4": {
 "_em": "2026-11-16",
@@ -1841,20 +1841,20 @@
 "profitMargins": 0.32458,
 "returnOnEquity": 0.20955,
 "sector": "Financial Services",
-"trailingEps": 4.33,
-"trailingPE": 9.538106
+"trailingEps": 4.23,
+"trailingPE": 9.763593
 },
 "JALL3": {
 "_em": "2026-11-16",
 "currentPrice": 2.42,
-"debtToEquity": 241.85,
-"enterpriseToEbitda": 4.699,
+"debtToEquity": 263.422,
+"enterpriseToEbitda": 5.143,
 "industry": "Confectioners",
 "longName": "Jalles Machado S/A",
 "marketCap": 729745344,
 "priceToBook": 0.36303633,
-"profitMargins": -0.025510002,
-"returnOnEquity": -0.02579,
+"profitMargins": -0.01678,
+"returnOnEquity": -0.014140001,
 "sector": "Consumer Defensive",
 "trailingEps": -0.17,
 "trailingPE": null
@@ -1926,7 +1926,7 @@
 "enterpriseToEbitda": 5.303,
 "industry": "Integrated Freight & Logistics",
 "longName": "JSL S.A.",
-"marketCap": 1697938944,
+"marketCap": 1697945088,
 "priceToBook": 1.4052904,
 "profitMargins": -0.00985,
 "returnOnEquity": -0.06443,
@@ -1946,8 +1946,8 @@
 "profitMargins": 0.074710004,
 "returnOnEquity": 0.12964,
 "sector": "Industrials",
-"trailingEps": 0.81,
-"trailingPE": 8.333333
+"trailingEps": 0.87,
+"trailingPE": 7.7586207
 },
 "KLBN11": {
 "_em": "2026-11-16",
@@ -2021,8 +2021,8 @@
 "profitMargins": 0.15438,
 "returnOnEquity": 0.32412,
 "sector": "Utilities",
-"trailingEps": 1.48,
-"trailingPE": 1.831081
+"trailingEps": 3.38,
+"trailingPE": 0.80177516
 },
 "LJQQ3": {
 "_em": "2026-11-16",
@@ -2092,12 +2092,12 @@
 "industry": "Department Stores",
 "longName": "Lojas Renner S.A.",
 "marketCap": 9057433600,
-"priceToBook": 0.88687277,
+"priceToBook": 0.8998685,
 "profitMargins": 0.091709994,
 "returnOnEquity": 0.14354,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.48,
-"trailingPE": 6.472973
+"trailingEps": 1.49,
+"trailingPE": 6.42953
 },
 "LUPA3": {
 "_em": "2026-11-16",
@@ -2126,23 +2126,23 @@
 "profitMargins": 0.12906,
 "returnOnEquity": 0.12141,
 "sector": "Industrials",
-"trailingEps": 0.48,
-"trailingPE": 6.375
+"trailingEps": 0.49,
+"trailingPE": 6.244898
 },
 "LWSA3": {
 "_em": "2026-11-16",
 "currentPrice": 3.22,
-"debtToEquity": 3.154,
-"enterpriseToEbitda": -8.027,
+"debtToEquity": 3.51,
+"enterpriseToEbitda": 5.308,
 "industry": "Software - Infrastructure",
 "longName": "Locaweb Serviços de Internet S.A.",
 "marketCap": 1756355584,
-"priceToBook": 0.71810883,
-"profitMargins": -0.13288,
-"returnOnEquity": -0.07797,
+"priceToBook": 0.7433057,
+"profitMargins": 0.08148,
+"returnOnEquity": 0.05075,
 "sector": "Technology",
-"trailingEps": -0.36,
-"trailingPE": null
+"trailingEps": 0.22,
+"trailingPE": 14.636364
 },
 "MAPT4": {
 "_em": "2026-11-16",
@@ -2152,7 +2152,7 @@
 "industry": "Asset Management",
 "longName": "Cemepe Investimentos S.A.",
 "marketCap": 1846979,
-"priceToBook": -0.2838582,
+"priceToBook": -0.14155926,
 "profitMargins": 0.0,
 "returnOnEquity": null,
 "sector": "Financial Services",
@@ -2163,11 +2163,11 @@
 "_em": "2026-11-16",
 "currentPrice": 5.18,
 "debtToEquity": 124.88,
-"enterpriseToEbitda": 6.519,
+"enterpriseToEbitda": 6.608,
 "industry": "Medical Care Facilities",
 "longName": "Hospital Mater Dei S.A.",
 "marketCap": 1710000000,
-"priceToBook": 1.1070741,
+"priceToBook": 1.1044775,
 "profitMargins": 0.069409996,
 "returnOnEquity": 0.10944,
 "sector": "Healthcare",
@@ -2192,14 +2192,14 @@
 "MDIA3": {
 "_em": "2026-11-16",
 "currentPrice": 16.88,
-"debtToEquity": 21.094,
-"enterpriseToEbitda": 5.616,
+"debtToEquity": 21.387,
+"enterpriseToEbitda": 5.341,
 "industry": "Packaged Foods",
 "longName": "M. Dias Branco S.A. Indústria e Comércio de Alimentos",
 "marketCap": 5664649216,
-"priceToBook": 0.68721247,
-"profitMargins": 0.06229,
-"returnOnEquity": 0.07809,
+"priceToBook": 0.6572952,
+"profitMargins": 0.056939997,
+"returnOnEquity": 0.06982,
 "sector": "Consumer Defensive",
 "trailingEps": 1.76,
 "trailingPE": 9.590909
@@ -2222,14 +2222,14 @@
 "MELK3": {
 "_em": "2026-11-16",
 "currentPrice": 2.03,
-"debtToEquity": 70.557,
-"enterpriseToEbitda": 8.439,
+"debtToEquity": 68.635,
+"enterpriseToEbitda": 8.933,
 "industry": "Real Estate Services",
 "longName": "Melnick Desenvolvimento Imobiliário S.A.",
 "marketCap": 412161984,
-"priceToBook": 0.39333463,
-"profitMargins": 0.10346,
-"returnOnEquity": 0.13537,
+"priceToBook": 0.37606522,
+"profitMargins": 0.09034,
+"returnOnEquity": 0.11565,
 "sector": "Real Estate",
 "trailingEps": 0.56,
 "trailingPE": 3.625
@@ -2257,7 +2257,7 @@
 "industry": "Specialty Retail",
 "longName": "Magazine Luiza S.A.",
 "marketCap": 5809955840,
-"priceToBook": 0.5200666,
+"priceToBook": 0.5144231,
 "profitMargins": -0.00017999999,
 "returnOnEquity": -0.00061,
 "sector": "Consumer Cyclical",
@@ -2271,7 +2271,7 @@
 "enterpriseToEbitda": 4.522,
 "industry": "Rental & Leasing Services",
 "longName": "Mills Locação, Serviços e Logística S.A.",
-"marketCap": 3727343616,
+"marketCap": 3728131840,
 "priceToBook": 1.8446274,
 "profitMargins": 0.26708,
 "returnOnEquity": 0.27678,
@@ -2321,7 +2321,7 @@
 "profitMargins": 0.30336002,
 "returnOnEquity": 0.16916001,
 "sector": "Industrials",
-"trailingEps": -0.7,
+"trailingEps": -0.68,
 "trailingPE": null
 },
 "MOVI3": {
@@ -2351,7 +2351,7 @@
 "profitMargins": -0.041100003,
 "returnOnEquity": -0.08765,
 "sector": "Real Estate",
-"trailingEps": -1.02,
+"trailingEps": -0.91,
 "trailingPE": null
 },
 "MTRE3": {
@@ -2411,7 +2411,7 @@
 "profitMargins": -0.22409001,
 "returnOnEquity": null,
 "sector": "Consumer Cyclical",
-"trailingEps": -7.62,
+"trailingEps": -8.58,
 "trailingPE": null
 },
 "MYPK3": {
@@ -2516,8 +2516,8 @@
 "profitMargins": 0.17291,
 "returnOnEquity": 0.31807,
 "sector": "Healthcare",
-"trailingEps": 4.39,
-"trailingPE": 6.0159454
+"trailingEps": 4.51,
+"trailingPE": 5.8558755
 },
 "OIBR3": {
 "_em": "2026-11-16",
@@ -2561,18 +2561,18 @@
 "profitMargins": 0.03352,
 "returnOnEquity": 0.023599999,
 "sector": "Industrials",
-"trailingEps": 0.15,
-"trailingPE": 126.799995
+"trailingEps": 0.14,
+"trailingPE": 135.85715
 },
 "OSXB3": {
 "_em": "2026-11-16",
 "currentPrice": 2.2,
 "debtToEquity": null,
-"enterpriseToEbitda": 62.252,
+"enterpriseToEbitda": 72.513,
 "industry": "Oil & Gas Equipment & Services",
 "longName": "OSX Brasil S.A.",
 "marketCap": 6925684,
-"priceToBook": -0.0006996076,
+"priceToBook": -0.0006426191,
 "profitMargins": 0.0,
 "returnOnEquity": null,
 "sector": "Energy",
@@ -2642,17 +2642,17 @@
 "PGMN3": {
 "_em": "2026-11-16",
 "currentPrice": 2.34,
-"debtToEquity": 101.786,
-"enterpriseToEbitda": 5.526,
+"debtToEquity": 100.722,
+"enterpriseToEbitda": 5.377,
 "industry": "Pharmaceutical Retailers",
 "longName": "Empreendimentos Pague Menos S.A.",
 "marketCap": 1677936256,
-"priceToBook": 0.5003207,
-"profitMargins": 0.021,
-"returnOnEquity": 0.10585,
+"priceToBook": 0.48177886,
+"profitMargins": 0.021370001,
+"returnOnEquity": 0.10649,
 "sector": "Healthcare",
-"trailingEps": 0.51,
-"trailingPE": 4.5882354
+"trailingEps": 0.5,
+"trailingPE": 4.68
 },
 "PINE4": {
 "_em": "2026-11-16",
@@ -2706,7 +2706,7 @@
 "enterpriseToEbitda": -29.967,
 "industry": "Copper",
 "longName": "Paranapanema S.A.",
-"marketCap": 93198376,
+"marketCap": 1054394688,
 "priceToBook": -0.009511852,
 "profitMargins": -2.20274,
 "returnOnEquity": null,
@@ -2721,7 +2721,7 @@
 "enterpriseToEbitda": 6.634,
 "industry": "Drug Manufacturers - General",
 "longName": "Dimed S.A. Distribuidora de Medicamentos",
-"marketCap": 1620188928,
+"marketCap": 1641316864,
 "priceToBook": 1.2340139,
 "profitMargins": 0.024349999,
 "returnOnEquity": 0.113970004,
@@ -2777,14 +2777,14 @@
 "PRNR3": {
 "_em": "2026-11-16",
 "currentPrice": 12.96,
-"debtToEquity": 176.223,
-"enterpriseToEbitda": 5.564,
+"debtToEquity": 180.632,
+"enterpriseToEbitda": 4.579,
 "industry": "Engineering & Construction",
 "longName": "Priner Serviços Industriais S.A.",
 "marketCap": 741029376,
 "priceToBook": 1.5225564,
-"profitMargins": 0.02554,
-"returnOnEquity": 0.12181,
+"profitMargins": 0.026080001,
+"returnOnEquity": 0.103999995,
 "sector": "Industrials",
 "trailingEps": 0.72,
 "trailingPE": 18.0
@@ -2801,8 +2801,8 @@
 "profitMargins": 0.08007,
 "returnOnEquity": 0.23405,
 "sector": "Financial Services",
-"trailingEps": 5.79,
-"trailingPE": 7.8652854
+"trailingEps": 5.68,
+"trailingPE": 8.017606
 },
 "QUAL3": {
 "_em": "2026-11-16",
@@ -2831,14 +2831,14 @@
 "profitMargins": 0.027379999,
 "returnOnEquity": 0.19725001,
 "sector": "Healthcare",
-"trailingEps": 0.78,
-"trailingPE": 18.051283
+"trailingEps": 0.79,
+"trailingPE": 17.822784
 },
 "RAIL3": {
 "_em": "2026-11-16",
 "currentPrice": 16.29,
 "debtToEquity": 203.369,
-"enterpriseToEbitda": 7.468,
+"enterpriseToEbitda": 7.452,
 "industry": "Railroads",
 "longName": "Rumo S.A.",
 "marketCap": 30244755456,
@@ -2917,7 +2917,7 @@
 "industry": "Medical Care Facilities",
 "longName": "Rede D'Or São Luiz S.A.",
 "marketCap": 76372303872,
-"priceToBook": 3.5867686,
+"priceToBook": 4.017786,
 "profitMargins": 0.0789,
 "returnOnEquity": 0.18509,
 "sector": "Healthcare",
@@ -2931,13 +2931,13 @@
 "enterpriseToEbitda": 3.434,
 "industry": "Oil & Gas E&P",
 "longName": "Petroreconcavo S.A.",
-"marketCap": 3046344448,
+"marketCap": 3041434112,
 "priceToBook": 0.68860286,
 "profitMargins": 0.20561,
 "returnOnEquity": 0.13648,
 "sector": "Energy",
-"trailingEps": 2.16,
-"trailingPE": 4.8055553
+"trailingEps": 2.09,
+"trailingPE": 4.9665074
 },
 "RENT3": {
 "_em": "2026-11-16",
@@ -3003,12 +3003,12 @@
 "_em": "2026-11-16",
 "currentPrice": 1.52,
 "debtToEquity": null,
-"enterpriseToEbitda": -4.432,
+"enterpriseToEbitda": -1.245,
 "industry": "Residential Construction",
 "longName": "Rossi Residencial S.A.",
 "marketCap": 30441228,
 "priceToBook": -0.03339118,
-"profitMargins": 0.0,
+"profitMargins": 0.88883,
 "returnOnEquity": null,
 "sector": "Consumer Cyclical",
 "trailingEps": -8.01,
@@ -3017,14 +3017,14 @@
 "RSUL4": {
 "_em": "2026-11-16",
 "currentPrice": 41.03,
-"debtToEquity": 16.799,
-"enterpriseToEbitda": 1.866,
+"debtToEquity": 15.588,
+"enterpriseToEbitda": 1.751,
 "industry": "Auto Parts",
 "longName": "Metalúrgica Riosulense S.A.",
 "marketCap": 249139408,
-"priceToBook": 0.90925205,
-"profitMargins": 0.14579001,
-"returnOnEquity": 0.22056,
+"priceToBook": 0.8279856,
+"profitMargins": 0.14291,
+"returnOnEquity": 0.2023,
 "sector": "Consumer Cyclical",
 "trailingEps": 10.07,
 "trailingPE": 4.0744786
@@ -3062,14 +3062,14 @@
 "SAPR11": {
 "_em": "2026-11-16",
 "currentPrice": 32.9,
-"debtToEquity": 59.898,
-"enterpriseToEbitda": 4.185,
+"debtToEquity": 58.89,
+"enterpriseToEbitda": 4.05,
 "industry": "Utilities - Regulated Water",
 "longName": "Companhia de Saneamento do Paraná - SANEPAR",
 "marketCap": 9943729152,
 "priceToBook": 0.80530673,
-"profitMargins": 0.06036,
-"returnOnEquity": 0.03812,
+"profitMargins": 0.066599995,
+"returnOnEquity": 0.04185,
 "sector": "Utilities",
 "trailingEps": 0.809,
 "trailingPE": 40.667492
@@ -3101,20 +3101,20 @@
 "profitMargins": 0.17469,
 "returnOnEquity": 0.16296,
 "sector": "Utilities",
-"trailingEps": 2.14,
-"trailingPE": 12.663551
+"trailingEps": 2.15,
+"trailingPE": 12.6046505
 },
 "SCAR3": {
 "_em": "2026-11-16",
 "currentPrice": 10.53,
-"debtToEquity": 81.312,
-"enterpriseToEbitda": 6.375,
+"debtToEquity": 72.358,
+"enterpriseToEbitda": 5.79,
 "industry": "Real Estate Services",
 "longName": "São Carlos Empreendimentos e Participações S.A.",
 "marketCap": 604750976,
-"priceToBook": 0.5638554,
-"profitMargins": -0.57849,
-"returnOnEquity": -0.107370004,
+"priceToBook": 0.644786,
+"profitMargins": -0.62175,
+"returnOnEquity": -0.118999995,
 "sector": "Real Estate",
 "trailingEps": -1.52,
 "trailingPE": null
@@ -3213,7 +3213,7 @@
 "_em": "2026-11-16",
 "currentPrice": 18.05,
 "debtToEquity": 173.349,
-"enterpriseToEbitda": 4.404,
+"enterpriseToEbitda": 4.405,
 "industry": "Specialty Chemicals",
 "longName": "São Martinho S.A.",
 "marketCap": 5826057216,
@@ -3221,20 +3221,20 @@
 "profitMargins": 0.094799995,
 "returnOnEquity": 0.09571,
 "sector": "Basic Materials",
-"trailingEps": 2.08,
-"trailingPE": 8.677884
+"trailingEps": 2.12,
+"trailingPE": 8.514151
 },
 "SOJA3": {
 "_em": "2026-11-16",
 "currentPrice": 5.31,
-"debtToEquity": 146.554,
-"enterpriseToEbitda": 8.248,
+"debtToEquity": 142.729,
+"enterpriseToEbitda": 8.881,
 "industry": "Agricultural Inputs",
 "longName": "Boa Safra Sementes S.A.",
 "marketCap": 749038720,
 "priceToBook": 0.5587121,
-"profitMargins": 0.0086900005,
-"returnOnEquity": 0.06291,
+"profitMargins": 0.00621,
+"returnOnEquity": 0.038110003,
 "sector": "Basic Materials",
 "trailingEps": -0.02,
 "trailingPE": null
@@ -3257,14 +3257,14 @@
 "SYNE3": {
 "_em": "2026-11-16",
 "currentPrice": 2.75,
-"debtToEquity": 50.207,
-"enterpriseToEbitda": 10.465,
+"debtToEquity": 48.973,
+"enterpriseToEbitda": 10.936,
 "industry": "Real Estate Services",
 "longName": "Syn Prop & Tech S.A.",
 "marketCap": 419772224,
 "priceToBook": 0.6231588,
-"profitMargins": 0.16156,
-"returnOnEquity": 0.04381,
+"profitMargins": 0.15248999,
+"returnOnEquity": 0.05076,
 "sector": "Real Estate",
 "trailingEps": 0.36,
 "trailingPE": 7.6388884
@@ -3341,8 +3341,8 @@
 "profitMargins": 0.25248,
 "returnOnEquity": 0.0848,
 "sector": "Communication Services",
-"trailingEps": 1.64,
-"trailingPE": 4.146342
+"trailingEps": 1.58,
+"trailingPE": 4.3037972
 },
 "TEND3": {
 "_em": "2026-11-16",
@@ -3371,23 +3371,23 @@
 "profitMargins": 0.13096,
 "returnOnEquity": 0.25722,
 "sector": "Consumer Cyclical",
-"trailingEps": 1.08,
-"trailingPE": 8.981481
+"trailingEps": 1.09,
+"trailingPE": 8.899082
 },
 "TGMA3": {
 "_em": "2026-11-16",
 "currentPrice": 34.36,
-"debtToEquity": 22.78,
-"enterpriseToEbitda": 6.056,
+"debtToEquity": 22.787,
+"enterpriseToEbitda": 5.965,
 "industry": "Trucking",
 "longName": "Tegma Gestão Logística S.A.",
 "marketCap": 2265621760,
 "priceToBook": 2.1868637,
 "profitMargins": 0.11061,
-"returnOnEquity": 0.28825,
+"returnOnEquity": 0.28823,
 "sector": "Industrials",
-"trailingEps": 4.51,
-"trailingPE": 7.618625
+"trailingEps": 4.41,
+"trailingPE": 7.7913837
 },
 "TIMS3": {
 "_em": "2026-11-16",
@@ -3452,14 +3452,14 @@
 "TRIS3": {
 "_em": "2026-11-16",
 "currentPrice": 4.41,
-"debtToEquity": 55.82,
-"enterpriseToEbitda": 6.4,
+"debtToEquity": 48.044,
+"enterpriseToEbitda": 6.407,
 "industry": "Real Estate - Development",
 "longName": "Trisul S.A.",
 "marketCap": 1029809920,
 "priceToBook": 0.71048814,
-"profitMargins": 0.12398,
-"returnOnEquity": 0.12507,
+"profitMargins": 0.12271,
+"returnOnEquity": 0.115480006,
 "sector": "Real Estate",
 "trailingEps": 1.03,
 "trailingPE": 4.2815533
@@ -3467,17 +3467,17 @@
 "TTEN3": {
 "_em": "2026-11-16",
 "currentPrice": 11.14,
-"debtToEquity": 103.287,
-"enterpriseToEbitda": 18.646,
+"debtToEquity": 105.159,
+"enterpriseToEbitda": 9.626,
 "industry": "Agricultural Inputs",
 "longName": "Três Tentos Agroindustrial S/A",
 "marketCap": 5572455936,
-"priceToBook": 1.1852325,
-"profitMargins": 0.0322,
-"returnOnEquity": 0.121350005,
+"priceToBook": 1.114892,
+"profitMargins": 0.03083,
+"returnOnEquity": 0.11725,
 "sector": "Basic Materials",
-"trailingEps": 1.23,
-"trailingPE": 9.0569105
+"trailingEps": 1.18,
+"trailingPE": 9.440679
 },
 "TUPY3": {
 "_em": "2026-11-16",
@@ -3551,8 +3551,8 @@
 "profitMargins": 0.05942,
 "returnOnEquity": 0.07127,
 "sector": "Basic Materials",
-"trailingEps": 1.13,
-"trailingPE": 4.292035
+"trailingEps": 1.11,
+"trailingPE": 4.369369
 },
 "VALE3": {
 "_em": "2026-11-16",
@@ -3576,7 +3576,7 @@
 "enterpriseToEbitda": 3.897,
 "industry": "Rental & Leasing Services",
 "longName": "Vamos Locação de Caminhões, Máquinas e Equipamentos S.A.",
-"marketCap": 3200960000,
+"marketCap": 3201186048,
 "priceToBook": 0.9271054,
 "profitMargins": 0.066479996,
 "returnOnEquity": 0.13686,
@@ -3596,8 +3596,8 @@
 "profitMargins": 0.03348,
 "returnOnEquity": 0.30365,
 "sector": "Consumer Cyclical",
-"trailingEps": 5.99,
-"trailingPE": 5.125209
+"trailingEps": 6.01,
+"trailingPE": 5.108153
 },
 "VITT3": {
 "_em": "2026-11-16",
@@ -3606,13 +3606,13 @@
 "enterpriseToEbitda": 6.233,
 "industry": "Agricultural Inputs",
 "longName": "Vittia S.A.",
-"marketCap": 394262176,
-"priceToBook": 0.66966647,
+"marketCap": 395622528,
+"priceToBook": 0.6336088,
 "profitMargins": 0.07969,
 "returnOnEquity": 0.10762999,
 "sector": "Basic Materials",
-"trailingEps": 0.39,
-"trailingPE": 6.4871798
+"trailingEps": 0.41,
+"trailingPE": 6.1707315
 },
 "VIVA3": {
 "_em": "2026-11-16",
@@ -3626,8 +3626,8 @@
 "profitMargins": 0.16213,
 "returnOnEquity": 0.16598,
 "sector": "Consumer Cyclical",
-"trailingEps": 2.2,
-"trailingPE": 7.4727273
+"trailingEps": 2.26,
+"trailingPE": 7.2743363
 },
 "VIVR3": {
 "_em": "2026-11-16",
@@ -3656,8 +3656,8 @@
 "profitMargins": 0.11404,
 "returnOnEquity": 0.10606,
 "sector": "Communication Services",
-"trailingEps": 2.06,
-"trailingPE": 16.762136
+"trailingEps": 2.03,
+"trailingPE": 17.009851
 },
 "VLID3": {
 "_em": "2026-11-16",
@@ -3671,8 +3671,8 @@
 "profitMargins": 0.111540005,
 "returnOnEquity": 0.13442001,
 "sector": "Industrials",
-"trailingEps": 2.86,
-"trailingPE": 5.454546
+"trailingEps": 2.85,
+"trailingPE": 5.4736843
 },
 "VSTE3": {
 "_em": "2026-11-16",
@@ -3687,13 +3687,13 @@
 "returnOnEquity": null,
 "sector": null,
 "trailingEps": null,
-"trailingPE": 6.046511
+"trailingPE": 6.341463
 },
 "VULC3": {
 "_em": "2026-11-16",
 "currentPrice": 11.48,
 "debtToEquity": 28.583,
-"enterpriseToEbitda": 5.245,
+"enterpriseToEbitda": 5.28,
 "industry": "Footwear & Accessories",
 "longName": "Vulcabras S.A.",
 "marketCap": 3606016256,
@@ -3711,7 +3711,7 @@
 "enterpriseToEbitda": 4.667,
 "industry": "Medical Distribution",
 "longName": "CM Hospitalar S/A",
-"marketCap": 170608368,
+"marketCap": 690900352,
 "priceToBook": 0.088033915,
 "profitMargins": -0.022230001,
 "returnOnEquity": -0.121750005,
@@ -3752,14 +3752,14 @@
 "WEST3": {
 "_em": "2026-11-16",
 "currentPrice": 3.56,
-"debtToEquity": 5.714,
-"enterpriseToEbitda": 1.779,
+"debtToEquity": 7.236,
+"enterpriseToEbitda": -0.405,
 "industry": "Specialty Retail",
 "longName": "Westwing Comércio Varejista S.A.",
 "marketCap": 39588948,
-"priceToBook": 0.1794988,
-"profitMargins": -0.06628,
-"returnOnEquity": -0.05503,
+"priceToBook": 0.27808154,
+"profitMargins": -0.10054,
+"returnOnEquity": -0.08096,
 "sector": "Consumer Cyclical",
 "trailingEps": -1.68,
 "trailingPE": null
@@ -3768,7 +3768,7 @@
 "_em": "2026-11-16",
 "currentPrice": 9.7,
 "debtToEquity": 181.597,
-"enterpriseToEbitda": 4.2,
+"enterpriseToEbitda": 4.184,
 "industry": "Education & Training Services",
 "longName": "Yduqs Participações S.A.",
 "marketCap": 2468236032,
@@ -3776,7 +3776,7 @@
 "profitMargins": 0.02382,
 "returnOnEquity": 0.04249,
 "sector": "Consumer Defensive",
-"trailingEps": 0.42,
-"trailingPE": 23.095238
+"trailingEps": 0.52,
+"trailingPE": 18.653847
 }
 }
