@@ -15,3 +15,16 @@ def test_proventos_b3_filtra_classe_e_descarta_repetidos(monkeypatch):
     assert r["XPTO3"] == [("2025-12-19", 0.412831673), ("2025-12-19", 0.412831673)]   # duas parcelas, a repetida sai
     assert r["XPTO4"] == [("2026-03-20", 1234.5)] and r["XPTO11"] == [("2026-03-20", 0.9)]
     assert "NADA3" not in r and "JBSS32" not in r
+
+
+def test_proventos_b3_tenta_de_novo_quem_falhou(monkeypatch):
+    chamadas = []
+
+    def falso(e):
+        chamadas.append(e)
+        if len(chamadas) == 1:
+            raise TimeoutError
+        return [{"isinCode": "BRWEGEACNOR0", "lastDatePrior": "18/09/2026", "paymentDate": "10/03/2027", "rate": "0,1", "label": "JRS"}]
+    monkeypatch.setattr(coleta, "_b3_emissor", falso)
+    monkeypatch.setattr(coleta.time, "sleep", lambda s: None)
+    assert coleta.proventos_b3(["WEGE3"]) == {"WEGE3": [("2026-09-18", 0.1)]} and chamadas == ["WEGE", "WEGE"]

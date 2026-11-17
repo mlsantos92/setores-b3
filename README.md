@@ -45,6 +45,9 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 - **Resultados oficiais e auditados.** P/L, P/VP, ROE e margem saem das demonstrações que a empresa protocola na CVM, as mesmas do portal de relações com investidores: DFP anual, auditada, e ITR trimestral, revisado pelo auditor independente. O lucro é o dos últimos 12 meses atribuído aos controladores (DFP + acumulado do ano − mesmo período do ano anterior); o patrimônio exclui minoritários.
 - **Só as métricas.** A avaliação usa os números das demonstrações. O parecer do auditor não é lido nem entra em nenhum critério; o painel mostra apenas o nome do auditor informado à CVM.
 - **Histórico por período.** Receita, resultado operacional, EBITDA, lucro, patrimônio, passivo e dívida de cada trimestre desde 2019 (o ano de 2019 vem todo por referência cruzada, dos documentos de 2020). Cada documento da CVM traz o acumulado do exercício: o trimestre isolado é a diferença entre dois acumulados seguidos, e o 4º trimestre é o ano (DFP) menos os nove meses. Semestre, acumulado no ano e ano são somas de trimestres civis, o que deixa comparáveis as empresas com exercício fora do ano civil. O painel compara dois períodos quaisquer, por empresa e por setor.
+- **Indicadores completos por empresa.** Os 30 indicadores dos sites de análise de ações, em cinco grupos: valuation (D.Y, P/L, PEG, P/VP, EV/EBITDA, EV/EBIT, P/EBITDA, P/EBIT, VPA, P/Ativo, LPA, P/SR, P/Capital de giro, P/Ativo circulante líquido), endividamento (dívida líquida sobre PL, EBITDA e EBIT, PL/Ativos, Passivos/Ativos, liquidez corrente), eficiência (margens bruta, EBITDA, EBIT e líquida), rentabilidade (ROE, ROA, ROIC, giro dos ativos) e crescimento (CAGR de receitas e lucros em 5 anos). Fluxos somam os 4 trimestres mais recentes; contas do balanço são as do fim do último trimestre; o preço é o do último pregão. O painel filtra por qualquer indicador (mínimo e máximo), tem atalhos prontos (barata e rentável, pouca dívida, boas pagadoras, crescimento, margens altas, abaixo do patrimônio) e mostra a ficha da empresa ao lado da mediana do setor.
+- **Conferência com uma referência de mercado.** Para a WEG (WEGE3), 26 dos 29 indicadores calculados ficaram a menos de 3% dos publicados pelo Status Invest em 17/11/2026. As diferenças: EBITDA (1,2%, a depreciação vem de outra demonstração), CAGR de lucros (22,2% contra 21,8%) e dividend yield (explicado abaixo).
+- **Dividend yield pelos proventos oficiais da B3.** Proventos com data com nos últimos 12 meses ÷ preço atual, contando cada parcela informada à B3 uma vez. Dividendos declarados de uma vez e pagos em parcelas até 2028 (comuns no fim de 2025) entram inteiros, por isso o D.Y pode ficar acima do de sites que contam só a parcela do ano. Sem resposta da B3, vale o Yahoo.
 - **Filtros e comparação com os pares.** Para o trimestre escolhido, o painel calcula o crescimento contra o trimestre anterior (T/T) e contra o mesmo trimestre do ano anterior (A/A) de receita, lucro e EBITDA, além de margem EBITDA, P/VP, passivo sobre patrimônio e dívida sobre EBITDA. Dá para filtrar por lucro ou prejuízo, por quem saiu ou entrou no prejuízo, por mínimos e máximos, e ver cada número como diferença para a mediana do setor.
 - **EBITDA e passivos.** EBITDA = resultado operacional + depreciação e amortização da demonstração do valor adicionado. Passivo exigível = passivo total − patrimônio líquido. Dívida bruta = empréstimos e financiamentos de curto e longo prazo.
 - **Referência cruzada na falta de documento.** Se falta o documento de um período, o valor é buscado no trimestre seguinte (acumulado menos o trimestre isolado) ou no mesmo período do ano seguinte, que repete os números do exercício anterior. O período fica marcado. Sem nenhuma referência, fica vazio: nada é estimado.
@@ -63,7 +66,7 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 - **Dívida bruta, não líquida.** O caixa não entra na conta, então Dívida/EBITDA fica acima do indicador de dívida líquida que as empresas divulgam.
 - **Lucro contábil, sem ajustes.** O lucro de 12 meses inclui itens não recorrentes e operações descontinuadas, e fusões recentes (Bradsaúde, MBRF) misturam períodos de empresas diferentes. Os releases de RI costumam mostrar também um lucro ajustado, que não entra aqui.
 - **Quantidade de ações sem escala.** A CVM não informa se o número está em unidades ou em milhares; a escala é decidida por comparação com o valor de mercado do Yahoo. Empresas com classes de ações de direitos econômicos diferentes ficam com o valor de mercado do Yahoo.
-- **Preços de fonte única.** Cotações e proventos vêm do Yahoo Finance.
+- **Preços de fonte única.** Cotações vêm do Yahoo Finance; proventos, da B3 (com o Yahoo de reserva).
 - **Setores pequenos.** Comunicações, Tecnologia e Outros têm poucas empresas elegíveis. Grupos com menos de 3 empresas ficam fora dos gráficos.
 - **Feriados locais.** O calendário desconta feriados nacionais. Em feriado só da B3, o selo pode ficar amarelo por um dia.
 - **Classificação dos setores** é a da lista original, sem revisão.
@@ -73,7 +76,8 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 | Etapa | Onde |
 |---|---|
 | Universo e ajustes de código | `data/raw/`, `src/setores_b3/universo.py` |
-| Coleta de preços (Yahoo Finance) e do CDI (Banco Central) | `src/setores_b3/coleta.py` |
+| Coleta de preços (Yahoo Finance), proventos (B3) e CDI (Banco Central) | `src/setores_b3/coleta.py` |
+| Indicadores fundamentalistas por empresa | `src/setores_b3/indicadores.py` |
 | Resultados oficiais, histórico por trimestre e capital (CVM: DFP, ITR e FCA) | `src/setores_b3/cvm.py` |
 | Retorno, volatilidade, maior queda, Sharpe, índice de pesos iguais | `src/setores_b3/metricas.py` |
 | Múltiplos, conferência entre fontes e mediana do setor | `src/setores_b3/multiplos.py` |
@@ -82,7 +86,7 @@ As 31 empresas sem preço são as que saíram da bolsa (Neoenergia, Santos Brasi
 | Painel estático | `docs/index.html`, que lê `docs/dados.json` e `docs/historico.json` |
 | Atualização diária | `.github/workflows/atualizar.yml` |
 
-Só os módulos de coleta falam com a rede. Os cálculos recebem tabelas prontas, o que permite testar tudo sem internet: são 48 testes com dados sintéticos (`pytest`), incluindo demonstrações fictícias no formato da CVM.
+Só os módulos de coleta falam com a rede. Os cálculos recebem tabelas prontas, o que permite testar tudo sem internet: são 57 testes com dados sintéticos (`pytest`), incluindo demonstrações fictícias no formato da CVM.
 
 **Selo:** verde quando pelo menos 95% das large e mid caps têm preço do último pregão fechado, há fundamentos para 80% das elegíveis e os testes passam. Amarelo quando algum desses pontos falha. Vermelho quando a coleta ou os testes quebram.
 

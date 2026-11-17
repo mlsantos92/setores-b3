@@ -131,11 +131,18 @@ def proventos_b3(tickers: list[str], pausa: float = 0.3) -> dict[str, list[tuple
         sufixo = t[4:]
         if sufixo in CLASSE_ISIN:
             por_emissor.setdefault(t[:4], []).append(t)
-    for emissor, codigos in por_emissor.items():
+    falhas: list[str] = []
+    fila = list(por_emissor)
+    for n, emissor in enumerate(fila):
+        codigos = por_emissor[emissor]
         try:
             linhas = _b3_emissor(emissor)
         except Exception as erro:
-            print(f"B3 {emissor}: {type(erro).__name__}")
+            if emissor not in falhas:          # uma nova tentativa no fim da fila
+                falhas.append(emissor)
+                fila.append(emissor)
+            else:
+                print(f"B3 {emissor}: {type(erro).__name__}")
             time.sleep(2)
             continue
         if linhas is None:
