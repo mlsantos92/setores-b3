@@ -62,11 +62,13 @@ def baixar_demonstracoes(ano: int, anos_atras: int = 1, cnpjs: set[str] | None =
     for a in range(ano - anos_atras, ano + 1):
         for tipo in ("DFP", "ITR"):
             z = _zip(f"{tipo}/DADOS/{tipo.lower()}_cia_aberta_{a}.zip")
-            for parte in ("DRE_con", "DRE_ind", "BPP_con", "BPP_ind", "DVA_con", "DVA_ind"):
+            for parte in ("DRE_con", "DRE_ind", "BPA_con", "BPA_ind", "BPP_con", "BPP_ind", "DVA_con", "DVA_ind"):
                 d = _csv(z, f"{tipo.lower()}_cia_aberta_{parte}_{a}.csv", cnpjs)
                 if len(d):
-                    # a DVA entra na mesma tabela da DRE: dela só interessa a depreciação e amortização
-                    out[parte.lower().replace("dva", "dre")].append(d.assign(TIPO=tipo))
+                    # a DVA entra na tabela da DRE (dela só interessa a depreciação e amortização) e o ativo (BPA)
+                    # na do passivo (BPP): os códigos de conta não se repetem entre elas
+                    destino = parte.lower().replace("dva", "dre").replace("bpa", "bpp")
+                    out[destino].append(d.assign(TIPO=tipo))
             d = _csv(z, f"{tipo.lower()}_cia_aberta_composicao_capital_{a}.csv", cnpjs)
             if len(d):
                 out["capital"].append(d)
@@ -195,6 +197,7 @@ def _dre(x: pd.DataFrame) -> dict:
     receita = x[x["CD_CONTA"] == "3.01"]["VALOR"]
     return {"lucro": ctrl if ctrl not in (None, 0.0) or lucro == 0 else lucro,
             "receita": float(receita.iloc[0]) if len(receita) and pd.notna(receita.iloc[0]) else None,
+            "bruto": _conta(x, "resultado bruto"),
             "ebit": _conta(x, "resultado antes do resultado financeiro e dos tributos"),
             "da": _conta(x, "depreciacao, amortizacao", nivel=7),
             "ini": x["DT_INI_EXERC"].iloc[0], "fim": x["DT_FIM_EXERC"].iloc[0]}
@@ -211,10 +214,13 @@ def _patrimonio(bpp_doc: pd.DataFrame) -> float | None:
 
 
 def _balanco(bpp_doc: pd.DataFrame) -> dict:
-    """Do balanço de uma data: patrimônio dos controladores, passivo exigível e dívida bruta.
+    """Do balanço de uma data (ativo e passivo juntos na mesma tabela):
 
-    Passivo exigível = passivo total − patrimônio líquido total (tudo o que a empresa deve).
-    Dívida bruta = empréstimos e financiamentos de curto e longo prazo (bancos não têm essa linha).
+    - pl: patrimônio dos controladores;
+    - passivo: passivo exigível = passivo total − patrimônio líquido total (tudo o que a empresa deve);
+    - divida: empréstimos e financiamentos de curto e longo prazo (bancos não têm essa linha);
+    - ativo, ativo_circ, passivo_circ: totais do balanço;
+    - caixa: caixa e equivalentes + aplicações financeiras do ativo circulante.
     """
     pl = _patrimonio(bpp_doc)
     if pl is None:
@@ -222,10 +228,17 @@ def _balanco(bpp_doc: pd.DataFrame) -> dict:
     x = bpp_doc[bpp_doc["ULTIMO"]]
     total = _conta(x, "passivo total", nivel=1)
     pl_total = _conta(x, "patrimonio liquido")
-    divida = x[(x["CD_CONTA"].str.len() == 7) & x["DS"].map(lambda t: t.startswith("emprestimos e financiamentos")).astype(bool)]["VALOR"].dropna()
+    nivel7 = x[x["CD_CONTA"].str.len() == 7]
+    divida = nivel7[nivel7["DS"].map(lambda t: t.startswith("emprestimos e financiamentos")).astype(bool)]["VALOR"].dropna()
+    caixa = nivel7[nivel7["CD_CONTA"].str.startswith("1.01.")
+                   & nivel7["DS"].map(lambda t: t.startswith(("caixa e equivalentes", "aplicacoes financeiras"))).astype(bool)]["VALOR"].dropna()
     return {"pl": pl,
             "passivo": None if total is None or pl_total is None else total - pl_total,
-            "divida": float(divida.sum()) if len(divida) else None}
+            "divida": float(divida.sum()) if len(divida) else None,
+            "ativo": _conta(x, "ativo total", nivel=1),
+            "ativo_circ": _conta(x, "ativo circulante"),
+            "passivo_circ": _conta(x, "passivo circulante"),
+            "caixa": float(caixa.sum()) if len(caixa) else None}
 
 
 def resultado_empresa(dre: pd.DataFrame, bpp: pd.DataFrame) -> dict:
@@ -303,7 +316,7 @@ def rotulo_trimestre(fim: str) -> str:
 
 
 ORIGINAL, TRIMESTRE_SEGUINTE, ANO_SEGUINTE = 0, 1, 2
-FLUXOS = ("receita", "ebit", "lucro", "da")
+FLUXOS = ("receita", "bruto", "ebit", "lucro", "da")
 
 
 def _pontos(dre: pd.DataFrame) -> tuple[dict, dict]:
@@ -419,6 +432,8 @@ def mesclar(antigo: dict[str, dict], novo: dict[str, dict]) -> dict[str, dict]:
     out = dict(antigo)
     for rot, q in novo.items():
         if rot in out and q.get("cruzado") and not out[rot].get("cruzado"):
+            # mantém o original, mas completa os campos que ele ainda não tinha
+            out[rot] = {**{k: v for k, v in q.items() if k != "cruzado"}, **{k: v for k, v in out[rot].items() if v is not None}}
             continue
         out[rot] = q
     return out

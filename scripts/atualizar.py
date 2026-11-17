@@ -98,7 +98,12 @@ try:
 except Exception as erro:
     print("CDI indisponível:", type(erro).__name__, erro)
 
-dados = estudo.montar(u, fech, vol, guardado, cdi_aa, fim, bruto=bruto, proventos=prov, oficiais=oficiais)
+hist_tk = {t: historico[c] for t, c in cnpjs.items() if c in historico}
+dados = estudo.montar(u, fech, vol, guardado, cdi_aa, fim, bruto=bruto, proventos=prov, oficiais=oficiais, historico=hist_tk)
+amostra = {e["ticker"]: {k: e.get(k) for k in ("ind_ate", "pl", "pvp", "ev_ebitda", "dl_ebitda", "roe", "roic", "m_bruta", "liq_corrente", "cagr_receita")}
+           for e in dados["empresas"] if e["ticker"] in ("WEGE3", "PETR4", "ITUB4", "MGLU3")}
+print("Indicadores amostra:", json.dumps(amostra, default=lambda x: round(x, 3)))
+print("Indicadores completos:", sum(1 for e in dados["empresas"] if e["elegivel"] and e.get("ind_ate")), "elegíveis")
 
 ref = {}
 if len(ibov.dropna()):

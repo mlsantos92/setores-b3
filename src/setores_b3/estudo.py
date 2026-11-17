@@ -7,11 +7,11 @@ import math
 import numpy as np
 import pandas as pd
 
-from . import metricas, multiplos
+from . import indicadores, metricas, multiplos
 
 LIQ_MINIMA = 100_000      # R$/dia, mediana dos últimos 60 pregões
 PRESENCA_MINIMA = 0.90    # fração dos pregões dos últimos 12 meses com negócio
-INDICADORES = ["pl", "pvp", "ev_ebitda", "dy", "roe", "margem", "div_pl"]
+INDICADORES = list(dict.fromkeys(["pl", "pvp", "ev_ebitda", "dy", "roe", "margem", "div_pl"] + indicadores.TODOS))
 
 
 def _limpo(x):
@@ -139,15 +139,19 @@ def _agregado(nome: dict, emp: pd.DataFrame, fech: pd.DataFrame, fim: pd.Timesta
 
 def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundamentos: dict,
            cdi_aa: float, fim: pd.Timestamp, bruto: pd.DataFrame | None = None,
-           proventos: pd.DataFrame | None = None, oficiais: dict | None = None) -> dict:
+           proventos: pd.DataFrame | None = None, oficiais: dict | None = None,
+           historico: dict | None = None) -> dict:
     """Devolve {"empresas": [...], "setores": [...], "listas": [...], "series": {...}}.
 
     ``fech`` é o preço ajustado por proventos. ``bruto`` (preço negociado) e ``proventos``
     são opcionais: sem eles a liquidez usa o preço ajustado e não há dividend yield.
     ``oficiais`` traz, por código, o resultado protocolado na CVM e o auditor: quando existe,
     P/L, P/VP, ROE e margem saem dele e os números do Yahoo ficam só como conferência.
+    ``historico`` traz, por código, os trimestres da CVM; com ele a empresa ganha o conjunto
+    completo de indicadores (``indicadores.calcular``), que passa a valer no lugar dos anteriores.
     """
     oficiais = oficiais or {}
+    historico = historico or {}
     fech = fech[fech.index <= fim]
     vol = vol[vol.index <= fim]
     bruto = fech if bruto is None else bruto[bruto.index <= fim]
@@ -178,7 +182,18 @@ def montar(universo: pd.DataFrame, fech: pd.DataFrame, vol: pd.DataFrame, fundam
             pago = proventos[e.ticker]
             pago = pago[(pago.index > fim - pd.DateOffset(years=1)) & (pago.index <= fim)].sum()
             m["dy"] = multiplos.dividend_yield(float(pago), float(bruto[e.ticker].dropna().iloc[-1]))
-        reg.append({**base, **r, **m, "ultimo_preco_em": fech[e.ticker].dropna().index[-1].date().isoformat()})
+        hist = historico.get(e.ticker)
+        if hist and not m.get("atrasado"):
+            ind = indicadores.calcular(hist, m.get("valor_mercado"), float(bruto[e.ticker].dropna().iloc[-1]), m["dy"])
+            if ind:
+                q = ind["ind_ate"]
+                fim_q = pd.Timestamp(year=int(q[:4]), month=int(q[5:]) * 3, day=1) + pd.offsets.MonthEnd(0)
+                if (fim - fim_q).days <= ATRASO_MAXIMO:
+                    m.update({k: ind[k] for k in indicadores.TODOS})
+                    m.update({"ind_ate": q, "margem": ind["m_liquida"], "prejuizo": ind["prejuizo_12m"],
+                              "fonte": "CVM", "div_pl": ind["dl_pl"]})
+        reg.append({**base, **{k: None for k in indicadores.TODOS}, **r, **m,
+                    "ultimo_preco_em": fech[e.ticker].dropna().index[-1].date().isoformat()})
     emp = pd.DataFrame(reg)
     emp["ticker"] = pd.Series([r["ticker"] for r in reg], dtype=object)
 

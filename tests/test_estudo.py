@@ -185,3 +185,25 @@ def test_resultado_muito_antigo_nao_gera_multiplo():
     d = estudo.montar(u, fech, vol, fund, 0.10, fim, oficiais=of)
     alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
     assert alfa["atrasado"] is True and alfa["pl"] is None and alfa["pvp"] is None and alfa["fonte"] is None
+
+
+def test_historico_completo_gera_o_conjunto_de_indicadores():
+    u, fech, vol, fund, fim = _base()
+    fund["AAAA4"]["marketCap"] = 1_000.0
+    hist = {}
+    for ano in range(2020, 2027):
+        for q in (1, 2, 3, 4):
+            hist[f"{ano}T{q}"] = {"receita": 100.0, "bruto": 40.0, "ebit": 20.0, "ebitda": 30.0, "lucro": 10.0}
+    fim_q = {"2026-09-30": "2026T3"}
+    hist = {k: v for k, v in hist.items() if k <= "2026T3"}
+    hist["2026T3"].update({"pl": 500.0, "passivo": 500.0, "divida": 200.0, "caixa": 50.0, "ativo": 1000.0,
+                           "ativo_circ": 300.0, "passivo_circ": 200.0})
+    d = estudo.montar(u, fech, vol, fund, 0.10, pd.Timestamp("2026-11-13"), historico={"AAAA4": hist})
+    alfa = next(e for e in d["empresas"] if e["empresa"] == "Alfa")
+    beta = next(e for e in d["empresas"] if e["empresa"] == "Beta")
+    assert alfa["ind_ate"] == "2026T3" and alfa["fonte"] == "CVM"
+    assert alfa["pl"] == pytest.approx(1000 / 40) and alfa["m_bruta"] == pytest.approx(0.4)
+    assert alfa["dl_ebitda"] == pytest.approx(150 / 120) and alfa["cagr_receita"] == pytest.approx(0.0)
+    assert beta["roic"] is None and beta["pl"] == pytest.approx(12.0)      # sem histórico: fica o que havia
+    fin = next(s for s in d["setores"] if s["setor"] == "Financeiro" and s["lista"] == "Todas")
+    assert "m_bruta_mediana" in fin
